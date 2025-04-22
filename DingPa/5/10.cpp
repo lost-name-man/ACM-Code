@@ -17,7 +17,7 @@
 #include <numeric>
 #include <iomanip>
 
-//#define int long long
+#define int long long
 #define INF 1e9
 #define endl '\n'
 #define MOD (int)(1000000007)
@@ -34,46 +34,36 @@ struct Edge
 };
 int n;
 int head[N];
-vector<Edge>edge;
+vector<Edge> edge;
 int tot = 1;
 
 void add(int x, int y, int z)
 {
-    edge[++tot].to = y, edge[tot].w = (z % 2);
+    edge[++tot].to = y, edge[tot].w = (z & 1);
     edge[tot].nex = head[x], head[x] = tot;
 }
 int even = 0, odd = 0;
 
-vector<int> dis, vis;
-void dfs1(int startp)
+vector<int> vis;
+void dfs1(int nownode, int dis)
 {
-    queue<int> q;
-    q.push(startp);
-
-    while (!q.empty())
+    if (dis & 1)
     {
-        int nownode = q.front();
-        q.pop();
-        if (vis[nownode] == 1)
+        odd++;
+    }
+    else
+    {
+        even++;
+    }
+    vis[nownode] = 1;
+    for (int i = head[nownode]; i; i = edge[i].nex)
+    {
+        int nextnode = edge[i].to;
+        if (vis[nextnode])
         {
             continue;
         }
-        else
-        {
-            vis[nownode] = 1;
-        }
-        for (int i = head[nownode]; i; i=edge[i].nex)
-        {
-            int nextnode = edge[i].to;
-            int w = edge[i].w;
-            if (vis[nextnode])
-            {
-                continue;
-            }
-            dis[nextnode] = dis[nownode] ^ w;
-            q.push(nextnode);
-        }
-        
+        dfs1(nextnode, dis ^ edge[i].w);
     }
 }
 
@@ -81,7 +71,7 @@ void solve()
 {
     even = 0, odd = 0;
     edge = vector<Edge>(M);
-    memset(head, 0,sizeof(head));
+    memset(head, 0, sizeof(head));
     tot = 1;
     cin >> n;
     for (int i = 1; i <= n - 1; i++)
@@ -91,23 +81,10 @@ void solve()
         add(x, y, z);
         add(y, x, z);
     }
-
-    dis = vector<int>(n + 5, 0);
     vis = vector<int>(n + 5, 0);
-    dis[1] = 0;
-    dfs1(1);
-    for (int i = 1; i <= n; i++)
-    {
-        if (dis[i] == 0)
-        {
-            even++;
-        }
-        else
-        {
-            odd++;
-        }
-    }
-    cout <<even*even*even+odd*odd*odd<< endl;
+    dfs1(1, 0);
+
+    cout << even * even * even + odd * odd * odd << endl;
 }
 
 signed main()
