@@ -39,7 +39,7 @@ int tot = 1;
 
 void add(int x, int y, int z)
 {
-    edge[++tot].to = y, edge[tot].w = (z & 1);
+    edge[++tot].to = y, edge[tot].w = (z % 2);
     edge[tot].nex = head[x], head[x] = tot;
 }
 int even = 0, odd = 0;
