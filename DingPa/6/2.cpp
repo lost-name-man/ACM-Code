@@ -82,7 +82,7 @@ void solve()
         pre[i] += pre[i - 1] + abs(arr[i] - arr[i - 1]);
     }
     pre[n + 1] = pre[n];
-    int l = 0, r = n + 1;
+    int l = 0, r = n;
     int ans = 0;
     while (l <= r)
     {
