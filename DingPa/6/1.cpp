@@ -31,13 +31,39 @@ using namespace std;
 void solve()
 {
     
-    int n, m;
-    cin>>n>>m;
-    vector<int>arr(n+5, 0);
-    for(int i=1; i<+n; i++)
+    int k, a, b, c;
+    cin>>k>>a>>b>>c;
+    int ans=0;
+    vector<int>arr;
+    arr.push_back(a);
+    arr.push_back(b);
+    arr.push_back(c);
+    for(int i=0; i<=pow(2, 3)-1; i++)
     {
-        cin>>arr[i];
+        int nowzwei=i;
+        int index=0;
+        int tmpans=0;
+        while(nowzwei)
+        {
+            int now=nowzwei&1;
+            if(now)
+            {
+                tmpans+=arr[index];
+            }
+            index++;
+            nowzwei=nowzwei>>1;
+        }
+        if(tmpans>k)
+        {
+
+        }
+        else
+        {
+            ans=max(ans, tmpans);
+        }
     }
+
+    cout<<k-ans<<endl;
     
 }
 
