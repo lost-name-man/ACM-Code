@@ -26,6 +26,27 @@ const int N = 1000005;
 const int M = N * 2;
 using namespace std;
 
+int qpow(int n, int p)
+{
+    int base = n, sum = 1;
+    while (p)
+    {
+        if (p & 1)
+        {
+            sum *= base;
+            sum %= MOD;
+        }
+        base *= base;
+        base %= MOD;
+        p >>= 1;
+    }
+    return sum;
+}
+
+int inv(int x)
+{
+    return qpow(x, MOD - 2);
+}
 void solve()
 {
     int n;
@@ -45,7 +66,11 @@ void solve()
     int cnt = 1;
     for (int i = n; i >= 2; i--)
     {
-        cnt *= i * (i - 1) / 2;
+        cnt *= i;
+        cnt %= MOD;
+        cnt *= i - 1;
+        cnt %= MOD;
+        cnt = cnt * inv(2) % MOD;
         cnt %= MOD;
     }
 
