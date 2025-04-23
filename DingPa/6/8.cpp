@@ -43,12 +43,11 @@ void solve()
         num %= MOD;
     }
     int cnt = 1;
-    for (int i = 1; i <= n; i++)
+    for (int i = n; i >= 2; i--)
     {
-        cnt *= i;
+        cnt *= i * (i - 1) / 2;
         cnt %= MOD;
     }
-    cnt /= 2;
 
     cout << ans << ' ' << cnt << endl;
 }
