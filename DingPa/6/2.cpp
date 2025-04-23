@@ -34,6 +34,14 @@ bool p(int len)
 {
     int minn = INF;
     deque<int> dq;
+    for (int i = 1; i <= len - 1; i++)
+    {
+        while (!dq.empty() && arr[dq.back()] <= arr[i])
+        {
+            dq.pop_back();
+        }
+        dq.push_back(i);
+    }
     for (int i = 1; i <= n; i++)
     {
         int l = i;
@@ -73,7 +81,7 @@ void solve()
     {
         pre[i] += pre[i - 1] + abs(arr[i] - arr[i - 1]);
     }
-
+    pre[n + 1] = pre[n];
     int l = 0, r = n + 1;
     int ans = 0;
     while (l <= r)
