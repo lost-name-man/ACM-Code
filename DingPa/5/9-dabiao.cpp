@@ -84,29 +84,29 @@ void check(int nowx)
 
     if (win[nowx - 5] < win[nowx - 8])
     {
-        //cout << nowx << " : -> " << nowx - 4 << " choose: -5" << endl;
+        cout << nowx << " : -> " << nowx - 4 << " choose: -5" << endl;
         down = win[nowx - 5];
     }
     else if (win[nowx - 5] == win[nowx - 8])
     {
-        //cout << nowx << " : -> " << nowx - 4 << " choose: ==" << endl;
+        cout << nowx << " : -> " << nowx - 4 << " choose: ==" << endl;
         down = win[nowx - 5];
     }
     else
     {
-        //cout << nowx << " : -> " << nowx - 4 << " choose: -8" << endl;
+        cout << nowx << " : -> " << nowx - 4 << " choose: -8" << endl;
         down = win[nowx - 8];
     }
 
     win[nowx] = 1.0 / 2 * up + 1.0 / 2 * down;
-    //cout << nowx << " == " << win[nowx] << endl;
+    cout << nowx << " == " << win[nowx] << endl;
 
 }
 
 void solve()
 {
     
-    for (int i = 9; i <= 1000; i++)
+    for (int i = 9; i <= 100; i++)
     {
         check(i);
     }
