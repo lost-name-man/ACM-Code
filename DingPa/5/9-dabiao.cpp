@@ -67,34 +67,34 @@ void check(int nowx)
     double up, down;
     if (win[nowx - 2] < win[nowx - 5])
     {
-        cout << nowx << " : -> " << nowx - 1 << " choose: -2" << endl;
+        //cout << nowx << " : -> " << nowx - 1 << " choose: -2" << endl;
         up = win[nowx - 2];
     }
     else if (win[nowx - 2] == win[nowx - 5])
     {
-        cout << nowx << " : -> " << nowx - 1 << " choose: ==" << endl;
+        //cout << nowx << " : -> " << nowx - 1 << " choose: ==" << endl;
         up = win[nowx - 2];
     }
     else
     {
-        cout << nowx << " : -> " << nowx - 1 << " choose: -5" << endl;
+        //cout << nowx << " : -> " << nowx - 1 << " choose: -5" << endl;
         up = win[nowx - 5];
     }
 
 
     if (win[nowx - 5] < win[nowx - 8])
     {
-        cout << nowx << " : -> " << nowx - 4 << " choose: -5" << endl;
+        //cout << nowx << " : -> " << nowx - 4 << " choose: -5" << endl;
         down = win[nowx - 5];
     }
     else if (win[nowx - 5] == win[nowx - 8])
     {
-        cout << nowx << " : -> " << nowx - 4 << " choose: ==" << endl;
+        //cout << nowx << " : -> " << nowx - 4 << " choose: ==" << endl;
         down = win[nowx - 5];
     }
     else
     {
-        cout << nowx << " : -> " << nowx - 4 << " choose: -8" << endl;
+        //cout << nowx << " : -> " << nowx - 4 << " choose: -8" << endl;
         down = win[nowx - 8];
     }
 

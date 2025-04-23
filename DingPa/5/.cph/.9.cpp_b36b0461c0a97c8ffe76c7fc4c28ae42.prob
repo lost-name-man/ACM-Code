@@ -1,0 +1,1 @@
+{"name":"Local: 9","url":"d:\\Code\\acm\\ACM-Code\\DingPa\\5\\9.cpp","tests":[{"id":1745399087464,"input":"4\n1\n2\n8\n103","output":"499122177\n1\n124780545\n239"},{"id":1745399243664,"input":"1\n8","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\Code\\acm\\ACM-Code\\DingPa\\5\\9.cpp","group":"local","local":true}
