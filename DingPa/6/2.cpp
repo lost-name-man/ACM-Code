@@ -32,6 +32,10 @@ vector<int> pre;
 
 bool p(int len)
 {
+    if (len == 0)
+    {
+        return pre[n] <= x;
+    }
     int minn = INF;
     deque<int> dq;
     for (int i = 1; i <= len - 1; i++)
