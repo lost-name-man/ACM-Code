@@ -76,17 +76,17 @@ void findend(int nownode, int fa)
     }
 }
 
-int dfs(int nownode, int nowval, int fa)
+int dfs(int nownode, int faedge)
 {
-    int tmpval = nowval;
+    int nowval = edge[faedge].val + edge[faedge ^ 1].val;
     for (int i = head[nownode]; i; i = edge[i].nextedge)
     {
         int nextnode = edge[i].tonode;
-        if (isroad[nextnode] == 1 || nextnode == fa)
+        if (isroad[nextnode] == 1 || (i ^ 1) == faedge)
         {
             continue;
         }
-        nowval += max(dfs(nextnode, tmpval + edge[i].val + edge[i ^ 1].val, nownode), (int)0);
+        nowval += max(dfs(nextnode, i), (int)0);
     }
     return nowval;
 }
@@ -114,7 +114,7 @@ void solve()
     findend(starts, -1);
     for (int i = 0; i < road.size(); i++)
     {
-        ans += dfs(road[i], 0, -1);
+        ans += dfs(road[i], 0);
     }
     cout << ans << endl;
 }
