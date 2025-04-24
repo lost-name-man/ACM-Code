@@ -26,57 +26,96 @@ const int N = 1000005;
 const int M = N * 2;
 using namespace std;
 
-int n, k;
-vector<int> pre;
-
-int qpow(int x, int p)
+struct Edge
 {
-    int base = x, sum = 1;
-    while (p)
+    int nextedge;
+    int tonode;
+    int val;
+};
+
+int n;
+vector<Edge> edge;
+vector<int> head;
+int tot = 1;
+
+void add(int x, int y, int z)
+{
+    edge[++tot].tonode = y, edge[tot].val = z, edge[tot].nextedge = head[x];
+    head[x] = tot;
+}
+
+vector<int> isroad;
+vector<int> road;
+int starts, final;
+int ok = 0;
+int ans = 0;
+void findend(int nownode, int fa)
+{
+    if (nownode == final)
     {
-        if (p & 1)
-        {
-            sum *= base;
-            sum %= MOD;
-        }
-        base = base * base;
-        base %= MOD;
-        p = p >> 1;
+        ok = 1;
+        isroad[nownode] = 1;
+        road.push_back(nownode);
+        return;
     }
-
-    return sum % MOD;
+    for (int i = head[nownode]; i; i = edge[i].nextedge)
+    {
+        int nextnode = edge[i].tonode;
+        if (nextnode == fa)
+        {
+            continue;
+        }
+        findend(nextnode, nownode);
+        if (ok == 1)
+        {
+            ans += edge[i].val;
+            isroad[nownode] = 1;
+            road.push_back(nownode);
+            return;
+        }
+    }
 }
 
-int inv(int x)
+int dfs(int nownode, int nowval, int fa)
 {
-    int ret = qpow(x, MOD - 2) % MOD;
-    return ret;
+    for (int i = head[nownode]; i; i = edge[i].nextedge)
+    {
+        int nextnode = edge[i].tonode;
+        if (isroad[nextnode] == 1 || nextnode == fa)
+        {
+            continue;
+        }
+        nowval += max(dfs(nextnode, nowval + edge[i].val + edge[i ^ 1].val, nownode), (int)0);
+    }
+    return nowval;
 }
-
-vector<vector<int>> dp;
-
 void solve()
 {
 
-    cin >> n >> k;
-    pre = vector<int>(n + 5, 0);
-    dp = vector<vector<int>>(n + 5, vector<int>(2, 0));
-    dp[1][0] = 21;
-    dp[1][1] = 5;
-    pre[1] = 21;
-    for (int i = 2; i <= n; i++)
+    cin >> n;
+    tot = 1;
+    road = vector<int>();
+    edge = vector<Edge>(n * 2 + 10);
+    isroad = vector<int>(n + 10, 0);
+    head = vector<int>(n + 10, 0);
+    for (int i = 1; i < n; i++)
     {
-        int l = max(i - k + 1, (int)1) - 1;
-        dp[i][0] = ((dp[i - 1][0] + dp[i - 1][1]) % MOD) * 21;
-        pre[i] = pre[i - 1] + dp[i][0];
-        int sq = (((pre[i - 1] - pre[l - 1]) + MOD) % MOD * (i - 1 - l + 1)) % MOD % MOD;
-
-        sq = ((sq - ((pre[i - 1] - pre[l - 1]) + MOD) % MOD) + MOD) % MOD;
-        sq = sq * inv(2) % MOD;
-        sq = ((sq + (pre[i - 1] - pre[l - 1])) + MOD) % MOD;
-        dp[i][1] = (dp[i][1] + sq * 5) % MOD;
+        int x, y, val1, val2;
+        cin >> x >> y >> val1 >> val2;
+        add(x, y, val1);
+        add(y, x, val2);
     }
-    cout << (dp[n][0] + dp[n][1]) % MOD << endl;
+
+    ans = 0;
+    ok = 0;
+    cin >> starts >> final;
+
+    findend(starts, -1);
+    for (int i = 0; i < road.size(); i++)
+    {
+        ans += dfs(road[i], 0, -1);
+    }
+    cout << ans << endl;
 }
 
 signed main()
@@ -85,7 +124,6 @@ signed main()
     std::cin.tie(0);
     int T = 1;
     cin >> T;
-
     for (int i = 1; i <= T; i++)
     {
         solve();
