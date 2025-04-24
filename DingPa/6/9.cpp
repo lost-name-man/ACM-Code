@@ -18,7 +18,7 @@
 #include <iomanip>
 
 #define int long long
-#define INF 1e9
+#define INF 1e18
 #define endl '\n'
 #define MOD (int)(1000000007)
 
@@ -78,6 +78,7 @@ void findend(int nownode, int fa)
 
 int dfs(int nownode, int nowval, int fa)
 {
+    int tmpval = nowval;
     for (int i = head[nownode]; i; i = edge[i].nextedge)
     {
         int nextnode = edge[i].tonode;
@@ -85,7 +86,7 @@ int dfs(int nownode, int nowval, int fa)
         {
             continue;
         }
-        nowval += max(dfs(nextnode, nowval + edge[i].val + edge[i ^ 1].val, nownode), (int)0);
+        nowval += max(dfs(nextnode, tmpval + edge[i].val + edge[i ^ 1].val, nownode), (int)0);
     }
     return nowval;
 }
