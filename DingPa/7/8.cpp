@@ -27,10 +27,31 @@ const int M = N * 2;
 using namespace std;
 
 
+int cab(int a, int b)
+{
+    int ret=1;
+    for(int i=b, check=0; check!=a; i--, check++)
+    {
+        ret*=i;
+    }
+    for(int i=1, check=0; check!=a; i++, check++)
+    {
+        ret/=i;
+    }
+
+    return ret;
+}
+
 void solve()
 {
 
-    
+    int a,b,c,d,e;
+    cin>>a>>b>>c>>d>>e;
+    int ans=a*b*c*cab(2, d);
+    ans+=a*b*c*d*e;
+
+    cout<<ans<<endl;
+
 }
 
 signed main()
