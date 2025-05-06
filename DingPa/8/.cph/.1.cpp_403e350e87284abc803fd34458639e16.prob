@@ -1,0 +1,1 @@
+{"name":"Local: 1","url":"d:\\VScodewinGW\\vscodeloading\\acmcode\\ACM-Code\\DingPa\\8\\1.cpp","tests":[{"id":1746513255352,"input":"1\n2 3 10\n3 4\n2 5\n4 7\n2 4\n3 6\n4 8\n","output":"15"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\VScodewinGW\\vscodeloading\\acmcode\\ACM-Code\\DingPa\\8\\1.cpp","group":"local","local":true}

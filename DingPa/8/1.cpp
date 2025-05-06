@@ -55,8 +55,8 @@ void solve()
             if (viscol[color[i][j]] == 0)
             {
                 colnum++;
-                viscol[color[i][j]]++;
             }
+            viscol[color[i][j]]++;
         }
         if (colnum == k)
         {
@@ -116,7 +116,6 @@ signed main()
     }
     return 0;
 }
-
 
 /*
 input:
