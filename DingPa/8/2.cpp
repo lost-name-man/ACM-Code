@@ -68,11 +68,12 @@ void solve()
         }
     }
 
+    int vectop
     for(int subject=1; subject<=n; subject++)
     {
         for(int group=1; group<=m; group++)
         {
-            int nowcost=group
+            int nowcost=ques_grop_cost[subject][group];
         }
     }
     
