@@ -75,6 +75,13 @@ void solve()
     int ans = 0;
     for (int i = initx; i <= n; i++)
     {
+        if (i != initx)
+        {
+            for (int j = 1; j <= inity; j++)
+            {
+                viscol[color[i][j]]++;
+            }
+        }
         for (int j = inity; j >= 1; j--)
         {
             int ok = 1;
@@ -96,7 +103,7 @@ void solve()
                     int nowcol = color[h][j];
                     viscol[nowcol]++;
                 }
-                ans += i * (m - j);
+                ans += (m - j + 1);
                 break;
             }
         }
