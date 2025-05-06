@@ -28,50 +28,80 @@ using namespace std;
 
 struct Edge
 {
-    int nextedge;
-    int tonode;
-    int val;
 };
 
-int n, m;
-vector<Edge> edge;
-vector<int> head;
-int tot = 1;
-
-void add(int x, int y, int z)
-{
-    edge[++tot].tonode = y, edge[tot].val = z, edge[tot].nextedge = head[x];
-    head[x] = tot;
-}
-
-vector<vector<int>>colors;
-vector<vector<int>>dis;
-
-
-int wasd[4][2] = { {0, 1}, {0,-1}, {1, 0}, {-1, 0} };
-
-
+int n, m, k;
+int color[1003][1003];
+int viscol[2003];
 void solve()
 {
 
-    int n, m, k;
-    cin>>n>>m>>k;
-    for(int i=1; i<=n; i++)
+    cin >> n >> m >> k;
+    for (int i = 1; i <= n; i++)
     {
-        for(int j=1; j<=m; j++)
+        for (int j = 1; j <= m; j++)
         {
-            cin>>colors[i][j];
+            cin >> color[i][j];
         }
     }
 
-    vector<vector<int>>colors_col
-
-    for(int row=1; row<=n; row++)
+    int initx = -1;
+    int colnum = 0;
+    memset(viscol, 0, sizeof(viscol));
+    for (int i = 1; i <= n; i++)
     {
-
+        for (int j = 1; j <= m; j++)
+        {
+            if (viscol[color[i][j]] == 0)
+            {
+                colnum++;
+                viscol[color[i][j]]++;
+            }
+        }
+        if (colnum == k)
+        {
+            initx = i;
+            break;
+        }
     }
-    
 
+    if (initx == -1)
+    {
+        cout << 0 << endl;
+        return;
+    }
+
+    int inity = m;
+    int ans = 0;
+    for (int i = initx; i <= n; i++)
+    {
+        for (int j = inity; j >= 1; j--)
+        {
+            int ok = 1;
+            for (int h = 1; h <= i; h++)
+            {
+                int nowcol = color[h][j];
+                viscol[nowcol]--;
+                if (viscol[nowcol] <= 0)
+                {
+                    ok = 0;
+                }
+            }
+            if (ok == 0)
+            {
+                // j no
+                inity = j;
+                for (int h = 1; h <= i; h++)
+                {
+                    int nowcol = color[h][j];
+                    viscol[nowcol]++;
+                }
+                ans += i * (m - j);
+                break;
+            }
+        }
+    }
+    cout << ans << endl;
 }
 
 signed main()
