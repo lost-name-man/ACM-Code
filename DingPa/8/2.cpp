@@ -44,40 +44,59 @@ void add(int x, int y, int z)
     head[x] = tot;
 }
 
+int wasd[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
+int add_interval(int l, int r, int val)
+{
+}
 
-int wasd[4][2] = { {0, 1}, {0,-1}, {1, 0}, {-1, 0} };
-
-vector<vector<int>>ques_grop_cost;
-vector<vector<int>>ques_grop_val;
+vector<vector<int>> ques_grop_cost;
+vector<vector<int>> ques_grop_val;
 void solve()
 {
 
     int n, m, x;
     cin >> n >> m >> x;
-    ques_grop_cost=vector<vector<int>>(n+5, vector<int>(m+5, 0));
-    ques_grop_val=vector<vector<int>>(n+5, vector<int>(m+5, 0));
+    ques_grop_cost = vector<vector<int>>(n + 5, vector<int>(m + 5, 0));
+    ques_grop_val = vector<vector<int>>(n + 5, vector<int>(m + 5, 0));
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            cin >> ques_grop_cost[i][j];
+            ques_grop_cost[i][j] += ques_grop_cost[i][j - 1];
+            cin >> ques_grop_val[i][j];
+            ques_grop_val[i][j] += ques_grop_val[i][j - 1];
+        }
+    }
+
+    // vector<vector<int>> dp(n + 5, vector<int>(x + 5, 0));
+    vector<int>dp(x + 5, 0);
+    for (int subject = 1; subject <= n; subject++)
+    {
+        for (int j = x; j >= 0; j--)
+        {
+            for (int group = 1; group <= m; group++)
+            {
+                
+                int nowcost = ques_grop_cost[subject][group];
+                int nowval = ques_grop_val[subject][group];
+                if(j>=nowcost)
+                {
+                    {
+                        dp[j]=max(dp[j], dp[j-nowcost]+nowval);
+                    }
+                }
+            }
+        }
+    }
+
+    int sum=0;
     for(int i=1; i<=n; i++)
     {
-        for(int j=1; j<=m; j++)
-        {
-            cin>>ques_grop_cost[i][j];
-            ques_grop_cost[i][j]+=ques_grop_cost[i][j-1];
-            cin>>ques_grop_val[i][j];
-            ques_grop_val[i][j]+=ques_grop_val[i][j-1];
-        }
+        sum+=ques_grop_val[i][m];
     }
-
-    int vectop
-    for(int subject=1; subject<=n; subject++)
-    {
-        for(int group=1; group<=m; group++)
-        {
-            int nowcost=ques_grop_cost[subject][group];
-        }
-    }
-    
-
+    cout<<sum-dp[x]<<endl;
 }
 
 signed main()
