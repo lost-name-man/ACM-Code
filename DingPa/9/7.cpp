@@ -50,7 +50,7 @@ void solve()
         }
         else
         {
-            lastindex = 0;
+            lastindex = numindex[i];
             len = 1;
         }
     }
