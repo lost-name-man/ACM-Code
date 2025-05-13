@@ -30,18 +30,14 @@ void solve()
 {
     int v, w;
     cin >> v >> w;
-    // cout << v / (w / 2 + 1) + (v % (w / 2 + 1) != 0) << endl;
-
-    int cost = (w / 2) + 1;
-    int normcard = v / cost;
-    int loss = v % cost;
-    int ans = normcard;
-    if (loss > (w - cost) || normcard == 0)
+    if (w % 2 == 0)
     {
-        ans++;
+        cout << 1 + (v - w / 2) / (w / 2 + 1) << endl;
     }
-
-    cout << ans << endl;
+    else
+    {
+        cout << 1 + (v - w / 2 - 1) / (w / 2 + 1) << endl;
+    }
 }
 
 signed main()
