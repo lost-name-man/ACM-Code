@@ -24,11 +24,32 @@
 
 using namespace std;
 
-int n, m;
 void solve()
 {
-
-    
+    int m;
+    cin >> m;
+    for (int i = 1; i <= m; i++)
+    {
+        string str;
+        cin >> str;
+        int t;
+        cin >> t;
+        int hours = (str[0] - '0') * 10 + (str[1] - '0');
+        int mins = (str[3] - '0') * 10 + (str[4] - '0');
+        hours += t;
+        hours += 24;
+        hours %= 24;
+        if(hours<10)
+        {
+            cout<<0;
+        }
+        cout << hours << ":" ;
+        if(mins<10)
+        {
+            cout<<0;
+        }
+        cout<< mins << endl;
+    }
 }
 
 signed main()
