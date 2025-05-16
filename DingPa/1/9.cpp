@@ -40,54 +40,39 @@ void solve()
     {
         cin >> grr[i - 1];
     }
-    vector<int> dp(n + 5, 0);
-    vector<vector<int>> index_of_j(22, vector<int>(2, 1));
+    vector<int> dp(n + 5, -INF);
+    dp[0] = 0;
+    vector<vector<int>> index_of_j(22, vector<int>(2, 0));
 
     vector<vector<int>> preein(22, vector<int>(n + 5, 0));
-    for (int i = 1; i <= m; i++)
-    {
-        for (int j = 1; j <= n; j++)
-        {
-            preein[i][j] = preein[i][j - 1] + ((arr[j] >> (i - 1)) & 1);
-        }
-    }
     for (int i = 1; i <= n; i++)
     {
         int maxn = 0;
         int nownum = arr[i];
         dp[i] = dp[i - 1];
-        map<int, int> flj;
+
+        map<int, int> mp;
         for (int j = 1; j <= m; j++)
         {
             int nowzwei = (nownum >> (j - 1)) & 1;
             int nowindex = index_of_j[j][nowzwei ^ 1];
-
             index_of_j[j][nowzwei] = i;
             if (nowindex == 0)
             {
                 continue;
             }
-            int len = i - nowindex + 1;
-            int nowf = 0;
-            if (flj[nowindex] != 0)
-            {
-                nowf = flj[nowindex];
-            }
             else
             {
-                for (int k = 1; k <= m; k++)
-                {
-                    int onenum = (preein[k][i] - preein[k][nowindex - 1]);
-                    if (onenum != 0 && onenum != len)
-                    {
-                        nowf |= (1 << (k - 1));
-                    }
-                }
-                flj[nowindex] = nowf;
+                mp[nowindex] |= (1 << (j - 1));
             }
-
-            maxn = max(maxn, grr[nowf] + dp[nowindex - 1]);
         }
+        int nowf = 0;
+        for (auto it = mp.rbegin(); it != mp.rend(); it++)
+        {
+            nowf |= it->second;
+            maxn = max(maxn, grr[nowf] + dp[it->first - 1]);
+        }
+
         dp[i] = max(dp[i], maxn);
     }
 
