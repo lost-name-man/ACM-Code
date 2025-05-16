@@ -44,7 +44,7 @@ void solve()
     vector<vector<int>> index_of_j(22, vector<int>(n + 5, 1));
 
     vector<vector<int>> preein(22, vector<int>(n + 5, 0));
-    for (int i = 1; i <= 20; i++)
+    for (int i = 1; i <= m; i++)
     {
         for (int j = 1; j <= n; j++)
         {
@@ -56,7 +56,7 @@ void solve()
         int maxn = 0;
         int nownum = arr[i];
         dp[i] = dp[i - 1];
-        for (int j = 1; j <= 20; j++)
+        for (int j = 1; j <= m; j++)
         {
             int nowzwei = (nownum >> (j - 1)) & 1;
             int nowindex = index_of_j[j][nowzwei ^ 1];
@@ -68,7 +68,10 @@ void solve()
             }
             int len = i - nowindex + 1;
             int nowf = 0;
-            for (int k = 1; k <= 20; k++)
+
+            nowf =
+
+                for (int k = 1; k <= m; k++)
             {
                 int onenum = (preein[k][i] - preein[k][nowindex - 1]);
                 if (onenum != 0 && onenum != len)
