@@ -44,7 +44,7 @@ void solve()
     dp[0] = 0;
     vector<vector<int>> index_of_j(22, vector<int>(2, 0));
 
-    int prex = 0,prey=0,pre;
+    int prex = 0, prey = 0, pre;
     for (int i = 1; i <= n; i++)
     {
         prex |= arr[i];
@@ -76,7 +76,7 @@ void solve()
             maxn = max(maxn, grr[nowf] + dp[it->first - 1]);
         }
 
-        dp[i] = max({dp[i], maxn,grr[pre]});
+        dp[i] = max({dp[i], maxn, grr[pre]});
     }
 
     cout << dp[n] << endl;
