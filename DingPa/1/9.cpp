@@ -44,12 +44,15 @@ void solve()
     dp[0] = 0;
     vector<vector<int>> index_of_j(22, vector<int>(2, 0));
 
-    vector<vector<int>> preein(22, vector<int>(n + 5, 0));
+    int prex = 0,prey=0,pre;
     for (int i = 1; i <= n; i++)
     {
-        int maxn = 0;
+        prex |= arr[i];
+        prey &= arr[i];
+        pre = prex - prey;
+        int maxn = -INF;
         int nownum = arr[i];
-        dp[i] = dp[i - 1];
+        dp[i] = dp[i - 1] + grr[0];
 
         map<int, int> mp;
         for (int j = 1; j <= m; j++)
@@ -73,7 +76,7 @@ void solve()
             maxn = max(maxn, grr[nowf] + dp[it->first - 1]);
         }
 
-        dp[i] = max(dp[i], maxn);
+        dp[i] = max({dp[i], maxn,grr[pre]});
     }
 
     cout << dp[n] << endl;
