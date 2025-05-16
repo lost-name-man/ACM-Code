@@ -24,9 +24,29 @@
 
 using namespace std;
 
-int n, m;
+int arr[100005];
 void solve()
 {
+    int n, m, t;
+    cin >> t >> n >> m;
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> arr[i];
+    }
+    sort(arr + 1, arr + 1 + n);
+    int lesst = t;
+    for (int i = 1; i <= m; i++)
+    {
+        lesst -= arr[i];
+    }
+    if (lesst < 0)
+    {
+        cout << "-1" << endl;
+    }
+    else
+    {
+        cout << lesst / 40 << endl;
+    }
 }
 
 signed main()
