@@ -41,7 +41,7 @@ void solve()
         cin >> grr[i - 1];
     }
     vector<int> dp(n + 5, 0);
-    vector<vector<int>> index_of_j(22, vector<int>(n + 5, 1));
+    vector<vector<int>> index_of_j(22, vector<int>(2, 1));
 
     vector<vector<int>> preein(22, vector<int>(n + 5, 0));
     for (int i = 1; i <= m; i++)
@@ -56,6 +56,7 @@ void solve()
         int maxn = 0;
         int nownum = arr[i];
         dp[i] = dp[i - 1];
+        map<int, int> flj;
         for (int j = 1; j <= m; j++)
         {
             int nowzwei = (nownum >> (j - 1)) & 1;
@@ -68,17 +69,23 @@ void solve()
             }
             int len = i - nowindex + 1;
             int nowf = 0;
-
-            nowf =
-
-                for (int k = 1; k <= m; k++)
+            if (flj[nowindex] != 0)
             {
-                int onenum = (preein[k][i] - preein[k][nowindex - 1]);
-                if (onenum != 0 && onenum != len)
-                {
-                    nowf |= (1 << (k - 1));
-                }
+                nowf = flj[nowindex];
             }
+            else
+            {
+                for (int k = 1; k <= m; k++)
+                {
+                    int onenum = (preein[k][i] - preein[k][nowindex - 1]);
+                    if (onenum != 0 && onenum != len)
+                    {
+                        nowf |= (1 << (k - 1));
+                    }
+                }
+                flj[nowindex] = nowf;
+            }
+
             maxn = max(maxn, grr[nowf] + dp[nowindex - 1]);
         }
         dp[i] = max(dp[i], maxn);
