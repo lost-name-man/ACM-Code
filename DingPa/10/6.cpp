@@ -67,10 +67,6 @@ int dijsk()
         int nowstep = pq.top().step;
         int nowval = pq.top().val;
         pq.pop();
-<<<<<<< HEAD
-        vis[nownode] = 1;
-
-=======
         if (vis[nownode] == 1)
         {
             continue;
@@ -79,7 +75,6 @@ int dijsk()
         {
             vis[nownode] = 1;
         }
->>>>>>> d9bee6660a4d13fa3bd57cb69991a48bfea51d85
         if (nownode == n)
         {
             return nowval;
