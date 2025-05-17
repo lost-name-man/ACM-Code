@@ -54,17 +54,27 @@ inline void LTbuild(int i, int l, int r)
     LTree[i].maxn = max(LTree[i * 2].maxn, LTree[i * 2 + 1].maxn);
 }
 
-inline void LTpd(int i)
-{
-    if (LTree[i].lazytag != 0)
-    {
-        LTree[i * 2].lazytag += LTree[i].lazytag;
-        LTree[i * 2 + 1].lazytag += LTree[i].lazytag;
-
-        LTree[i * 2].sum += LTree[i].lazytag * (LTree[i * 2].l - LTree[i * 2].l + 1);
-        LTree[i * 2 + 1].sum += LTree[i].lazytag * (LTree[i * 2 + 1].l - LTree[i * 2 + 1].l + 1);
+inline void LTpd(int i) {
+    int t = LTree[i].lazytag;
+    if (t != 0) {
+        // 左子节点
+        int ls = i << 1, rs = ls + 1;
+        // 更新子节点的懒标记
+        LTree[ls].lazytag += t;
+        LTree[rs].lazytag += t;
+        // 计算左右子区间长度
+        int llen = LTree[ls].r - LTree[ls].l + 1;
+        int rlen = LTree[rs].r - LTree[rs].l + 1;
+        // 更新 sum 和 maxn
+        LTree[ls].sum += t * llen;
+        LTree[rs].sum += t * rlen;
+        LTree[ls].maxn += t;
+        LTree[rs].maxn += t;
+        // 清除当前节点懒标记
+        LTree[i].lazytag = 0;
     }
 }
+
 
 int LTsearch(int i, int l, int r)
 {
