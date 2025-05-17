@@ -63,6 +63,10 @@ int dfs(int innode)
     for (int i = head[innode]; i != 0; i = edge[i].next)
     {
         int nextnode = edge[i].tver;
+        if (dis[nextnode] ==1 && nextnode<innode)
+        {
+            ret = ret | 1;
+        }
         if (!vis[nextnode] && nextnode<innode)
         {
             ret = ret | dfs(nextnode);
@@ -101,10 +105,11 @@ void solve()
         addedge(v, u, 1);
     }
 
+    vis = vector<int>(n + 5, 0);
     for (int i = 1; i <= n; i++)
     {
-        vis = vector<int>(n + 5, 0);
-        if (dis[i] != 1)
+        
+        if (dis[i] != 1 || vis[i] != 1)
         {
             dfs(i);
         }
