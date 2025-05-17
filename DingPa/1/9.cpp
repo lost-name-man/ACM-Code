@@ -26,106 +26,125 @@ using namespace std;
 
 int n, m;
 
-struct LTREE
-{
-    int l, r;
-    int sum;
-    int maxn;
-    int lazytag;
-};
-
-vector<LTREE> LTree;
 vector<int> dp;
-inline void LTbuild(int i, int l, int r)
+void makelzy(int tot, int x);
+void makesame(int tot, int x);
+void downlzy(int tot);
+void update(int tot, int le, int ri, int x);
+int query(int tot, int le, int ri);
+void upsame(int tot, int le, int ri, int x);
+struct node
 {
-    LTree[i].l = l;
-    LTree[i].r = r;
-    if (l == r)
-    {
-        LTree[i].sum = dp[l];
-        LTree[i].maxn = dp[l];
-        return;
-    }
-
-    int mid = (l + r) / 2;
-    LTbuild(i * 2, l, mid);
-    LTbuild(i * 2 + 1, mid + 1, r);
-    LTree[i].sum = LTree[i * 2].sum + LTree[i * 2 + 1].sum;
-    LTree[i].maxn = max(LTree[i * 2].maxn, LTree[i * 2 + 1].maxn);
+    int L;
+    int R;
+    int val;
+    int lzy;
+    int same = INF;
+} tree[400005];
+void makelzy(int tot, int x)
+{
+    int len = tree[tot].R - tree[tot].L + 1;
+    tree[tot].lzy += x;
+    tree[tot].val += x;
+}
+void makesame(int tot, int x)
+{
+    tree[tot].val = x;
+    tree[tot].same = x;
+    tree[tot].lzy = 0;
 }
 
-inline void LTpd(int i)
+void downlzy(int tot)
 {
-    if (LTree[i].lazytag != 0)
+    if (tree[tot].same != INF)
     {
-        LTree[i * 2].lazytag += LTree[i].lazytag;
-        LTree[i * 2 + 1].lazytag += LTree[i].lazytag;
-
-        LTree[i * 2].sum += LTree[i].lazytag * (LTree[i * 2].l - LTree[i * 2].l + 1);
-        LTree[i * 2 + 1].sum += LTree[i].lazytag * (LTree[i * 2 + 1].l - LTree[i * 2 + 1].l + 1);
+        makesame(tot * 2, tree[tot].same);
+        makesame(tot * 2 + 1, tree[tot].same);
+        tree[tot].same = INF;
     }
+    int m = (tree[tot].L + tree[tot].R) / 2;
+    makelzy(tot * 2, tree[tot].lzy);
+    makelzy(tot * 2 + 1, tree[tot].lzy);
+    tree[tot].lzy = 0;
 }
 
-int LTsearch(int i, int l, int r)
+int query(int tot, int le, int ri)
 {
-    if (LTree[i].l >= l && LTree[i].r <= r)
+    int LL = tree[tot].L, RR = tree[tot].R;
+    if (le <= LL && ri >= RR)
     {
-        return LTree[i].maxn;
+        return tree[tot].val;
     }
-    if (LTree[i].l > r || LTree[i].r < l)
+    else if (!(le > RR || ri < LL))
     {
+        int m = (RR + LL) / 2;
+        downlzy(tot);
+        int tmp;
+
+        tmp = max(query(tot * 2, le, ri), query(tot * 2 + 1, le, ri));
+        return tmp;
+    }
+    else
         return -INF;
-    }
-
-    LTpd(i);
-    int ret = -INF;
-    if (LTree[i * 2].r >= l)
-    {
-        ret = max(ret, LTsearch(i * 2, l, r));
-    }
-    if (LTree[i * 2 + 1].l <= r)
-    {
-        ret = max(ret, LTsearch(i * 2 + 1, l, r));
-    }
-
-    if (l == 0)
-    {
-        ret = max(ret, dp[0]);
-    }
-
-    return ret;
 }
-
-inline void LTadd(int i, int l, int r, int val)
+void update(int tot, int le, int ri, int x)
 {
-    if (LTree[i].r <= r && LTree[i].l >= l)
+    int LL = tree[tot].L, RR = tree[tot].R;
+    if (le <= LL && ri >= RR)
     {
-        LTree[i].sum = val * (LTree[i].r - LTree[i].l + 1);
-        LTree[i].maxn = LTree[i].sum;
-        LTree[i].lazytag += val;
+        makelzy(tot, x);
         return;
     }
-    LTpd(i);
-    if (LTree[i * 2].r >= l)
+    else if (!(le > RR || ri < LL))
     {
-        LTadd(i * 2, l, r, val);
+        int m = (RR + LL) / 2;
+        downlzy(tot);
+        update(tot * 2, le, ri, x);
+        update(tot * 2 + 1, le, ri, x);
+        tree[tot].val = max(tree[tot * 2].val, tree[tot * 2 + 1].val);
+        return;
     }
-    if (LTree[i * 2 + 1].l <= r)
+}
+void upsame(int tot, int le, int ri, int x)
+{
+    int LL = tree[tot].L, RR = tree[tot].R;
+    if (le <= LL && ri >= RR)
     {
-        LTadd(i * 2 + 1, l, r, val);
+        makesame(tot, x);
+        return;
     }
-
-    LTree[i].sum = LTree[i * 2].sum + LTree[i * 2 + 1].sum;
-    LTree[i].maxn = max(LTree[i * 2].maxn, LTree[i * 2].maxn);
+    else if (!(le > RR || ri < LL))
+    {
+        downlzy(tot);
+        upsame(tot * 2, le, ri, x);
+        upsame(tot * 2 + 1, le, ri, x);
+        tree[tot].val = max(tree[tot * 2].val, tree[tot * 2 + 1].val);
+        return;
+    }
 }
 
+void build(int tot, int LL, int RR)
+{
+    tree[tot].L = LL;
+    tree[tot].R = RR;
+    tree[tot].lzy = 0;
+    tree[tot].same = INF;
+    if (LL == RR)
+    {
+        tree[tot].val = dp[LL];
+        return;
+    }
+    int m = (LL + RR) / 2;
+    build(tot * 2, LL, m);
+    build(tot * 2 + 1, m + 1, RR);
+    tree[tot].val = max(tree[tot * 2].val, tree[tot * 2 + 1].val);
+}
 void solve()
 {
 
     cin >> n >> m;
     int M = pow(2, m);
     vector<int> arr(n + 5, 0);
-    LTree = vector<LTREE>(4 * n);
     for (int i = 1; i <= n; i++)
     {
         cin >> arr[i];
@@ -143,10 +162,8 @@ void solve()
     {
         int nowzwei = (arr[1] >> (j - 1)) & 1;
         index_of_j[j][nowzwei] = 1;
-
     }
-    LTbuild(1, 1, n);
-    
+    build(1, 0, n);
 
     int prex = 0, prey = 0x7f7f7f7f7f7f7f7f, pre;
     for (int i = 2; i <= n; i++)
@@ -184,8 +201,7 @@ void solve()
         {
             int r = jinv[j].first;
             int l = jinv[j + 1].first + 1;
-            int invmax = LTsearch(1, l-1, r-1);
-
+            int invmax = query(1, l - 1, r - 1);
             nowf |= jinv[j].second;
             maxn = max(maxn, grr[nowf] + invmax);
         }
@@ -193,15 +209,14 @@ void solve()
             int index = jinv.size() - 1;
             int r = jinv[index].first;
             int l = 1;
-            int invmax = LTsearch(1, l-1, r-1);
+            int invmax = query(1, l - 1, r - 1);
 
             nowf |= jinv[index].second;
             maxn = max(maxn, grr[nowf] + invmax);
         }
 
         dp[i] = maxn;
-        LTadd(1, i, i, dp[i]);
-
+        upsame(1, i, i, dp[i]);
     }
 
     cout << dp[n] << endl;
