@@ -16,8 +16,10 @@
 #include <unordered_map>
 #include <numeric>
 #include <iomanip>
+#include <random>
+#include <chrono>
 
-#define int size_t
+#define int long long
 #define INF 1e18
 #define endl '\n'
 #define MOD (int)(1000000007)
@@ -33,8 +35,20 @@ map<int, size_t> int2hash;
 vector<size_t> sumhash(1000006 + 100);
 
 
-size_t hash_int(int x) {
-    return 1145141919810ULL * x;
+static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
+
+unordered_map<size_t, size_t>hashmap;
+size_t hash_int(int x) 
+{
+    if(hashmap[x]==0)
+    {
+        hashmap[x]=rnd();
+        return hashmap[x];
+    }
+    else
+    {
+        return hashmap[x];
+    }
 }
 // hash<int> hash_int;
 
