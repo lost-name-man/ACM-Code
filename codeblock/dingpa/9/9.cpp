@@ -24,7 +24,7 @@ struct node
     int lzy;
     int same = INF;
 } tree[800005];
-int arrline[200005];
+int arrline[200005]={0};
 void makelzy(int tot, int x)
 {
     int len = tree[tot].R - tree[tot].L + 1;
@@ -155,11 +155,14 @@ void solve()
     for(int i=1;i<=n;i++)
     {
         Rect nowrect=rect[i];
-        int nowmax=query(1,nowrect.x1,nowrect.x2);
+        int nowmax=query(1,nowrect.x1,nowrect.x2-1);
         int nexmax=nowrect.y2-nowrect.y1+nowmax;
         ans+=(nowrect.y1-nowmax)*(nowrect.x2-nowrect.x1)*(nowrect.y2-nowrect.y1);
-        upsame(1,nowrect.x1,nowrect.x2,nexmax);
+        upsame(1,nowrect.x1,nowrect.x2-1,nexmax);
     }
+
+
+
     cout<<ans<<endl;
 }
 
@@ -175,3 +178,37 @@ signed main()
     }
     return 0;
 }
+
+
+
+/*
+
+
+
+3
+3
+1 1 3 3
+2 6 4 8
+2 4 3 5
+3
+0 0 2 1
+1 2 3 3
+2 4 4 5
+3
+1 1 2 3
+2 6 4 8
+2 4 3 5
+
+
+18
+6
+18
+
+
+
+
+
+
+
+
+*/
