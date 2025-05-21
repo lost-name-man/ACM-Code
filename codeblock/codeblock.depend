@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1747818942 source:d:\code\acm\acm-code\codeblock\dingpa\9\9.cpp
+	<iostream>
+	<algorithm>
+	<cmath>
+	<cstring>
+	<string>
+	<cstdlib>
+	<vector>
+	<map>
+	<list>
+	<queue>
+	<deque>
+	<stack>
+	<set>
+	<functional>
+	<unordered_set>
+	<unordered_map>
+	<numeric>
+	<iomanip>
+
