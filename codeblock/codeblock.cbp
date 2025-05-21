@@ -31,6 +31,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="dingpa/9/9.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
