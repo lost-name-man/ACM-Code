@@ -41,7 +41,7 @@ void solve()
     }
     arr[n] = n * t;
     dp[0][0][0] = 0;
-    for (int nowindex = 1; nowindex <= n * t; nowindex++)
+    for (int nowindex = 0; nowindex <= n * t; nowindex++)
     {
         for (int j = 1; j <= n; j++)
         {
@@ -49,7 +49,7 @@ void solve()
             {
                 int dis = abs(arr[j] - nowindex);
 
-                if (j == n && (nowindex != n & t))
+                if (j == n && (nowindex != n * t))
                 {
                     continue;
                 }
