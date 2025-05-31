@@ -113,7 +113,7 @@ void solve()
             if(isout(x+steps[j].x,y+steps[j].y)==0)
             {
                 horse[i].attack.push_back({x+steps[j].x,y+steps[j].y,hx,hy});
-                if((x+steps[j].x==0 || y+steps[j].y==0)&&(exhorse[{hx,hy}]==0))
+                if((x+steps[j].x==0 && y+steps[j].y==0)&&(exhorse[{hx,hy}]==0))
                 {
                     ok=0;
                 }
@@ -223,8 +223,19 @@ signed main()
 }
 
 /*
- 27
- ShangHaiShiSaiHaiGeTongKuai
 
+3 4
+0 3
+1 1
+1 2
+2 2
+
+
+3 5
+0 3
+1 1
+1 2
+1 3
+2 2
 
 */
