@@ -4,6 +4,7 @@
 #define INF ((long long)1e18)
 #define endl '\n'
 #define MOD  998244353
+
 using namespace std;
 
 const int N = 1000000;
@@ -27,7 +28,7 @@ struct Node
 vector<Node> horse;
 pair<int,int> croodh[11];
 hf steps[8]={{-2,1,-1,0},{-1,2,0,1},{1,2,0,1},{2,1,1,0},{2,-1,1,0},{1,-2,0,-1},{-1,-2,0,-1},{-2,-1,-1,0}};
-int dp[102][102][1003]={0};
+int dp[102][102][2000]={0};
 map<pair<int,int>,int> exhorse;
 bool isout(int x,int y)
 {
@@ -53,7 +54,7 @@ bool safes(int x,int y,int st)
         if(((st>>i)&1)==0)
         {
             int nowhorse=i+1;
-            for(int j=0;j<horse[nowhorse].attack.size();j++)
+            for(int j=0; j<horse[nowhorse].attack.size(); j++)
             {
                 int hx=horse[nowhorse].attack[j].hx,hy=horse[nowhorse].attack[j].hy;
                 int fid=exhorse[{hx,hy}]-1;
@@ -137,60 +138,39 @@ void solve()
                 continue;
             }
 
-            if(i!=0)
+            for (int st = 0; st < (1 << m); st++)
             {
-                int hid=exhorse[{i,j}]-1;
-                if(hid!=-1)
+                int hid = exhorse[{i, j}] - 1;
+                if (safes(i, j, st))
                 {
-                     for(int st=0;st<(1<<m);st++)
+                    if (hid != -1)
                     {
-                        if(safes(i,j,st))
+                        if(i!=0)
                         {
-                            dp[i][j][st|(1ll<<hid)]+=dp[i-1][j][st];
-                            dp[i][j][st|(1ll<<hid)]%=MOD;
+                            dp[i][j][st | (1ll << hid)] += dp[i - 1][j][st];
+                            dp[i][j][st | (1ll << hid)] %= MOD;
                         }
+                        if(j!=0)
+                        {
+                            dp[i][j][st | (1ll << hid)] += dp[i][j - 1][st];
+                            dp[i][j][st | (1ll << hid)] %= MOD;
+                        }
+                    }
+                    else
+                    {
+                        if(i!=0)
+                        {
+                        dp[i][j][st] += dp[i - 1][j][st];
+                        dp[i][j][st] %= MOD;
+                        }
+                        if(j!=0)
+                        {
+                            dp[i][j][st] += dp[i][j - 1][st];
+                            dp[i][j][st] %= MOD;
+                        }
+                    }
+                }
 
-                    }
-                }
-                else
-                {
-                    for(int st=0;st<(1<<m);st++)
-                    {
-                        if(safes(i,j,st))
-                        {
-                            dp[i][j][st]+=dp[i-1][j][st];
-                            dp[i][j][st]%=MOD;
-                        }
-
-                    }
-                }
-            }
-            if(j!=0)
-            {
-                int hid=exhorse[{i,j}]-1;
-                if(hid!=-1)
-                {
-                     for(int st=0;st<(1<<m);st++)
-                    {
-                        if(safes(i,j,st))
-                        {
-                            dp[i][j][st|(1ll<<hid)]+=dp[i][j-1][st];
-                            dp[i][j][st|(1ll<<hid)]%=MOD;
-                        }
-                    }
-                }
-                else
-                {
-                    for(int st=0;st<(1<<m);st++)
-                    {
-                        if(safes(i,j,st))
-                        {
-                           dp[i][j][st]+=dp[i][j-1][st];
-                            dp[i][j][st]%=MOD;
-                        }
-
-                    }
-                }
             }
         }
     }
@@ -237,5 +217,15 @@ signed main()
 1 2
 1 3
 2 2
+
+10 8
+0 3
+1 3
+2 3
+3 3
+4 3
+5 3
+6 3
+7 3
 
 */
