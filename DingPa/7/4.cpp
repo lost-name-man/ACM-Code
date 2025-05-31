@@ -84,7 +84,7 @@ int query0(int tot, int k)
         }
     }
     downlzy(tot);
-    if (tree[tot].val0 >= k)
+    if (tree[tot * 2].val0 >= k)
     {
         query0(tot * 2, k);
     }
@@ -108,7 +108,7 @@ int query1(int tot, int k)
         }
     }
     downlzy(tot);
-    if (tree[tot].val0 >= k)
+    if (tree[tot * 2].val1 >= k)
     {
         query1(tot * 2, k);
     }
@@ -194,7 +194,7 @@ void mergerange(int nowindex)
         {
             upsame1(1, *it, *it, 0);
         }
-        ranges.erase(it);
+        it = ranges.erase(it);
         it--;
     }
     if (it == ranges.begin())
@@ -202,10 +202,12 @@ void mergerange(int nowindex)
         mp[*it].first = sumlen;
         if (mp[*it].second == 0)
         {
-            upsame0(1, *it, *it, sumlen);
+            upsame1(1, *it, *it, sumlen);
+            upsame0(1, *it, *it, 0);
         }
         else
         {
+            upsame0(1, *it, *it, sumlen);
             upsame1(1, *it, *it, sumlen);
         }
     }
@@ -219,16 +221,18 @@ void mergerange(int nowindex)
         {
             upsame1(1, *it, *it, 0);
         }
-        ranges.erase(it);
+        it = ranges.erase(it);
         it--;
         sumlen += mp[*it].first;
         mp[*it].first = sumlen;
         if (mp[*it].second == 0)
         {
-            upsame0(1, *it, *it, sumlen);
+            upsame1(1, *it, *it, sumlen);
+            upsame0(1, *it, *it, 0);
         }
         else
         {
+            upsame0(1, *it, *it, sumlen);
             upsame1(1, *it, *it, sumlen);
         }
     }
@@ -256,6 +260,7 @@ void solve()
             else
             {
                 ranges.insert(st);
+                arrline1[st] = i - st + 1;
                 mp[st] = {i - st + 1, 1};
             }
             st = i + 1;
@@ -290,7 +295,7 @@ void solve()
         }
         else
         {
-            int nowindex = query0(1, k);
+            int nowindex = query1(1, k);
             cout << nowindex << endl;
             if (nowindex != -1)
             {
