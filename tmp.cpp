@@ -28,7 +28,7 @@ struct Node
 vector<Node> horse;
 pair<int, int> croodh[11];
 hf steps[8] = {{-2, 1, -1, 0}, {-1, 2, 0, 1}, {1, 2, 0, 1}, {2, 1, 1, 0}, {2, -1, 1, 0}, {1, -2, 0, -1}, {-1, -2, 0, -1}, {-2, -1, -1, 0}};
-int dp[102][102][2000] = {0};
+int dp[102][102][1500] = {0};
 map<pair<int, int>, int> exhorse;
 bool isout(int x, int y)
 {
@@ -88,7 +88,7 @@ bool safes(int x, int y, int st)
     return ok;
 }
 
-int dang[102][102][2000] = {0};
+int dang[102][102][1500] = {0};
 void solve()
 {
 
