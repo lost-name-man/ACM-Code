@@ -27,7 +27,10 @@ using namespace std;
 
 void solve()
 {
-    int ans=332748120;
+    int n, x, a, b;
+    cin>>n>>x>>a>>b;
+
+    int ans=(n-x)*a + x*b;
     cout<<ans<<endl;
     
 }
@@ -37,7 +40,7 @@ signed main()
     std::ios::sync_with_stdio(0);
     std::cin.tie(0);
     int T = 1;
-    //cin >> T;
+    cin >> T;
     for (int i = 1; i <= T; i++)
     {
         solve();
