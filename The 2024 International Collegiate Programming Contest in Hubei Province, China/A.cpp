@@ -18,7 +18,7 @@
 #include <iomanip>
 
 #define int long long
-#define INF 1e9
+#define INF 1e18
 #define endl '\n'
 #define MOD (int)(998244353)
 

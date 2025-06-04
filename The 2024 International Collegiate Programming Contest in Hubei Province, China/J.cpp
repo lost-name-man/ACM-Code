@@ -32,7 +32,7 @@ long long qpower(long long base, long long exp, long long mod)
 {
     long long result = 1;
     base %= mod;
-    while (exp > 0) 
+    while (exp) 
 	{
         if (exp % 2 == 1) 
 		{
@@ -60,19 +60,20 @@ void solve()
     for(int i=1; i<=n; i++)
     {
         cin>>arr[i];
-        
-    }
-
-    for(int i=1; i<=n; i++)
-    {
         ans+=arr[i];
-        if(i!=1)
-        {
-            ans=ans*inv(2)%MOD;
-        }
+        ans%=MOD;
     }
 
-    //ans=ans*inv(n)%MOD;
+    // for(int i=1; i<=n; i++)
+    // {
+    //     ans+=arr[i];
+    //     if(i!=1)
+    //     {
+    //         ans=ans*inv(2)%MOD;
+    //     }
+    // }
+
+    ans=ans*inv(n)%MOD;
 
 
 
