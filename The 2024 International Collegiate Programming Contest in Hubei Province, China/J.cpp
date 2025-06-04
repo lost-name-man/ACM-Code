@@ -1,6 +1,5 @@
 
 
-
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -27,15 +26,14 @@
 
 using namespace std;
 
-
-long long qpower(long long base, long long exp, long long mod) 
+long long qpower(long long base, long long exp, long long mod)
 {
     long long result = 1;
     base %= mod;
-    while (exp > 0) 
-	{
-        if (exp % 2 == 1) 
-		{
+    while (exp > 0)
+    {
+        if (exp % 2 == 1)
+        {
             result = (result * base) % mod;
         }
         base = (base * base) % mod;
@@ -46,38 +44,35 @@ long long qpower(long long base, long long exp, long long mod)
 
 int inv(int x)
 {
-    return qpower(x, MOD-2, MOD)%MOD;
+    return qpower(x, MOD - 2, MOD) % MOD;
 }
 
 void solve()
 {
     int n;
-    cin>>n;
+    cin >> n;
     // map<int, int>
-    vector<int>arr(n+5);
+    vector<int> arr(n + 5);
 
-    int ans=0;
-    for(int i=1; i<=n; i++)
+    int ans = 0;
+    for (int i = 1; i <= n; i++)
     {
-        cin>>arr[i];
-        
+        cin >> arr[i];
+        ans += arr[i];
     }
 
-    for(int i=1; i<=n; i++)
-    {
-        ans+=arr[i];
-        if(i!=1)
-        {
-            ans=ans*inv(2)%MOD;
-        }
-    }
+    // for(int i=1; i<=n; i++)
+    // {
+    //     ans+=arr[i];
+    //     if(i!=1)
+    //     {
+    //         ans=ans*inv(2)%MOD;
+    //     }
+    // }
 
-    //ans=ans*inv(n)%MOD;
+    ans = ans * inv(n) % MOD;
 
-
-
-    cout<<ans<<endl;
-    
+    cout << ans << endl;
 }
 
 signed main()
@@ -85,7 +80,7 @@ signed main()
     std::ios::sync_with_stdio(0);
     std::cin.tie(0);
     int T = 1;
-    //cin >> T;
+    // cin >> T;
     for (int i = 1; i <= T; i++)
     {
         solve();
