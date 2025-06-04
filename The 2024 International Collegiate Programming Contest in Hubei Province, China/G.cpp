@@ -53,7 +53,6 @@ void bfs(int x, int y, int c)
         if (lib[nowx][nowy] != 0)
         {
             ok = 1;
-            break;
         }
         else
         {
@@ -116,14 +115,6 @@ void solve()
         else
         {
             nowc = 2;
-        }
-        if (nowc == 1)
-        {
-            sum1++;
-        }
-        else
-        {
-            sum2++;
         }
         int x, y;
         cin >> x >> y;
