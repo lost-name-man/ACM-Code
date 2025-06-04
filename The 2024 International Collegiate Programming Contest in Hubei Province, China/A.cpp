@@ -39,7 +39,7 @@ void solve()
     {
         cin >> p[i].first >> p[i].second;
     }
-    double ans = INF;
+    int ans = INF;
     for (int i = 1; i <= n; i++)
     {
         for (int j = i + 1; j <= n; j++)
@@ -50,9 +50,8 @@ void solve()
                 {
                     continue;
                 }
-                double a = asklen(p[i], p[j]), b = asklen(p[i], p[k]), c = asklen(p[j], p[k]);
-                double s = (a + b + c) / 2;
-                ans = min(ans, sqrt(s * (s - a) * (s - b) * (s - c)));
+                pair<int, int> a = {p[i].first - p[j].first, p[i].second - p[j].second}, b = {p[i].first - p[k].first, p[i].second - p[k].second};
+                ans = min(ans, abs(a.first * b.second - a.second * b.first));
             }
         }
     }
@@ -62,7 +61,7 @@ void solve()
     }
     else
     {
-        cout << fixed << setprecision(12) << ans << endl;
+        cout << fixed << setprecision(12) << ans * 1.0 / 2 << endl;
     }
 }
 
