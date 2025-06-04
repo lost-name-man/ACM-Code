@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <numeric>
 #include <cstring>
 #include <string>
 #include <cstdlib>
@@ -14,7 +15,6 @@
 #include <functional>
 #include <unordered_set>
 #include <unordered_map>
-#include <numeric>
 #include <iomanip>
 
 #define int long long
@@ -24,69 +24,87 @@
 
 using namespace std;
 
+
+int gcd(int a, int b)
+{
+    if (b > a)
+    {
+        swap(a, b);
+    }
+    if (b == 0)
+    {
+        return a;
+    }
+
+    return gcd(b, a % b);
+}
+
 int lcm(int a, int b)
 {
-    return a*b/__gcd(a, b);
+    return a * b / gcd(a, b);
 }
 
 void solve()
 {
     int a, b;
-    cin>>a>>b;
+    cin >> a >> b;
 
-    if(a==b)
+    if (a == b)
     {
-        cout<<0<<endl;
+        cout << 0 << endl;
         return;
     }
 
     vector<int>factor;
-    int minx=b;
-    for(int i=2; i<=sqrt(b); i++)
+    int minx = b;
+    for (int i = 2; i <= sqrt(b); i++)
     {
-        if(b%i==0)
+        if (b % i == 0)
         {
             factor.push_back(i);
-            minx=min(minx, i);
-            if((b/i)!=i)
+            minx = min(minx, i);
+            if ((b / i) != i)
             {
-                factor.push_back(b/i);
-                minx=min(minx, b/i);
+                factor.push_back(b / i);
+                minx = min(minx, b / i);
             }
         }
     }
 
-    int miny=a;
-    for(int i=2; i<=sqrt(a); i++)
+
+    int miny = a;
+    for (int i = 2; i <= sqrt(a); i++)
     {
-        if(a%i==0)
+        if (a % i == 0)
         {
             factor.push_back(i);
-            miny=min(miny, i);
-            if((a/i)!=i)
+            miny = min(miny, i);
+            if ((a / i) != i)
             {
-                factor.push_back(a/i);
-                miny=min(miny, b/i);
+                factor.push_back(a / i);
+                miny = min(miny, b / i);
             }
         }
     }
 
     factor.push_back(2);
 
-    int ans=lcm(a, b);
+    int ans = lcm(a, b);
 
 
-    for(int i=0; i<factor.size(); i++)
+    for (int i = 0; i < factor.size(); i++)
     {
-        int nowfactor=factor[i];
+        int nowfactor = factor[i];
         // cout<<"@"<<nowfactor<<endl;
-        ans=min(ans, lcm(a, nowfactor)+lcm(nowfactor, b));
+        ans = min(ans, lcm(a, nowfactor) + lcm(nowfactor, b));
     }
 
 
-    ans=min(ans, lcm(a, miny)+lcm(miny, minx)+lcm(minx, b));
-
-    cout<<ans<<endl;
+    ans = min(ans, lcm(a, miny) + lcm(miny, minx) + lcm(minx, b));
+    ans = min(ans, lcm(a, miny) + lcm(miny, 2) + lcm(2, minx) + lcm(minx, b));
+    ans = min(ans, lcm(a, miny) + lcm(miny, 2) + lcm(2, b));
+    ans = min(ans, lcm(a, 2) + lcm(2, minx) + lcm(minx, b));
+    cout << ans << endl;
 
 
 }
