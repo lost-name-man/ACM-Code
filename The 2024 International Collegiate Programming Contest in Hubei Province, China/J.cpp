@@ -30,7 +30,7 @@ long long qpower(long long base, long long exp, long long mod)
 {
     long long result = 1;
     base %= mod;
-    while (exp > 0)
+    while (exp)
     {
         if (exp % 2 == 1)
         {
