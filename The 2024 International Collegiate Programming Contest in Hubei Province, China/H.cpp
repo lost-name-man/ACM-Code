@@ -1,8 +1,7 @@
-
-
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <numeric>
 #include <cstring>
 #include <string>
 #include <cstdlib>
@@ -16,108 +15,120 @@
 #include <functional>
 #include <unordered_set>
 #include <unordered_map>
-#include <numeric>
 #include <iomanip>
 
 #define int long long
 #define INF 1e18
 #define endl '\n'
-#define MOD (int)(998244353)
+#define MOD (int)(1000000007)
 
 using namespace std;
 
-struct Xy
-{
-    int x;
-    int y;
-    const bool operator<(const Xy &a) const
-    {
-        if (this->x == a.x)
-        {
-            return this->y < a.y;
-        }
-        return this->x < a.x;
-    }
-};
-
 int n, m, k;
-int crood[1003][1003] = {0};
-Xy steps[4] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-set<Xy> boomloc;
-vector<Xy> fishloc;
-void insertboomloc(int x, int y)
+vector<int> dag[2000006];
+int target = 0;
+
+vector<pair<int, int>> boomloc;
+pair<int, int> steps[4] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+int locfish[1003][1003] = {0};
+int vis[2000006] = {0};
+void insertboom(int x, int y)
 {
-    boomloc.insert({x, y});
+    boomloc.push_back({x, y});
     for (int i = 0; i < 4; i++)
     {
-        int nowx = x + steps[i].x, nowy = y + steps[i].y;
-        if (nowx < 1 || nowx > n || nowy < 1 || nowy > m)
+        int nx = x + steps[i].first, ny = y + steps[i].second;
+        if (nx < 1 || nx > n || ny < 1 || ny > m)
         {
             continue;
         }
-        boomloc.insert({nowx, nowy});
+        boomloc.push_back({nx, ny});
     }
-}
-int checkover()
-{
-    int ok = 1;
-    for (int i = 0; i < fishloc.size(); i++)
-    {
-        int x = fishloc[i].x, y = fishloc[i].y;
-        if (crood[x][y] > 0)
-        {
-            ok = 0;
-            break;
-        }
-    }
-    return ok;
 }
 void solve()
 {
+
     cin >> n >> m >> k;
-    for (int i = 1; i <= k; i++)
+    for (int i = 0; i < k; i++)
     {
         int x, y, num;
         cin >> x >> y >> num;
-        crood[x][y] = num;
-        fishloc.push_back({x, y});
-        insertboomloc(x, y);
+        target += num << (i * 2);
+        insertboom(x, y);
+        locfish[x][y] = i + 1;
     }
+    sort(boomloc.begin(), boomloc.end());
+    boomloc.erase(unique(boomloc.begin(), boomloc.end()), boomloc.end());
+
+    queue<pair<int, int>> q;
+    q.push({0, 0});
+    vis[0] = 1;
     int ans = 0;
-    while (checkover() != 1)
+    while (!q.empty())
     {
-        ans++;
-        int maxn = 0;
-        Xy maxboom;
+        int nowst = q.front().first;
+        int nowdeep = q.front().second;
+
+        q.pop();
+
+        if (nowst == target)
+        {
+            ans = nowdeep;
+            break;
+        }
         for (auto iter = boomloc.begin(); iter != boomloc.end(); iter++)
         {
-            int nowx = iter->x, nowy = iter->y;
-            int nownum = 0;
-            nownum += (crood[nowx][nowy] != 0);
-            for (int i = 0; i < 4; i++)
+            int nextst = nowst;
+            int x = iter->first, y = iter->second;
+            // self
             {
-                int nx = nowx + steps[i].x, ny = nowy + steps[i].y;
-                nownum += (crood[nx][ny] != 0);
+                int nx = x, ny = y;
+                int fishid = locfish[nx][ny] - 1;
+                if (fishid != -1)
+                {
+
+                    int nowfish = (nowst >> (fishid * 2)) % 4;
+                    int fishtop = (target >> (fishid * 2)) % 4;
+                    if (nowfish == fishtop)
+                    {
+                    }
+                    else
+                    {
+                        nextst += (1 << (fishid * 2));
+                    }
+                }
             }
-            if (nownum > maxn)
+            for (int j = 0; j < 4; j++)
             {
-                maxn = nownum;
-                maxboom = {nowx, nowy};
+                int nx = x + steps[j].first, ny = y + steps[j].second;
+                int fishid = locfish[nx][ny] - 1;
+                if (fishid == -1)
+                {
+                    continue;
+                }
+                int nowfish = (nowst >> (fishid * 2)) % 4;
+                int fishtop = (target >> (fishid * 2)) % 4;
+                if (nowfish == fishtop)
+                {
+                    continue;
+                }
+                else
+                {
+                    nextst += (1 << (fishid * 2));
+                }
             }
-        }
-        if (crood[maxboom.x][maxboom.y] > 0)
-        {
-            crood[maxboom.x][maxboom.y]--;
-        }
-        for (int i = 0; i < 4; i++)
-        {
-            int nx = maxboom.x + steps[i].x, ny = maxboom.y + steps[i].y;
-            if (crood[nx][ny] > 0)
+            if (nextst != nowst)
             {
-                crood[nx][ny]--;
+                if (vis[nextst] == 1)
+                {
+                    continue;
+                }
+                vis[nextst] = 1;
+                q.push({nextst, nowdeep + 1});
             }
         }
     }
+
     cout << ans << endl;
 }
 
