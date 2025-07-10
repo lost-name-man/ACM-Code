@@ -1,0 +1,25 @@
+# C++ 编译输出
+*.exe
+*.out
+*.obj
+*.o
+
+# 临时文件
+*.log
+*.tmp
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# VSCode 配置缓存
+.vscode/
+
+# Qt 构建缓存
+build-*/
+*.pro.user
+
+# 其他
+.idea/
+.DS_Store
+Thumbs.db
