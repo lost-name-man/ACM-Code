@@ -13,7 +13,7 @@ int n, m, p;
 int d[N + 10];
 int arr[N + 10];
 int prearr[N + 10];
-int dq[N + 11];
+int dq[N + 12];
 int ll = 0, rr = -1;
 
 int f[102][N + 10];
