@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <vector>
 
 typedef long double ld;
 #define int long long
@@ -11,63 +14,63 @@ const int N = 200000;
 
 int n;
 
-int vis[N + 10][3];
-vector<vector<int>> tree;
-int doornum[N + 10];
-int deep[N + 10][3];
-int usedr[N + 10][3];
-map<pair<int, int>, int> visver;
-void dfs(int nowroom, int nowdoor)
+struct Edge
 {
-    int nextroom = tree[nowroom][nowdoor];
-    int nextdoor = (nowdoor + 1) % doornum[nextroom];
-    pair<int, int> road = {nowroom, nextroom};
-    if (road.first > road.second)
-    {
-        swap(road.first, road.second);
-    }
-    if (visver[road] == 1)
-    {
-        usedr[nowroom][nowdoor]++;
-    }
-    visver[road] = 1;
+    int id;
+    int from;
+    int to;
+    int next;
+};
 
-    if (vis[nextroom][nextdoor] == 1)
-    {
-        if (deep[nextroom][nextdoor] == 0)
-        {
-            deep[nowroom][nowdoor] = 1;
-            return;
-        }
-        else
-        {
-            deep[nowroom][nowdoor] = deep[nextroom][nextdoor] + 1;
-        }
-    }
-    else
-    {
-    }
+struct CF
+{
+
+    vector<Edge> edge;
+    vector<int> head;
+    int tot = 1;
+};
+
+void addedge(CF &cf, int x, int y, int id)
+{
+
+    cf.tot++;
+    cf.edge[cf.tot].from = x;
+    cf.edge[cf.tot].to = y;
+    cf.edge[cf.tot].id = id;
+    cf.edge[cf.tot].next = cf.head[x];
+    cf.head[x] = cf.tot;
 }
+
+CF cfori;
+CF cfdrei;
+int totid=0;
+int delta;
 void solve()
 {
 
     cin >> n;
-    tree = vector<vector<int>>(n + 10);
-    for (int i = 1; i <= n; i++)
+    delta=n+5;
+    cfori.head = vector<int>(n + 5, 0);
+    cfori.edge = vector<Edge>(3*n+5);
+    cfdrei.head = vector<int>(3*n + 5, 0);
+    cfdrei.edge = vector<Edge>(9*n+5);
+
+    
+
+    for(int i=1; i<=n; i++)
     {
         int num;
-        cin >> num;
-        doornum[i] = num;
-        for (int j = 0; j < num; j++)
-        {
-            int nextroom;
-            cin >> nextroom;
-            tree[i].push_back(nextroom);
-        }
-    }
+        cin>>num;
+        int nowdelta=0;
 
-    for (int i = 1; i <= n; i++)
-    {
+        for(int j=1; j<=num; j++)
+        {
+            totid++;
+            int toroom;
+            cin>>toroom;
+            addedge(cfdrei, i+nowdelta, toroom, totid);
+            nowdelta+=delta;
+        }
     }
 }
 
