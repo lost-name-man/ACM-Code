@@ -51,11 +51,11 @@ struct Node
 
 priority_queue<Node> pq;
 int ans = INF;
-vector<int> dis;
+
 vector<int> vis;
 int dji()
 {
-    dis[1] = 0;
+
     pq.push({0, 1});
     int re;
     while (pq.size())
@@ -151,7 +151,6 @@ void solve()
     }
 
     pq = priority_queue<Node>();
-    dis = vector<int>(nodetot + 5, INF);
     vis = vector<int>(nodetot + 5, 0);
     ans = dji();
 
