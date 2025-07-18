@@ -19,6 +19,14 @@ struct Node
 {
     int x;
     int y;
+    bool operator<(const Node &other) const
+    {
+        if (this->x == other.x)
+        {
+            return this->y < other.y;
+        }
+        return this->x < other.x;
+    }
 };
 
 int n, m;
@@ -27,7 +35,7 @@ set<int> exnode;
 map<int, Node> h_node;
 map<Node, int> vis;
 
-Node steps[4] = {{0, 1}, {1, 0}, {0, 1}, {0, -1}};
+Node steps[4] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
 int check(Node node)
 {
@@ -71,7 +79,7 @@ void bfs(Node stnode)
         for (int i = 0; i < 4; i++)
         {
             Node nextnode = {nownode.x + steps[i].x, nownode.y + steps[i].y};
-            if (check(nextnode) == 0 || vis[nextnode] == 1 || checkh(nownode, nextnode))
+            if (check(nextnode) == 0 || vis[nextnode] == 1 || checkh(nownode, nextnode) == 0)
             {
                 continue;
             }
@@ -84,7 +92,11 @@ void bfs(Node stnode)
 
 void solve()
 {
-    cin >> n >> m;
+    exnode = set<int>();
+    h_node = map<int, Node>();
+    vis = map<Node, int>();
+    cin >>
+        n >> m;
     for (int i = 1; i <= n; i++)
     {
         for (int j = 1; j <= m; j++)
@@ -96,7 +108,16 @@ void solve()
     }
 
     bfs({1, 1});
+
+    // cout << "!";
+    // for (auto iter = exnode.begin(); iter != exnode.end(); iter++)
+    // {
+    //     cout << *iter << " ";
+    // }
+    // cout << endl;
+
     vector<int> tranfunc;
+    tranfunc.push_back(arr[1][1]);
     while (exnode.size())
     {
         int nowh = *exnode.rbegin();
@@ -113,7 +134,7 @@ void solve()
         int nowh = tranfunc[i], nexth = tranfunc[i + 1];
         ans += 114 * (abs(nownode.x - nextnode.x)) + 5141 * (abs(nownode.y - nextnode.y)) + 919810 * (abs(nowh - nexth));
     }
-    ans += ((int)1 << 34) * tranfunc.size();
+    ans += ((int)1 << 34) * (tranfunc.size() - 1);
     cout << ans << endl;
 }
 
