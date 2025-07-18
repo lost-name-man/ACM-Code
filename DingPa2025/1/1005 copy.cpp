@@ -11,7 +11,7 @@
 using namespace std;
 #define int long long
 #define endl '\n'
-const long long INF = 1e18 + 7;
+const long long INF = 1e9 + 7;
 
 struct Edge
 {
@@ -37,19 +37,6 @@ void addedge(int x, int y, int w, int c)
     edge[tot].c = c;
     edge[tot].next = head[x];
     head[x] = tot;
-}
-
-vector<map<int, int>> node_aso;
-
-vector<int> fa;
-
-int findfa(int x)
-{
-    if (fa[x] == x)
-    {
-        return x;
-    }
-    return fa[x] = findfa(fa[x]);
 }
 
 struct Node
@@ -134,20 +121,16 @@ void solve()
 {
     tot = 1;
     cin >> n >> m;
-    head = vector<int>(n + m + 15, 0);
-    edge = vector<Edge>(m * 4 + 15);
+    head = vector<int>(n + m + 100, 0);
+    edge = vector<Edge>(m * 6 + 100);
 
     nodetot = n + 10;
-    node_aso = vector<map<int, int>>(n + 15);
-    fa = vector<int>(n + m + 15);
 
     p_aso = map<int, set<int>>();
     for (int i = 1; i <= m; i++)
     {
         int u, v, c;
         cin >> u >> v >> c;
-        node_aso[u][c] = 1;
-        node_aso[v][c] = 1;
         addedge(u, v, INF, c);
         addedge(v, u, INF, c);
         p_aso[c].insert(u);
