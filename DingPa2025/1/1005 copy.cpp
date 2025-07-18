@@ -53,39 +53,40 @@ priority_queue<Node> pq;
 int ans = INF;
 vector<int> dis;
 vector<int> vis;
-void dji()
+int dji()
 {
     dis[1] = 0;
-    pq.push((Node){0, 1});
-
+    pq.push({0, 1});
+    int re;
     while (pq.size())
     {
         Node tmp = pq.top();
         pq.pop();
         int nownode = tmp.pos;
         int nowdis = tmp.dis;
+
+        if (nownode == n)
+        {
+            re = nowdis;
+            return re;
+        }
         if (vis[nownode] == 1)
         {
             continue;
         }
-        vis[nownode] = 1;
+        else
+        {
+            vis[nownode] = 1;
+        }
         for (int i = head[nownode]; i; i = edge[i].next)
         {
             int tonode = edge[i].to;
             int tow = edge[i].w;
-            int baned = edge[i].id;
-            if (baned == 1)
+            if (vis[tonode])
             {
                 continue;
             }
-            if (dis[tonode] > dis[nownode] + tow)
-            {
-                dis[tonode] = dis[nownode] + tow;
-                if (vis[tonode] == 0)
-                {
-                    pq.push((Node){dis[tonode], tonode});
-                }
-            }
+            pq.push({nowdis + tow, tonode});
         }
     }
 }
@@ -152,9 +153,9 @@ void solve()
     pq = priority_queue<Node>();
     dis = vector<int>(nodetot + 5, INF);
     vis = vector<int>(nodetot + 5, 0);
-    dji();
+    ans = dji();
 
-    cout << dis[n] << endl;
+    cout << ans << endl;
 }
 
 signed main()
