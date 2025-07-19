@@ -28,6 +28,8 @@ int ans = 0;
 void dfs(int nownode, int fa)
 {
     int nowval = val[nownode];
+    f[nownode][nowval]++;
+    ans += f[nownode][stnum - 1];
     for (int i = 0; i < tree[nownode].size(); i++)
     {
         int nextnode = tree[nownode][i];
@@ -36,14 +38,34 @@ void dfs(int nownode, int fa)
             continue;
         }
         dfs(nextnode, nownode);
-        for (int st = 0; st < stnum; st++)
+
+        vector<int> nextf(stnum + 1);
+        for (int j = 0; j < stnum; j++)
         {
-            int nowst = nowval | st;
-            f[nownode][nowst] += f[nextnode][st];
+            nextf[j] = f[nextnode][j];
+        }
+
+        for (int j = 0; j < prinum.size(); j++)
+        {
+            for (int k = 0; k < stnum; k++)
+            {
+                if (!((k >> j) & 1))
+                {
+                    nextf[k] += nextf[k ^ (1 << j)];
+                }
+            }
+        }
+        //
+        for (int j = 0; j < stnum; j++)
+        {
+            ans += f[nownode][j] * nextf[(stnum - 1) ^ j];
+        }
+        //
+        for (int j = 0; j < stnum; j++)
+        {
+            f[nownode][nowval | j] += f[nextnode][j];
         }
     }
-    f[nownode][nowval]++;
-    ans += f[nownode][stnum - 1];
 }
 void solve()
 {
@@ -53,9 +75,9 @@ void solve()
     ans = 0;
     tree = vector<vector<int>>(n + 5);
     val = vector<int>(n + 5);
-
+    prinum = map<int, int>();
     int cpx = x;
-    for (int i = 2; i * i <= x; i++)
+    for (int i = 2; i <= x; i++)
     {
         while (cpx % i == 0)
         {
