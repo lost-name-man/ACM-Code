@@ -90,8 +90,18 @@ void solve()
     }
     else
     {
-        int cx = (x << j);
-        if (cx > n)
+        int cx = x;
+        int ok = 1;
+        for (int k = 0; k <= j; k++)
+        {
+            if ((cx << k) > n)
+            {
+                ok = 0;
+                break;
+            }
+        }
+
+        if (ok == 0)
         {
             cx = lx;
             if ((lx << j) == y)
