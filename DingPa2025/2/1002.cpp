@@ -81,7 +81,37 @@ void solve()
         cout << 1 << endl;
         return;
     }
-    cout << 2 << endl;
+    int j = abs(indexx - indexy);
+
+    if (lx > ly) // x>>
+    {
+        cout << 2 << endl;
+        return;
+    }
+    else
+    {
+        int cx = (x << j);
+        if (cx > n)
+        {
+            cx = lx;
+            if ((lx << j) == y)
+            {
+                cout << 2 << endl;
+            }
+            else
+            {
+                cout << 3 << endl;
+            }
+            return;
+        }
+        else
+        {
+
+            cout << 2 << endl;
+
+            return;
+        }
+    }
 }
 
 signed main()
