@@ -6,8 +6,6 @@
 #include <cmath>
 #include <set>
 #include <queue>
-#include<fstream>
-#include <iomanip>
 
 typedef long double ld;
 #define int long long
@@ -17,47 +15,59 @@ typedef long double ld;
 
 using namespace std;
 
-void dabiao()
-{
-    ofstream outfile;
-	outfile.open("dabiao.txt");
-    vector<vector<int>>crood(20+5, vector<int>(20+5, 0));
-    for(int i=1; i<=20; i++)
-    {
-        crood[1][i]=1;
-        crood[i][1]=1;
-    }
-    for(int i=2; i<=20; i++)
-    {
-        for(int j=2; j<=20; j++)
-        {
-            crood[i][j]=crood[i-1][j]+crood[i][j-1];
-        }
-        
-    }
-    for(int i=20; i>=1; i--)
-    {
-        for(int j=1; j<=20; j++)
-        {
-            outfile<<setw(5)<<crood[i][j]<<" ";
-        }
-        outfile<<endl;
-        
-    }
-    
-}
+int n, r;
+vector<int> arr;
 
-
-void solve()
+int fun(int h, int) void solve()
 {
-    dabiao();
+    cin >> n >> r;
+    arr = vector<int>(n + 5);
+    vector<int> arr_id(n + 5, 0);
+    map<int, int> allrr;
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> arr[i];
+        allrr[arr[i]] = 1;
+        arr_id[arr[i]] = i;
+    }
+
+    int lasstmax = r;
+    int lastl = 0;
+    vector<int> minlim(n + 5, 0);
+    for (auto iter = allrr.rbegin(); iter != allrr.rend(); iter++)
+    {
+        int nowmax = iter->first;
+        int nowr = arr_id[nowmax];
+        for (int i = lastl + 1; i <= nowr; i++)
+        {
+            minlim[i] = nowmax;
+        }
+        lastl = max(lastl, nowr);
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        cout << minlim[i] << " ";
+    }
+    cout << endl;
+
+    for (int i = 1; i <= n; i++)
+    {
+        if (minlim[i] != minlim[i + 1])
+        {
+            for (int j = 1; j <= i; j++)
+            {
+            }
+        }
+    }
 }
 
 signed main()
 {
-    std::ios::sync_with_stdio(0);
-    std::cin.tie(0);
+    // std::ios::sync_with_stdio(0);
+    // std::cin.tie(0);
     int T = 1;
+
     cin >> T;
     for (int i = 1; i <= T; i++)
     {

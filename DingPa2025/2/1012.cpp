@@ -18,7 +18,7 @@ using namespace std;
 int n;
 int arr[550];
 int ans = 0;
-int dfs(int nowindex, int lastval)
+void dfs(int nowindex, int lastval)
 {
     int nowval = lastval ^ arr[nowindex];
     ans = max(ans, nowval);
