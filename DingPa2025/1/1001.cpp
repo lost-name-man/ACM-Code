@@ -107,11 +107,19 @@ void solve()
         ans += tmpans;
         ans %= MOD;
     }
-    if (all1odd % 2 == 1 && all1odd + all1even == n)
+    if (all1odd + all1even == n)
     {
-        ans += factorial[all1even];
-        ans %= MOD;
+        if (all1odd & 1)
+        {
+            cout << factorial[n] << endl;
+        }
+        else
+        {
+            cout << 0 << endl;
+        }
+        return;
     }
+
     ans *= com(n, all1even);
     ans %= MOD;
     ans *= factorial[all1even];
