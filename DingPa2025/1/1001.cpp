@@ -96,13 +96,13 @@ void solve()
         int tmpans = 0;
         if (i % 2 == 0)
         {
-            tmpans = com(all1odd, i) * factorial[all1odd] % MOD * (xor1) % MOD * factorial[n - i - all1even - 1] % MOD;
+            tmpans = com(all1odd, i) * factorial[i] % MOD * (xor1) % MOD * factorial[n - i - all1even - 1] % MOD;
             // cout << com(all1odd, i) << ' ' << factorial[all1odd] << ' ' << factorial[n - i - 1] << endl;
         }
         else
         {
 
-            tmpans = com(all1odd, i) * factorial[all1odd] % MOD * (xor0) % MOD * factorial[n - i - all1even - 1] % MOD;
+            tmpans = com(all1odd, i) * factorial[i] % MOD * (xor0) % MOD * factorial[n - i - all1even - 1] % MOD;
         }
         ans += tmpans;
         ans %= MOD;
