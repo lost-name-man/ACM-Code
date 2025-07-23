@@ -25,7 +25,7 @@ struct Seg
     int L;
     int R;
     int max;
-} tree[400005];
+} tree[800005];
 
 vector<Node> edge;
 vector<int> head;
