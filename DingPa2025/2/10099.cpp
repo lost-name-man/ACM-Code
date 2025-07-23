@@ -189,6 +189,7 @@ void init()
     fa = vector<int>(n + 5, 0);
     sizes = vector<int>(n + 5, 0);
     heavyson = vector<int>(n + 5, 0);
+    cnt = 0;
 
     tot = 1;
     head = vector<int>(n + 5, 0);
