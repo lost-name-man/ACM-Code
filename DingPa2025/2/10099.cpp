@@ -151,7 +151,10 @@ int max_x_y(int x, int y)
         int tmpmax;
         tmpmax = query(1, id[top[x]], id[x]); // ans加上x点到x所在链顶端 这一段区间的点权和
         maxn = max(tmpmax, maxn);
-        maxn = max(tag[fa[top[x]]] + val[top[x]], maxn);
+        if (fa[top[x]] != 0)
+        {
+            maxn = max(tag[fa[top[x]]] + val[top[x]], maxn);
+        }
         x = fa[top[x]]; // 把x跳到x所在链顶端的那个点的上面一个点 //
     }
 
