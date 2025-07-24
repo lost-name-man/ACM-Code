@@ -20,7 +20,7 @@ int arr[55];
 int ans = 0;
 int pick[55] = {0};
 
-int linebase[65];
+vector<int> linebase;
 
 void base_insert(int x)
 {
@@ -41,7 +41,7 @@ void base_insert(int x)
 }
 void getmax()
 {
-    memset(linebase, 0, sizeof(linebase));
+    linebase = vector<int>(65);
     for (int i = 1; i <= n; i++)
     {
         if (pick[i])
@@ -82,8 +82,12 @@ void solve()
     {
         cin >> arr[i];
     }
+
     dfs(1);
-    dfs(2);
+    if (n > 1)
+    {
+        dfs(2);
+    }
     cout << ans << endl;
 }
 
