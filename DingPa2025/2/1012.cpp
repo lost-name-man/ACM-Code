@@ -16,13 +16,75 @@ typedef long double ld;
 using namespace std;
 
 int n;
-int arr[50];
+int arr[55];
 int ans = 0;
-void dfs(int nowindex, int lastval)
+int pick[55] = {0};
+
+int linebase[65];
+
+void base_insert(int x)
 {
+    for (int i = 63; i >= 0; i--)
+    {
+        if (x & (1ll << i))
+        {
+            if (linebase[i])
+            {
+                x ^= linebase[i];
+            }
+            else
+            {
+                linebase[i] = x;
+            }
+        }
+    }
+}
+void getmax()
+{
+    memset(linebase, 0, sizeof(linebase));
+    for (int i = 1; i <= n; i++)
+    {
+        if (pick[i])
+        {
+            base_insert(arr[i]);
+        }
+    }
+    int maxn = 0;
+    for (int i = 63; i >= 0; i--)
+    {
+        maxn = max(maxn, maxn ^ linebase[i]);
+    }
+    ans = max(ans, maxn);
+}
+void dfs(int nowindex)
+{
+    pick[nowindex] = 1;
+    if (nowindex + 2 > n)
+    {
+        getmax();
+    }
+    if (nowindex + 2 <= n)
+    {
+        dfs(nowindex + 2);
+    }
+    if (nowindex + 3 <= n)
+    {
+        dfs(nowindex + 3);
+    }
+    pick[nowindex] = 0;
 }
 void solve()
 {
+    ans = 0;
+
+    cin >> n;
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> arr[i];
+    }
+    dfs(1);
+    dfs(2);
+    cout << ans << endl;
 }
 
 signed main()
