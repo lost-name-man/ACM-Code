@@ -16,34 +16,13 @@ typedef long double ld;
 using namespace std;
 
 int n;
-int arr[550];
+int arr[50];
 int ans = 0;
 void dfs(int nowindex, int lastval)
 {
-    int nowval = lastval ^ arr[nowindex];
-    ans = max(ans, nowval);
-    for (int i = 2; i <= n; i++)
-    {
-        if (nowindex + i > n)
-        {
-            break;
-        }
-        dfs(nowindex + i, nowval);
-    }
 }
 void solve()
 {
-    ans = 0;
-    cin >> n;
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> arr[i];
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        dfs(i, 0);
-    }
-    cout << ans << endl;
 }
 
 signed main()
