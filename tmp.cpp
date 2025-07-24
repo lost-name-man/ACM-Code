@@ -53,7 +53,7 @@ void makelzy(int tot, int x)
 {
     int len = segtree[tot].R - segtree[tot].L + 1;
     segtree[tot].lzy += x;
-    segtree[tot].val += x;
+    segtree[tot].val += x * len;
     segtree[tot].lzy %= MOD;
     segtree[tot].val %= MOD;
 }
@@ -79,8 +79,8 @@ int query(int le, int ri, int tot = 1)
         downlzy(tot);
         int tmp;
 
-        tmp = query(ri, le, tot * 2) + query(ri, le, tot * 2 + 1);
-        tmp%=MOD;
+        tmp = query(le, ri, tot * 2) + query(le, ri, tot * 2 + 1);
+        tmp %= MOD;
         return tmp;
     }
     else
@@ -101,7 +101,7 @@ void update(int tot, int le, int ri, int x)
         update(tot * 2, le, ri, x);
         update(tot * 2 + 1, le, ri, x);
         segtree[tot].val = segtree[tot * 2].val + segtree[tot * 2 + 1].val;
-        segtree[tot].val%=MOD;
+        segtree[tot].val %= MOD;
         return;
     }
 }
@@ -113,14 +113,14 @@ void build(int tot, int LL, int RR)
 
     if (LL == RR)
     {
-        segtree[tot].val = arrline[LL];
+        segtree[tot].val = dfn_val[LL];
         return;
     }
     int m = (LL + RR) / 2;
     build(tot * 2, LL, m);
     build(tot * 2 + 1, m + 1, RR);
     segtree[tot].val = segtree[tot * 2].val + segtree[tot * 2 + 1].val;
-    segtree[tot].val%=MOD;
+    segtree[tot].val %= MOD;
 }
 
 void INITSegTree(int arrsize)
@@ -128,7 +128,7 @@ void INITSegTree(int arrsize)
     arrline = vector<int>(arrsize + 10, 0);
     for (int i = 1; i <= arrsize; i++)
     {
-        arrline[i] = dfn_val[i]%MOD;
+        arrline[i] = dfn_val[i] % MOD;
     }
     segtree = vector<SegNode>(4 * arrsize + 10);
     segtot = 1;
@@ -178,7 +178,7 @@ inline void dfs2(int nownode, int topf)
     hctot++;
     node[nownode].dfn = hctot;
     dfn_val[node[nownode].dfn] = node[nownode].val;
-    
+
     node[nownode].top = topf;
     if (node[nownode].sonsize <= 1)
     {
@@ -204,7 +204,7 @@ inline int HcQuerySum(int x, int y)
     int ans = 0;
     while (node[x].top != node[y].top)
     {
-        if (node[x].deep < node[y].deep)
+        if (node[node[x].top].deep < node[node[y].top].deep)
         {
             swap(x, y);
         }
@@ -240,7 +240,7 @@ inline void HcWriteItv(int x, int y, int k)
     k %= MOD;
     while (node[x].top != node[y].top)
     {
-        if (node[x].deep < node[y].deep)
+        if (node[node[x].top].deep < node[node[y].top].deep)
         {
             swap(x, y);
         }
@@ -264,7 +264,7 @@ void solve()
 {
     cin >> n >> m >> r >> MOD;
     // init
-    edge = vector<Edge>(n*2 + 5);
+    edge = vector<Edge>(n * 2 + 5);
     ctot = 0;
     hctot = 0;
 
@@ -274,7 +274,7 @@ void solve()
     for (int i = 1; i <= n; i++)
     {
         cin >> node[i].val;
-        node[i].val%=MOD;
+        node[i].val %= MOD;
     }
     for (int i = 1; i <= n - 1; i++)
     {
@@ -321,10 +321,10 @@ void solve()
         }
 
         // cout << "----------------------" << endl;
-        // for (int i = 1; i <= n; i++)
-        // {
-        //     cout << "!" << query(i, i) << endl;
-        // }
+        // cout << "!" << query(1, 1) << endl;
+        // cout << "!" << query(1, 2) << endl;
+        // cout << "!" << query(1, 4) << endl;
+        // cout << "!" << query(1, 8) << endl;
     }
 }
 

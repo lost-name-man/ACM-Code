@@ -151,10 +151,9 @@ int max_x_y(int x, int y)
         int tmpmax;
         tmpmax = query(1, id[top[x]], id[x]); // ans加上x点到x所在链顶端 这一段区间的点权和
         maxn = max(tmpmax, maxn);
-        if (fa[top[x]] != 0)
-        {
-            maxn = max(tag[fa[top[x]]] + val[top[x]], maxn);
-        }
+
+        maxn = max(tag[fa[top[x]]] + val[top[x]], maxn);
+
         x = fa[top[x]]; // 把x跳到x所在链顶端的那个点的上面一个点 //
     }
 
@@ -164,18 +163,20 @@ int max_x_y(int x, int y)
     int tmpmax = 0;
     tmpmax = query(1, id[x], id[y]); // 这时再加上此时两个点的区间和即可
     maxn = max(maxn, tmpmax);
-    if (top[y] == y && fa[y] != 0)
+    if (top[x] == x)
     {
-        maxn = max(maxn, tag[fa[y]] + val[y]);
+        maxn = max(maxn, tag[fa[x]] + val[x]);
     }
     return maxn;
 } // 变量解释见最下面
 
-int change(int x, int z)
+void change(int x, int z)
 {
     if (fa[x] != 0)
     {
         update(1, id[fa[x]], z);
+        val[fa[x]] += z;
+        idval[id[fa[x]]] += z;
     }
 
     if (heavyson[x] != 0)
@@ -245,8 +246,8 @@ void solve()
 
 signed main()
 {
-    // std::ios::sync_with_stdio(0);
-    // std::cin.tie(0);
+    ::ios::sync_with_stdio(0);
+    std::cin.tie(0);
     int T = 1;
     cin >> T;
     for (int i = 1; i <= T; i++)
