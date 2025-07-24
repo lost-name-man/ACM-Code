@@ -35,6 +35,7 @@ void base_insert(int x)
             else
             {
                 linebase[i] = x;
+                break;
             }
         }
     }
