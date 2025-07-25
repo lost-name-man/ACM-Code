@@ -44,10 +44,10 @@ map<int, int> id_num;
 map<int, int> num_id;
 
 // segtree-------------------------------------------------------------
-void makelzy(int tot, int x);
+void makelzy(int tot, size_t x);
 void downlzy(int tot);
-void update(int tot, int le, int ri, int x);
-int query(int le, int ri, int tot);
+void update(int tot, int le, int ri, size_t x);
+size_t query(int le, int ri, int tot);
 struct SegNode
 {
     int L;
