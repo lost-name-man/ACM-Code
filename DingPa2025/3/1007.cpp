@@ -46,8 +46,8 @@ map<int, int> num_id;
 // segtree-------------------------------------------------------------
 void makelzy(int tot, size_t x);
 void downlzy(int tot);
-void update(int tot, int le, int ri, size_t x);
-size_t query(int le, int ri, int tot);
+void update(int tot, int le, int ri, size_t x, int LL, int RR);
+size_t query(int index, int tot, int LL, int RR);
 struct SegNode
 {
     int L;
@@ -59,41 +59,40 @@ vector<SegNode> segtree;
 
 void makelzy(int tot, size_t x)
 {
-    int len = segtree[tot].R - segtree[tot].L + 1;
     segtree[tot].lzy ^= x;
 }
 
 void downlzy(int tot)
 {
-    int m = (segtree[tot].L + segtree[tot].R) / 2;
     makelzy(tot * 2, segtree[tot].lzy);
     makelzy(tot * 2 + 1, segtree[tot].lzy);
     segtree[tot].lzy = 0;
 }
 
-size_t query(int index, int tot = 1)
+size_t query(int index, int tot, int LL, int RR)
 {
-    int LL = segtree[tot].L, RR = segtree[tot].R;
     int mid = (LL + RR) / 2;
 
     if (LL == RR)
     {
         return segtree[tot].lzy;
     }
-
-    downlzy(tot);
+    if (segtree[tot].lzy != 0)
+    {
+        downlzy(tot);
+    }
     if (index <= mid)
     {
-        return query(index, tot * 2);
+        return query(index, tot * 2, LL, mid);
     }
     else
     {
-        return query(index, tot * 2 + 1);
+        return query(index, tot * 2 + 1, mid + 1, RR);
     }
 }
-void update(int tot, int le, int ri, size_t x)
+void update(int tot, int le, int ri, size_t x, int LL, int RR)
 {
-    int LL = segtree[tot].L, RR = segtree[tot].R;
+    int mid = (LL + RR) / 2;
     if (le <= LL && ri >= RR)
     {
         makelzy(tot, x);
@@ -102,32 +101,19 @@ void update(int tot, int le, int ri, size_t x)
     else if (!(le > RR || ri < LL))
     {
         int m = (RR + LL) / 2;
-        downlzy(tot);
-        update(tot * 2, le, ri, x);
-        update(tot * 2 + 1, le, ri, x);
+        if (segtree[tot].lzy != 0)
+        {
+            downlzy(tot);
+        }
+        update(tot * 2, le, ri, x, LL, mid);
+        update(tot * 2 + 1, le, ri, x, mid + 1, RR);
         return;
     }
-}
-void build(int tot, int LL, int RR)
-{
-    segtree[tot].L = LL;
-    segtree[tot].R = RR;
-    segtree[tot].lzy = 0;
-
-    if (LL == RR)
-    {
-        segtree[tot].val = 0;
-        return;
-    }
-    int m = (LL + RR) / 2;
-    build(tot * 2, LL, m);
-    build(tot * 2 + 1, m + 1, RR);
 }
 
 void INITSegTree(int arrsize)
 {
     segtree = vector<SegNode>(4 * arrsize + 10);
-    build(1, 1, arrsize);
 }
 // segtree----------------------------------------------------------------------
 
@@ -164,14 +150,14 @@ void solve()
     {
         size_t nownum = rnd();
         int nowl = num_id[arr[i].l], nowr = num_id[arr[i].r];
-        update(1, nowl, nowr, nownum);
+        update(1, nowl, nowr, nownum, 1, cnt);
     }
 
     map<size_t, int> mp;
     int ans = 0;
     for (int i = 1; i <= cnt; i++)
     {
-        size_t x = query(i);
+        size_t x = query(i, 1, 1, cnt);
         // cout << "!" << x << endl;
         if (mp[x] == 0)
         {
