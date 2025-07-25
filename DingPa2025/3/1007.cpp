@@ -80,15 +80,15 @@ size_t query(int index, int tot = 1)
     {
         return segtree[tot].lzy;
     }
-    else if (index <= mid)
+
+    downlzy(tot);
+    if (index <= mid)
     {
-        downlzy(tot);
-        query(index, tot * 2);
+        return query(index, tot * 2);
     }
     else
     {
-        downlzy(tot);
-        query(index, tot * 2 + 1);
+        return query(index, tot * 2 + 1);
     }
 }
 void update(int tot, int le, int ri, size_t x)
