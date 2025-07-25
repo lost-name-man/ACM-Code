@@ -43,8 +43,14 @@ void solve()
     for (int i = 1; i <= n; i++)
     {
         int nowl = arr[i].l, nowr = arr[i].r;
+        if (nowl == arr[i - 1].l && nowr == arr[i - 1].r)
+        {
+            continue;
+        }
+        int okl = 0;
         if (mp[nowr] == 0)
         {
+            okl = 1;
             ans++;
         }
         auto it = st.lower_bound(nowl);
@@ -64,7 +70,11 @@ void solve()
         else
         {
             nextl = *it;
-            if (mp[nextl] == 2)
+            if (okl == 0)
+            {
+                ans++;
+            }
+            else if (mp[nextl] == 2)
             {
                 ans++;
             }
