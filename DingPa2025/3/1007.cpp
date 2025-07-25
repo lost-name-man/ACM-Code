@@ -1,13 +1,27 @@
 #include <iostream>
-#include <map>
-#include <vector>
-#include <queue>
 #include <algorithm>
+#include <cmath>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <vector>
+#include <map>
+#include <list>
+#include <queue>
+#include <deque>
+#include <stack>
 #include <set>
+#include <functional>
+#include <unordered_set>
+#include <unordered_map>
+#include <numeric>
+#include <iomanip>
+#include <random>
+#include <chrono>
 using namespace std;
 #define int long long
 #define endl '\n'
-
+static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
 const int INF = 2e9 + 7;
 
 struct Inval
@@ -39,11 +53,11 @@ struct SegNode
     int L;
     int R;
     int val;
-    int lzy;
+    size_t lzy;
 };
 vector<SegNode> segtree;
 
-void makelzy(int tot, int x)
+void makelzy(int tot, size_t x)
 {
     int len = segtree[tot].R - segtree[tot].L + 1;
     segtree[tot].lzy ^= x;
@@ -61,22 +75,23 @@ int query(int index, int tot = 1)
 {
     int LL = segtree[tot].L, RR = segtree[tot].R;
     int mid = (LL + RR) / 2;
+
     if (LL == RR)
     {
         return segtree[tot].lzy;
     }
     else if (index <= mid)
     {
-        downlzy(tot * 2);
+        downlzy(tot);
         query(index, tot * 2);
     }
     else
     {
-        downlzy(tot * 2 + 1);
+        downlzy(tot);
         query(index, tot * 2 + 1);
     }
 }
-void update(int tot, int le, int ri, int x)
+void update(int tot, int le, int ri, size_t x)
 {
     int LL = segtree[tot].L, RR = segtree[tot].R;
     if (le <= LL && ri >= RR)
@@ -120,7 +135,14 @@ void solve()
 {
     int n;
     cin >> n;
-    vector<Inval> arr(n + 5);
+
+    if (n == 0)
+    {
+        cout << 1 << endl;
+        return;
+    }
+    vector<Inval>
+        arr(n + 5);
     for (int i = 1; i <= n; i++)
     {
         cin >> arr[i].l >> arr[i].r;
@@ -136,55 +158,24 @@ void solve()
         num_id[*it] = cnt;
     }
 
-    map<int, int> mp;
-    set<int> st;
-    int ans = 0;
+    INITSegTree(cnt);
     for (int i = 1; i <= n; i++)
     {
-        int nowl = arr[i].l, nowr = arr[i].r;
-        if (nowl == arr[i - 1].l && nowr == arr[i - 1].r)
-        {
-            continue;
-        }
-        int okl = 0;
-        if (mp[nowr] == 0)
-        {
-            okl = 1;
-            ans++;
-        }
-        auto it = st.lower_bound(nowl);
-        int nextl;
-        if (it == st.end())
-        {
-            mp[nowl] = 1;
-            if (mp[nowr] != 1)
-            {
-                mp[nowr] = 2;
-            }
-            st.insert(nowl);
-            st.insert(nowr);
+        size_t nownum = rnd();
+        int nowl = num_id[arr[i].l], nowr = num_id[arr[i].r];
+        update(1, nowl, nowr, nownum);
+    }
 
-            continue;
-        }
-        else
+    map<size_t, int> mp;
+    int ans = 0;
+    for (int i = 1; i <= cnt; i++)
+    {
+        size_t x = query(i);
+        if (mp[x] == 0)
         {
-            nextl = *it;
-            if (okl == 0)
-            {
-                ans++;
-            }
-            else if (mp[nextl] == 2)
-            {
-                ans++;
-            }
+            ans++;
+            mp[x] = 1;
         }
-        mp[nowl] = 1;
-        if (mp[nowr] != 1)
-        {
-            mp[nowr] = 2;
-        }
-        st.insert(nowl);
-        st.insert(nowr);
     }
     ans++;
     cout << ans << endl;
