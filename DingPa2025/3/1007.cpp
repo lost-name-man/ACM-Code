@@ -71,7 +71,7 @@ void downlzy(int tot)
     segtree[tot].lzy = 0;
 }
 
-int query(int index, int tot = 1)
+size_t query(int index, int tot = 1)
 {
     int LL = segtree[tot].L, RR = segtree[tot].R;
     int mid = (LL + RR) / 2;
@@ -172,6 +172,7 @@ void solve()
     for (int i = 1; i <= cnt; i++)
     {
         size_t x = query(i);
+        // cout << "!" << x << endl;
         if (mp[x] == 0)
         {
             ans++;
