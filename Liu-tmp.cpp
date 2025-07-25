@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -19,25 +20,15 @@
 #include <random>
 #include <chrono>
 using namespace std;
-#define int long long
+#define int size_t
 #define endl '\n'
 static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
-
 const int INF = 2e9 + 7;
 
 struct Inval
 {
     int l;
     int r;
-
-    bool operator<(const Inval &other) const
-    {
-        if (this->r == other.r)
-        {
-            return this->l < other.l;
-        }
-        return this->r < other.r;
-    }
 };
 
 set<int> allnum;
@@ -45,55 +36,55 @@ map<int, int> id_num;
 map<int, int> num_id;
 
 // segtree-------------------------------------------------------------
-void makelzy(int tot, int x);
+void makelzy(int tot, size_t x);
 void downlzy(int tot);
-void update(int tot, int le, int ri, int x);
-int query(int le, int ri, int tot);
+void update(int tot, int le, int ri, size_t x, int LL, int RR);
+size_t query(int index, int tot, int LL, int RR);
 struct SegNode
 {
     int L;
     int R;
     int val;
-    int lzy;
+    size_t lzy;
 };
 vector<SegNode> segtree;
 
-void makelzy(int tot, int x)
+void makelzy(int tot, size_t x)
 {
-    int len = segtree[tot].R - segtree[tot].L + 1;
     segtree[tot].lzy ^= x;
 }
 
 void downlzy(int tot)
 {
-    int m = (segtree[tot].L + segtree[tot].R) / 2;
     makelzy(tot * 2, segtree[tot].lzy);
     makelzy(tot * 2 + 1, segtree[tot].lzy);
     segtree[tot].lzy = 0;
 }
 
-int query(int index, int tot = 1)
+size_t query(int index, int tot, int LL, int RR)
 {
-    int LL = segtree[tot].L, RR = segtree[tot].R;
     int mid = (LL + RR) / 2;
+
     if (LL == RR)
     {
         return segtree[tot].lzy;
     }
-    else if (index <= mid)
+    if (segtree[tot].lzy != 0)
     {
-        downlzy(tot * 2);
-        query(index, tot * 2);
+        downlzy(tot);
+    }
+    if (index <= mid)
+    {
+        return query(index, tot * 2, LL, mid);
     }
     else
     {
-        downlzy(tot * 2 + 1);
-        query(index, tot * 2 + 1);
+        return query(index, tot * 2 + 1, mid + 1, RR);
     }
 }
-void update(int tot, int le, int ri, int x)
+void update(int tot, int le, int ri, size_t x, int LL, int RR)
 {
-    int LL = segtree[tot].L, RR = segtree[tot].R;
+    int mid = (LL + RR) / 2;
     if (le <= LL && ri >= RR)
     {
         makelzy(tot, x);
@@ -102,50 +93,77 @@ void update(int tot, int le, int ri, int x)
     else if (!(le > RR || ri < LL))
     {
         int m = (RR + LL) / 2;
-        downlzy(tot);
-        update(tot * 2, le, ri, x);
-        update(tot * 2 + 1, le, ri, x);
+        if (segtree[tot].lzy != 0)
+        {
+            downlzy(tot);
+        }
+        update(tot * 2, le, ri, x, LL, mid);
+        update(tot * 2 + 1, le, ri, x, mid + 1, RR);
         return;
     }
-}
-void build(int tot, int LL, int RR)
-{
-    segtree[tot].L = LL;
-    segtree[tot].R = RR;
-    segtree[tot].lzy = 0;
-
-    if (LL == RR)
-    {
-        segtree[tot].val = 0;
-        return;
-    }
-    int m = (LL + RR) / 2;
-    build(tot * 2, LL, m);
-    build(tot * 2 + 1, m + 1, RR);
 }
 
 void INITSegTree(int arrsize)
 {
     segtree = vector<SegNode>(4 * arrsize + 10);
-    build(1, 1, arrsize);
 }
 // segtree----------------------------------------------------------------------
 
 void solve()
 {
-    vector<size_t>arr(10+5);
-    for(int i=1; i<=10; i++)
+    int n;
+    cin >> n;
+    allnum = set<int>();
+    num_id = map<int, int>();
+    
+    vector<Inval> arr(n + 5);
+    for (int i = 1; i <= n; i++)
     {
-        size_t tmp = rnd();
-        cout<<tmp<<endl;
+        cin >> arr[i].l >> arr[i].r;
+        allnum.insert(arr[i].l);
+        allnum.insert(arr[i].r);
     }
 
-    INITSegTree(10);
+
+    if (n == 0)
+    {
+        cout << 1 << endl;
+        return;
+    }
+    else if(n==1)
+    {
+        cout<<2<<endl;
+        return;
+    }
 
 
-    update(1, 2, 3, )
 
-    
+    int cnt = 0;
+    for (auto it = allnum.begin(); it != allnum.end(); it++)
+    {
+        cnt++;
+        num_id[*it] = cnt;
+    }
+
+    INITSegTree(cnt);
+    for (int i = 1; i <= n; i++)
+    {
+        size_t nownum = rnd();
+        int nowl = num_id[arr[i].l], nowr = num_id[arr[i].r];
+        update(1, nowl, nowr, nownum, 1, cnt);
+    }
+
+    set<size_t> mp;
+    int ans = 0;
+    for (int i = 1; i <= cnt; i++)
+    {
+        size_t x = query(i, 1, 1, cnt);
+        // cout << "!" << x << endl;
+        mp.insert(x);
+    }
+    ans++;
+    ans+=mp.size();
+    cout << ans << endl;
 }
 
 signed main()
@@ -155,6 +173,24 @@ signed main()
 
     int T = 1;
 
+    map<int, int>mp;
+    int sum=0;
+    for(int i=1; i<=2*1e6; i++)
+    {
+        int tmp=rnd();
+        sum^=tmp;
+        mp[tmp]++;
+        mp[sum]++;
+        if(mp[tmp]>1)
+        {
+            cout<<tmp<<endl;
+        }
+        if(mp[sum]>1)
+        {
+            cout<<sum<<endl;
+        }
+    }
+    return 0;
     cin >> T;
 
     for (int i = 1; i <= T; i++)
