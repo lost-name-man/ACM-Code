@@ -135,14 +135,15 @@ void solve()
 {
     int n;
     cin >> n;
-
+    allnum = set<int>();
+    id_num = map<int, int>();
+    num_id = map<int, int>();
     if (n == 0)
     {
         cout << 1 << endl;
         return;
     }
-    vector<Inval>
-        arr(n + 5);
+    vector<Inval> arr(n + 5);
     for (int i = 1; i <= n; i++)
     {
         cin >> arr[i].l >> arr[i].r;
