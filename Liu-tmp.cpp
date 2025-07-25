@@ -1,76 +1,150 @@
 #include <iostream>
-#include <map>
-#include <vector>
-#include <queue>
 #include <algorithm>
+#include <cmath>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <vector>
+#include <map>
+#include <list>
+#include <queue>
+#include <deque>
+#include <stack>
+#include <set>
+#include <functional>
+#include <unordered_set>
+#include <unordered_map>
+#include <numeric>
+#include <iomanip>
+#include <random>
+#include <chrono>
 using namespace std;
 #define int long long
 #define endl '\n'
+static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 const int INF = 2e9 + 7;
 
-struct Node
+struct Inval
 {
-    int id;
-    int number;
-    int magic;
+    int l;
+    int r;
 
-    bool operator<(const Node &other) const
+    bool operator<(const Inval &other) const
     {
-        return this->magic > other.magic;
+        if (this->r == other.r)
+        {
+            return this->l < other.l;
+        }
+        return this->r < other.r;
     }
 };
-vector<Node> arr;
-vector<int> line_base;
 
-int n;
-int lingangu = 0;
-void check_baseline(int tomorin)
+set<int> allnum;
+map<int, int> id_num;
+map<int, int> num_id;
+
+// segtree-------------------------------------------------------------
+void makelzy(int tot, int x);
+void downlzy(int tot);
+void update(int tot, int le, int ri, int x);
+int query(int le, int ri, int tot);
+struct SegNode
 {
+    int L;
+    int R;
+    int val;
+    int lzy;
+};
+vector<SegNode> segtree;
 
-    int rock = arr[tomorin].number;
-    int gugugaga = arr[tomorin].magic;
-
-
-    for (int i = 63; i >= 0; i--)
-    {
-        if (rock & (1ll << i))
-        {
-            if (line_base[i] == 0)
-            {
-                line_base[i] = rock;
-                lingangu += gugugaga;
-                return;
-            }
-            else
-            {
-                rock^=line_base[i];
-            }
-        }
-    }
-    
+void makelzy(int tot, int x)
+{
+    int len = segtree[tot].R - segtree[tot].L + 1;
+    segtree[tot].lzy ^= x;
 }
+
+void downlzy(int tot)
+{
+    int m = (segtree[tot].L + segtree[tot].R) / 2;
+    makelzy(tot * 2, segtree[tot].lzy);
+    makelzy(tot * 2 + 1, segtree[tot].lzy);
+    segtree[tot].lzy = 0;
+}
+
+int query(int index, int tot = 1)
+{
+    int LL = segtree[tot].L, RR = segtree[tot].R;
+    int mid = (LL + RR) / 2;
+    if (LL == RR)
+    {
+        return segtree[tot].lzy;
+    }
+    else if (index <= mid)
+    {
+        downlzy(tot * 2);
+        query(index, tot * 2);
+    }
+    else
+    {
+        downlzy(tot * 2 + 1);
+        query(index, tot * 2 + 1);
+    }
+}
+void update(int tot, int le, int ri, int x)
+{
+    int LL = segtree[tot].L, RR = segtree[tot].R;
+    if (le <= LL && ri >= RR)
+    {
+        makelzy(tot, x);
+        return;
+    }
+    else if (!(le > RR || ri < LL))
+    {
+        int m = (RR + LL) / 2;
+        downlzy(tot);
+        update(tot * 2, le, ri, x);
+        update(tot * 2 + 1, le, ri, x);
+        return;
+    }
+}
+void build(int tot, int LL, int RR)
+{
+    segtree[tot].L = LL;
+    segtree[tot].R = RR;
+    segtree[tot].lzy = 0;
+
+    if (LL == RR)
+    {
+        segtree[tot].val = 0;
+        return;
+    }
+    int m = (LL + RR) / 2;
+    build(tot * 2, LL, m);
+    build(tot * 2 + 1, m + 1, RR);
+}
+
+void INITSegTree(int arrsize)
+{
+    segtree = vector<SegNode>(4 * arrsize + 10);
+    build(1, 1, arrsize);
+}
+// segtree----------------------------------------------------------------------
 
 void solve()
 {
-
-    cin >> n;
-    arr = vector<Node>(n + 5);
-    for (int i = 1; i <= n; i++)
+    vector<size_t>arr(10+5);
+    for(int i=1; i<=10; i++)
     {
-        cin >> arr[i].number >> arr[i].magic;
+        size_t tmp = rnd();
+        cout<<tmp<<endl;
     }
 
-    sort(arr.begin() + 1, arr.begin() + 1 + n);
+    INITSegTree(10);
 
-    line_base = vector<int>(n + 5, 0);
 
-    for(int tomo=1; tomo<=n; tomo++)
-    {
-        check_baseline(tomo);
-    }
+    update(1, 2, 3, )
 
-    cout<<lingangu<<endl;
     
 }
 
@@ -81,7 +155,7 @@ signed main()
 
     int T = 1;
 
-    // cin>>T
+    cin >> T;
 
     for (int i = 1; i <= T; i++)
     {
