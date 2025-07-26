@@ -61,6 +61,7 @@ void solve()
         cin >> arr[i].l >> arr[i].r;
         allnum.insert(arr[i].l);
         allnum.insert(arr[i].r);
+        allnum.insert(arr[i].r + 1);
     }
 
     int cnt = 0;
@@ -76,16 +77,17 @@ void solve()
     {
         size_t nowx = rnd();
         int nowl = num_id[arr[i].l];
-        int nowr = num_id[arr[i].r];
+        int nowra1 = num_id[arr[i].r + 1];
+
         line[nowl] ^= nowx;
-        line[nowr + 1] ^= nowx;
+        line[nowra1] ^= nowx;
     }
 
     vector<size_t> s;
     size_t nowc = 0;
     // s.push_back(0);
     int ans = 0;
-    for (int i = 1; i <= cnt + 1; i++)
+    for (int i = 0; i <= cnt; i++)
     {
         nowc ^= line[i];
         s.push_back(nowc);
