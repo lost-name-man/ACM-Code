@@ -1,5 +1,6 @@
 {
   "files.associations": {
+    "10077": "cpp",
     "iostream": "cpp",
     "string": "cpp",
     "cstdlib": "cpp",
