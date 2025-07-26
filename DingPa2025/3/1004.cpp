@@ -8,27 +8,51 @@ using namespace std;
 
 const int INF = 2e9 + 7;
 
-
 struct Node
 {
     int sum;
     int ein;
     int drei;
     
-
-
 };
+
+int total;
+
+int check(int d)
+{
+    
+}
+
+
 
 void solve()
 {
     vector<Node>arr(14);
+    total=0;
     for(int i=1; i<=13; i++)
     {
         cin>>arr[i].sum;
         arr[i].drei=arr[i].sum/3;
         arr[i].ein=arr[i].sum%3;
+        total+=arr[i].sum;
+    }
+
+    int l=0, r=total/4;
+
+    while(l<r)
+    {
+        int mid=(l+r+1)/2;
+        if(check(mid))
+        {
+            l=mid;
+        }
+        else
+        {
+            r=mid-1;
+        }
 
     }
+
 
 
 

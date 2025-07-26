@@ -20,7 +20,7 @@
 #include <random>
 #include <chrono>
 using namespace std;
-#define int size_t
+#define int long long
 #define endl '\n'
 static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
 const int INF = 2e9 + 7;
@@ -29,141 +29,66 @@ struct Inval
 {
     int l;
     int r;
+
+    bool operator<(const Inval &other) const
+    {
+        if (this->r == other.r)
+        {
+            return this->l < other.l;
+        }
+        return this->r < other.r;
+    }
 };
 
-set<int> allnum;
+set<pair<int, size_t>> allnum;
 map<int, int> id_num;
 map<int, int> num_id;
-
-// segtree-------------------------------------------------------------
-void makelzy(int tot, size_t x);
-void downlzy(int tot);
-void update(int tot, int le, int ri, size_t x, int LL, int RR);
-size_t query(int index, int tot, int LL, int RR);
-struct SegNode
-{
-    int L;
-    int R;
-    int val;
-    size_t lzy;
-};
-vector<SegNode> segtree;
-
-void makelzy(int tot, size_t x)
-{
-    segtree[tot].lzy ^= x;
-}
-
-void downlzy(int tot)
-{
-    makelzy(tot * 2, segtree[tot].lzy);
-    makelzy(tot * 2 + 1, segtree[tot].lzy);
-    segtree[tot].lzy = 0;
-}
-
-size_t query(int index, int tot, int LL, int RR)
-{
-    int mid = (LL + RR) / 2;
-
-    if (LL == RR)
-    {
-        return segtree[tot].lzy;
-    }
-    if (segtree[tot].lzy != 0)
-    {
-        downlzy(tot);
-    }
-    if (index <= mid)
-    {
-        return query(index, tot * 2, LL, mid);
-    }
-    else
-    {
-        return query(index, tot * 2 + 1, mid + 1, RR);
-    }
-}
-void update(int tot, int le, int ri, size_t x, int LL, int RR)
-{
-    int mid = (LL + RR) / 2;
-    if (le <= LL && ri >= RR)
-    {
-        makelzy(tot, x);
-        return;
-    }
-    else if (!(le > RR || ri < LL))
-    {
-        int m = (RR + LL) / 2;
-        if (segtree[tot].lzy != 0)
-        {
-            downlzy(tot);
-        }
-        update(tot * 2, le, ri, x, LL, mid);
-        update(tot * 2 + 1, le, ri, x, mid + 1, RR);
-        return;
-    }
-}
-
-void INITSegTree(int arrsize)
-{
-    segtree = vector<SegNode>(4 * arrsize + 10);
-}
-// segtree----------------------------------------------------------------------
 
 void solve()
 {
     int n;
     cin >> n;
-    allnum = set<int>();
+    allnum = set<pair<int, size_t>>();
+    id_num = map<int, int>();
     num_id = map<int, int>();
-    
-    vector<Inval> arr(n + 5);
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> arr[i].l >> arr[i].r;
-        allnum.insert(arr[i].l);
-        allnum.insert(arr[i].r);
-    }
-
-
     if (n == 0)
     {
         cout << 1 << endl;
         return;
     }
-    else if(n==1)
-    {
-        cout<<2<<endl;
-        return;
-    }
-
-
-
-    int cnt = 0;
-    for (auto it = allnum.begin(); it != allnum.end(); it++)
-    {
-        cnt++;
-        num_id[*it] = cnt;
-    }
-
-    INITSegTree(cnt);
+    vector<Inval> arr(n + 5);
     for (int i = 1; i <= n; i++)
     {
-        size_t nownum = rnd();
-        int nowl = num_id[arr[i].l], nowr = num_id[arr[i].r];
-        update(1, nowl, nowr, nownum, 1, cnt);
+        size_t tmp=rnd();
+        cin >> arr[i].l >> arr[i].r;
+        allnum.insert({arr[i].l, tmp});
+        allnum.insert({arr[i].r+1, tmp});
     }
 
-    set<size_t> mp;
-    int ans = 0;
-    for (int i = 1; i <= cnt; i++)
+    int cnt = 0;
+    map<int, size_t>index_xor;
+    for(auto iter=allnum.begin(); iter!=allnum.end(); iter++)
     {
-        size_t x = query(i, 1, 1, cnt);
-        // cout << "!" << x << endl;
-        mp.insert(x);
+        int index=iter->first;
+        size_t xxoo=iter->second;
+        index_xor[index]^=xxoo;
     }
-    ans++;
-    ans+=mp.size();
-    cout << ans << endl;
+
+
+    set<size_t>ans;
+    ans.insert(0);
+    int nowxxoo=0;
+    for(auto iter=index_xor.begin(); iter!=index_xor.end(); iter++)
+    {
+        int nowxor=iter->second;
+        nowxxoo^=nowxor;
+        ans.insert(nowxxoo);
+    }
+
+    cout<<ans.size()<<endl;
+
+
+
 }
 
 signed main()
@@ -173,24 +98,6 @@ signed main()
 
     int T = 1;
 
-    map<int, int>mp;
-    int sum=0;
-    for(int i=1; i<=2*1e6; i++)
-    {
-        int tmp=rnd();
-        sum^=tmp;
-        mp[tmp]++;
-        mp[sum]++;
-        if(mp[tmp]>1)
-        {
-            cout<<tmp<<endl;
-        }
-        if(mp[sum]>1)
-        {
-            cout<<sum<<endl;
-        }
-    }
-    return 0;
     cin >> T;
 
     for (int i = 1; i <= T; i++)

@@ -38,7 +38,7 @@ vector<int> dfn_val;
 void makelzy(int tot, int x);
 void downlzy(int tot);
 void update(int tot, int le, int ri, int x);
-int query(int le, int ri, int tot);
+int query(int tot, int le, int ri);
 struct SegNode
 {
     int L;
@@ -66,7 +66,7 @@ void downlzy(int tot)
     segtree[tot].lzy = 0;
 }
 
-int query(int le, int ri, int tot = 1)
+int query(int tot, int le, int ri)
 {
     int LL = segtree[tot].L, RR = segtree[tot].R;
     if (le <= LL && ri >= RR)
@@ -79,7 +79,7 @@ int query(int le, int ri, int tot = 1)
         downlzy(tot);
         int tmp;
 
-        tmp = query(le, ri, tot * 2) + query(le, ri, tot * 2 + 1);
+        tmp = query(tot * 2, le, ri) + query(tot * 2 + 1, le, ri);
         tmp %= MOD;
         return tmp;
     }
