@@ -145,28 +145,24 @@ void solve()
         num_id[*it] = cnt;
     }
 
-    INITSegTree(cnt);
+    INITSegTree(cnt + 1);
     for (int i = 1; i <= n; i++)
     {
         size_t nownum = rnd();
         int nowl = num_id[arr[i].l], nowr = num_id[arr[i].r];
-        update(1, nowl, nowr, nownum, 1, cnt);
+        update(1, nowl, nowr, nownum, 0, cnt);
     }
 
-    map<size_t, int> mp;
+    set<size_t> mp;
     int ans = 0;
-    for (int i = 1; i <= cnt; i++)
+    for (int i = 0; i <= cnt; i++)
     {
-        size_t x = query(i, 1, 1, cnt);
+        size_t x = query(i, 1, 0, cnt);
         // cout << "!" << x << endl;
-        if (mp[x] == 0)
-        {
-            ans++;
-            mp[x] = 1;
-        }
+        mp.insert(x);
     }
-    ans++;
-    cout << ans << endl;
+
+    cout << mp.size() << endl;
 }
 
 signed main()
