@@ -17,7 +17,7 @@ using namespace std;
 
 int n;
 vector<int> arr;
-vector<int> arr0(n + 5);
+vector<int> arr0;
 int prun()
 {
     int ans = 0;
