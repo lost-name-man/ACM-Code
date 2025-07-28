@@ -28,60 +28,63 @@ const int MOD = 998244353;
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, x, y, z;
+    cin >> n >> x >> y >> z;
     vector<int> arr(n + 5, 0);
-    set<int>st;
-    int l = 0, r = 0;
-    int L = INF, R = -1 * INF;
-    int sum = 0;
+    map<int, int> val_num;
     for (int i = 1; i <= n; i++)
     {
         cin >> arr[i];
-        st.insert(arr[i]);
-        sum += arr[i];
-        if (l == 0 && arr[i] != 0)
-        {
-            l = i;
-        }
-        if (arr[i] != 0)
-        {
-            r = i;
-        }
+        val_num[arr[i]]++;
     }
-
-    if (l == 0)
+    val_num[0]++;
+    vector<int> brr;
+    while (val_num.size() > 1)
     {
-        int ans = n * (n + 1) / 2;
-        ans %= MOD;
-        ans *= ((n + 1) * (n + 1)) % MOD;
-        ans %= MOD;
-        cout << sum << " ";
-        cout << ans << endl;
-        return;
+        for (auto iter = val_num.begin(); iter != val_num.end();)
+        {
+
+            brr.push_back(iter->first);
+            iter->second--;
+
+            if (iter->second == 0)
+            {
+                iter = val_num.erase(iter);
+            }
+            else
+            {
+
+                iter++;
+            }
+        }
     }
 
-    for (int i = l; i <= r; i++)
+    int ans = 0;
+
+    if (val_num.size() == 1)
+    {
+        ans += val_num.begin()->second * y;
+    }
+
+    for (int i = 1; i < brr.size(); i++)
     {
 
-        L = min(arr[i], L);
-        R = max(R, arr[i]);
+        // cout << "!" << brr[i] << endl;
+
+        if (brr[i] > brr[i - 1])
+        {
+            ans += x;
+        }
+        else if (brr[i] == brr[i - 1])
+        {
+            ans += y;
+        }
+        else
+        {
+            ans += z;
+        }
     }
-    cout << "!" << l << " " << r << " " << L << " " << R << endl;
 
-    int ldv = l - 1 + 1;
-    int rdv = n - r + 1;
-    int Ldv = L - (-n) + 1;
-    int Rdv = n - R + 1;
-
-    int ans = ldv * rdv;
-    ans %= MOD;
-    ans *= Ldv;
-    ans %= MOD;
-    ans *= Rdv;
-    ans %= MOD;
-
-    cout << sum << " ";
     cout << ans << endl;
 }
 
