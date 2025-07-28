@@ -8,54 +8,62 @@ using namespace std;
 
 const int INF = 2e9 + 7;
 
-struct Node
-{
-    int sum;
-    int ein;
-    int drei;
-    
-};
-
 int total;
+vector<int> arr;
 
-int check(int d)
+int check(int x)
 {
-    
+    int minn = 0, maxn = 0;
+    int ok = 1;
+    for (int i = 1; i <= 13; i++)
+    {
+        int down = (arr[i] - total + 3 * x + 1) / 2;
+        int up = arr[i] / 3;
+        down = max(0ll, down);
+        minn += down;
+        maxn += up;
+        if (down > up)
+        {
+            ok = 0;
+            break;
+        }
+    }
+    if (x >= minn && x <= maxn && ok == 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
-
-
 
 void solve()
 {
-    vector<Node>arr(14);
-    total=0;
-    for(int i=1; i<=13; i++)
+    arr = vector<int>(14, 0);
+    total = 0;
+    for (int i = 1; i <= 13; i++)
     {
-        cin>>arr[i].sum;
-        arr[i].drei=arr[i].sum/3;
-        arr[i].ein=arr[i].sum%3;
-        total+=arr[i].sum;
+        cin >> arr[i];
+        total += arr[i];
     }
 
-    int l=0, r=total/4;
+    int l = 0, r = total / 4, ans;
 
-    while(l<r)
+    while (l <= r)
     {
-        int mid=(l+r+1)/2;
-        if(check(mid))
+        int mid = (l + r) / 2;
+        if (check(mid))
         {
-            l=mid;
+            l = mid + 1;
+            ans = mid;
         }
         else
         {
-            r=mid-1;
+            r = mid - 1;
         }
-
     }
-
-
-
-
+    cout << ans << endl;
 }
 
 signed main()
@@ -65,7 +73,7 @@ signed main()
 
     int T = 1;
 
-    cin>>T;
+    cin >> T;
 
     for (int i = 1; i <= T; i++)
     {
