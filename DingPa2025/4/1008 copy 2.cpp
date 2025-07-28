@@ -43,33 +43,13 @@ void solve()
     sort(arr.begin()+1, arr.begin()+1+n);
     
     val_num[0]++;
-    vector<int> brr;
-    while (val_num.size() > 1)
-    {
-        for (auto iter = val_num.begin(); iter != val_num.end();)
-        {
-
-            brr.push_back(iter->first);
-            iter->second--;
-
-            if (iter->second == 0)
-            {
-                iter = val_num.erase(iter);
-            }
-            else
-            {
-
-                iter++;
-            }
-        }
-    }
+    
 
     int ans = 0;
 
-    if (val_num.size() == 1)
-    {
-        ans += val_num.begin()->second * y;
-    }
+    
+
+
     int neuans=0;
     for (int i = 1; i <=n; i++)
     {
@@ -89,24 +69,7 @@ void solve()
             neuans += z;
         }
     }
-    for (int i = 1; i < brr.size(); i++)
-    {
-
-        // cout << "!" << brr[i] << endl;
-
-        if (brr[i] > brr[i - 1])
-        {
-            ans += x;
-        }
-        else if (brr[i] == brr[i - 1])
-        {
-            ans += y;
-        }
-        else
-        {
-            ans += z;
-        }
-    }
+    
 
     cout << max(neuans, ans) << endl;
 }
