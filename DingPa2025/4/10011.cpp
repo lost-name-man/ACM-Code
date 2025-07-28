@@ -28,65 +28,69 @@ const int MOD = 998244353;
 
 void solve()
 {
-    int n, x, y, z;
-    cin >> n >> x >> y >> z;
+    int n;
+    cin >> n;
     vector<int> arr(n + 5, 0);
-
-    vector<int> num(n + 5, 0);
-    int max1 = 0, max2 = 0;
-
-    num[0]++;
+    int l = 0, r = 0;
+    int L = INF, R = 0;
+    int sum = 0;
     for (int i = 1; i <= n; i++)
     {
         cin >> arr[i];
-        num[arr[i]]++;
+        sum += arr[i];
+        if (l == 0 && arr[i] != 0)
+        {
+            l = i;
+        }
+        if (arr[i] != 0)
+        {
+            r = i;
+        }
     }
 
-    for (int i = 0; i <= n; i++)
+    for (int i = l; i <= r; i++)
     {
-        if (num[i] > max1)
+        if (arr[i] == 0)
         {
-            max2 = max1;
-            max1 = num[i];
+            continue;
         }
-        else if (num[i] > max2)
-        {
-            max2 = num[i];
-        }
+        L = min(arr[i], L);
+        R = max(R, arr[i]);
     }
 
-    int ans1 = (max2 - 1) * z + (n - max1 + 1) * x + (max1 - max2) * y;
-
-    sort(arr.begin() + 1, arr.begin() + 1 + n);
-
-    int neuans = 0;
-    for (int i = 1; i <= n; i++)
+    if (l == 0)
     {
-
-        // cout << "!" << brr[i] << endl;
-
-        if (arr[i] > arr[i - 1])
-        {
-            neuans += x;
-        }
-        else if (arr[i] == arr[i - 1])
-        {
-            neuans += y;
-        }
-        else
-        {
-            neuans += z;
-        }
+        int ans = n * (n + 1) / 2;
+        ans %= MOD;
+        ans *= ((n + 1) * (n + 1)) % MOD;
+        ans %= MOD;
+        cout << sum << " ";
+        cout << ans << endl;
+        return;
     }
 
-    cout << max(neuans, ans1) << endl;
+    int ldv = l - 1 + 1;
+    int rdv = n - r + 1;
+    int Ldv = L - (-n) + 1;
+    int Rdv = n - R + 1;
+
+    // cout << l << " " << r << " " << L << " " << R << endl;
+
+    int ans = ldv * rdv;
+    ans %= MOD;
+    ans *= Ldv;
+    ans %= MOD;
+    ans *= Rdv;
+    ans %= MOD;
+
+    cout << sum << " ";
+    cout << ans << endl;
 }
 
 signed main()
 {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    cout.tie(0);
 
     int T = 1;
 
