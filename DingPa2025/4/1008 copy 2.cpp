@@ -42,24 +42,19 @@ void solve()
         num[arr[i]]++;
     }
 
+    vector<int> eq;
     for (int i = 0; i <= n; i++)
     {
-        if (num[i] > max1)
+        if (num[i] > 1)
         {
-            max2 = max1;
-            max1 = num[i];
-        }
-        else if (num[i] > max2)
-        {
-            max2 = num[i];
+            eq.push_back(num[i] - 1);
         }
     }
 
-    int ans1 = (max2 - 1) * z + (n - max1 + 1) * x + (max1 - max2) * y;
-
+    sort(eq.begin(), eq.end());
     sort(arr.begin() + 1, arr.begin() + 1 + n);
 
-    int neuans = 0;
+    int ans = 0;
     for (int i = 1; i <= n; i++)
     {
 
@@ -67,19 +62,35 @@ void solve()
 
         if (arr[i] > arr[i - 1])
         {
-            neuans += x;
+            ans += x;
         }
         else if (arr[i] == arr[i - 1])
         {
-            neuans += y;
+            ans += y;
         }
         else
         {
-            neuans += z;
+            ans += z;
         }
     }
 
-    cout << max(neuans, ans1) << endl;
+    int tmpans = ans;
+    for (int i = 1; i <= n; i++)
+    {
+        auto it = lower_bound(eq.begin(), eq.end(), i);
+        if (it == eq.end())
+        {
+            break;
+        }
+
+        int base = (eq.end() - it - 1);
+        tmpans += x * base;
+        tmpans += z;
+        tmpans -= (base + 1) * y;
+        ans = max(ans, tmpans);
+    }
+
+    cout << max(ans, tmpans) << endl;
 }
 
 signed main()
