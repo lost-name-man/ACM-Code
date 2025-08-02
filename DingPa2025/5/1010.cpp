@@ -26,39 +26,26 @@ static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
 const int INF = 1e16 + 7;
 const int MOD = 1e9 + 7;
 
-struct Node
-{
-    int son, mu;
-};
-
-int qpow(int n, int p)
-{
-    int base = n, re = 1;
-    while (p)
-    {
-        if (p & 1)
-        {
-            re *= base;
-            re %= MOD;
-        }
-        base *= base;
-        base %= MOD;
-        p >>= 1;
-    }
-    return re;
-}
-
-int inv(int x)
-{
-    return qpow(x, MOD - 2);
-}
+int n;
+vector<double> p, f;
 
 void solve()
 {
+    cin >> n;
+    p = f = vector<double>(n + 5);
+    for (int i = 1; i <= n; i++)
+    {
+        int pp;
+        cin >> pp;
+        p[i] = pp * 1.0 / 1000;
+    }
 
-    int n, k;
-    cin >> n >> k;
-    cout << k * inv(n - k + 1) % MOD << endl;
+    f[n] = n;
+    for (int i = n - 1; i >= 1; i--)
+    {
+        f[i] = min(f[i + 1], (1 - p[i]) * i + p[i] * (f[i + 1] + 20));
+    }
+    cout << fixed << setprecision(12) << f[1] << endl;
 }
 
 signed main()
