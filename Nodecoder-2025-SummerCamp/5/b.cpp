@@ -78,6 +78,7 @@ void solve()
         {
             ans.push_back(4);
             it2 = it1;
+            b ^= a;
         }
         else if (it2 > it1)
         {
@@ -91,7 +92,7 @@ void solve()
             if (((a >> it2) & 1) != ((c >> (it3 - (it1 - it2)) & 1)))
             {
                 ans.push_back(3);
-                a ^= (1 << it2);
+                a ^= b;
             }
             if (it1 != it3)
             {
@@ -105,10 +106,11 @@ void solve()
             if (((a >> it2) & 1) != ((c >> it2) & 1))
             {
                 ans.push_back(3);
-                a ^= (1 << it2);
+                a ^= b;
             }
             ans.push_back(2);
             it2--;
+            b >>= 1;
         }
         ans.push_back(4);
     }
@@ -118,6 +120,7 @@ void solve()
         {
             ans.push_back(4);
             it2 = it1;
+            b ^= a;
         }
         else if (it2 > it1)
         {
@@ -130,12 +133,14 @@ void solve()
             if (((a >> it2) & 1) != ((c >> it2) & 1))
             {
                 ans.push_back(3);
-                a ^= (1 << it2);
+                a ^= b;
             }
             ans.push_back(2);
             it2--;
+            b >>= 1;
         }
         ans.push_back(4);
+        b ^= a;
     }
     cout << ans.size() << endl;
     for (int i = 0; i < ans.size(); i++)
