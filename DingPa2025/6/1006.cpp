@@ -37,8 +37,8 @@ int cmp(int a, int b, int c, int d)
 {
     int base = lca(b, d);
 
-    int aa = a * (b / base);
-    int cc = c * (d / base);
+    int aa = a * (base / b);
+    int cc = c * (base / d);
 
     if (aa >= cc)
     {
@@ -62,8 +62,8 @@ void solve()
     // int aa = a * (b / base);
     // int cc = c * (d / base);
     // int son22 = son2 * (fa2 / base);
-
-    if (cmp(son2, fa2, a, b))
+    // cout << "#" << son2 << " " << fa2 << endl;
+    if (cmp(a, b, son2, fa2))
     {
         int son = (times1 + 1) * c;
         int fa = d;
@@ -75,12 +75,18 @@ void solve()
         int fa4 = fa2;
         int son3 = (times1 + 1) * c;
         int fa3 = d;
+        int anss3 = son3 / __gcd(son3, fa3);
+        int ansf3 = fa3 / __gcd(son3, fa3);
+        int anss4 = son4 / __gcd(son4, fa4);
+        int ansf4 = fa4 / __gcd(son4, fa4);
         if (cmp(son3, fa3, son4, fa4))
         {
+            // cout << "!";
             cout << son3 / __gcd(son3, fa3) << '/' << fa3 / __gcd(son3, fa3) << endl;
         }
         else
         {
+            // cout << "@";
             cout << son4 / __gcd(son4, fa4) << '/' << fa4 / __gcd(son4, fa4) << endl;
         }
     }
