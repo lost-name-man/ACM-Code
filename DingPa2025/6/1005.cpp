@@ -39,17 +39,73 @@ int check(int x, int y)
     {
         return 0;
     }
-    if(y<1 || y)
+    if(y<1 || y>m)
+    {
+        return 0;
+    }
+    return 1;
 }
+
+
+
+struct Node
+{
+    int first;
+    int second;
+    int id;
+
+
+    bool operator <(const Node &other) const
+    {
+        return this->first < other.first;
+    }
+};
+
 void solve()
 {
     cin>>n>>m>>k;
     croods=vector<vector<int>>(n+5, vector<int>(m+5, 0));
+    vector<Node>arr;
     for(int i=1; i<=k; i++)
     {
         int x, y;
         cin>>x>>y;
+        arr.push_back({x, y, i});
+    }
 
+
+    sort(arr.begin(), arr.end());
+    for(int i=0; i<k; i++)
+    {
+        int x, y;
+        x=arr[i].first, y=arr[i].second;
+        // cout<<"!"<<x<<" "<<y<<endl;
+        for(int j=0; j<11; j++)
+        {
+            int nextx=x+wasd[j].first, nexty=y+wasd[j].second;
+            if(check(nextx, nexty))
+            {
+                croods[nextx][nexty]=arr[i].id;
+            }
+        }
+    }
+
+
+    for(int i=1; i<=n; i++)
+    {
+        for(int j=1; j<=m; j++)
+        {
+            if(croods[i][j]==0)
+            {
+                cout<<".";
+            }
+            else
+            {
+                cout<<croods[i][j];
+            }
+            
+        }
+        cout<<endl;
     }
 }
 
@@ -60,7 +116,7 @@ signed main()
 
     int T = 1;
 
-    // cin >> T;
+    cin >> T;
 
     for (int i = 1; i <= T; i++)
     {
