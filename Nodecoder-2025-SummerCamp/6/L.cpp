@@ -116,7 +116,7 @@ void solve()
     }
     if (ok == 0)
     {
-        cout << -1 << endl;
+        cout << -1;
     }
     else
     {
