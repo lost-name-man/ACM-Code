@@ -57,7 +57,7 @@ void solve()
         {
             if (crood[i][j] > 0)
             {
-                if (vis[crood[i][j]] == 0)
+                if (vis[crood[i][j]] == 0 && ok == 0)
                 {
                     ok = 1;
                     ans[i] = 1;
