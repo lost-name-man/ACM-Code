@@ -143,7 +143,7 @@ void solve()
         int tmpans = brr[2];
         for (int i = 2; i <= n; i++)
         {
-            tmpans = gcd(tmpans, brr[i]);
+            tmpans = gcd(tmpans, abs(brr[i]));
         }
 
         ans = max(ans, tmpans);
