@@ -26,14 +26,13 @@ static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
 const int INF = 2e9 + 7;
 const int MOD = 1e17 + 7;
 
-
-int gcd(int a, int b) 
+int gcd(int a, int b)
 {
-    if(b>a)
+    if (b > a)
     {
         swap(a, b);
     }
-    while (b != 0) 
+    while (b != 0)
     {
         int tmp = a;
         a = b;
@@ -90,15 +89,14 @@ void cul_prime_factor(int x, vector<pair<int, int>> &factor)
 
 void cul_factor(int x, vector<int> &factor)
 {
-    for (int i = 1; i*i <= x; i++)
+    for (int i = 1; i * i <= x; i++)
     {
         int pri = i;
         if (x % pri == 0)
         {
             factor.push_back(pri);
-            factor.push_back(x/pri);
+            factor.push_back(x / pri);
         }
-
     }
 }
 
@@ -121,150 +119,131 @@ void solve()
 
     // all same
     {
-        int ok=1;
+        int ok = 1;
         for (int i = 2; i <= n; i++)
         {
-            if(arr[i]!=arr[i-1])
+            if (arr[i] != arr[i - 1])
             {
-                ok=0;
+                ok = 0;
                 break;
             }
         }
 
-        if(ok==1)
+        if (ok == 1)
         {
-            cout<<0<<endl;
+            cout << 0 << endl;
             return;
         }
         else
         {
-            
         }
-
     }
 
-    
-
-    //all add
-    int ans=0;
+    // all add
+    int ans = 0;
 
     {
-        int tmpans=brr[2];
-        for(int i=2 ;i<=n; i++)
+        int tmpans = brr[2];
+        for (int i = 2; i <= n; i++)
         {
-            tmpans=gcd(tmpans, brr[i]);
+            tmpans = gcd(tmpans, brr[i]);
         }
 
-        ans=max(ans, tmpans);
-        
+        ans = max(ans, tmpans);
     }
 
-
-
-    //a1
+    // a1
     {
-        vector<int>aein_factor;
+        vector<int> aein_factor;
         cul_factor(arr[1], aein_factor);
-        for(int ff=0; ff<aein_factor.size(); ff++)
+        for (int ff = 0; ff < aein_factor.size(); ff++)
         {
-            int pri=aein_factor[ff];
-            int wanum=0;
-            vector<int>waid;
-            for(int i=2; i<=n; i++)
+            int pri = aein_factor[ff];
+            int wanum = 0;
+            vector<int> waid;
+            for (int i = 2; i <= n; i++)
             {
-                if(brr[i]%pri!=0)
+                if (brr[i] % pri != 0)
                 {
                     wanum++;
                     waid.push_back(i);
                 }
             }
 
-            if(wanum==0)
+            if (wanum == 0)
             {
-                ans=max(ans, pri);
+                ans = max(ans, pri);
             }
-            else if(wanum == 1)
+            else if (wanum == 1)
             {
-                ans=max(ans, pri);
+                ans = max(ans, pri);
             }
-            else if(wanum==2)
+            else if (wanum == 2)
             {
-                int a, b;
-                a=brr[waid[0]]%pri;
-                b=brr[waid[1]]%pri;
+                // int a, b;
+                // a = brr[waid[0]] % pri;
+                // b = brr[waid[1]] % pri;
 
-                if(a==(pri-b))
+                if ((brr[waid[0]] + brr[waid[1]]) % pri == 0)
                 {
-                    ans=max(ans, pri);
+                    ans = max(ans, pri);
                 }
-
             }
             else
             {
-
             }
         }
-        
-        
     }
 
-
-    reverse(arr.begin()+1, arr.begin()+1+n);
+    reverse(arr.begin() + 1, arr.begin() + 1 + n);
     for (int i = 2; i <= n; i++)
     {
         brr[i] = arr[i] - arr[i - 1];
     }
-    //an
+    // an
     {
-        vector<int>aein_factor;
+        vector<int> aein_factor;
         cul_factor(arr[1], aein_factor);
-        for(int ff=0; ff<aein_factor.size(); ff++)
+        for (int ff = 0; ff < aein_factor.size(); ff++)
         {
-            int pri=aein_factor[ff];
-            int wanum=0;
-            vector<int>waid;
-            for(int i=2; i<=n; i++)
+            int pri = aein_factor[ff];
+            int wanum = 0;
+            vector<int> waid;
+            for (int i = 2; i <= n; i++)
             {
-                if(brr[i]%pri!=0)
+                if (brr[i] % pri != 0)
                 {
                     wanum++;
                     waid.push_back(i);
                 }
             }
 
-            if(wanum==0)
+            if (wanum == 0)
             {
-                ans=max(ans, pri);
+                ans = max(ans, pri);
             }
-            else if(wanum == 1)
+            else if (wanum == 1)
             {
-                ans=max(ans, pri);
+                ans = max(ans, pri);
             }
-            else if(wanum==2)
+            else if (wanum == 2)
             {
                 int a, b;
-                a=brr[waid[0]]%pri;
-                b=brr[waid[1]]%pri;
+                a = brr[waid[0]] % pri;
+                b = brr[waid[1]] % pri;
 
-                if(a==(pri-b))
+                if (a == (pri - b))
                 {
-                    ans=max(ans, pri);
+                    ans = max(ans, pri);
                 }
-
             }
             else
             {
-
             }
         }
-        
-        
     }
 
-    cout<<ans<<endl;
-
-
-
+    cout << ans << endl;
 }
 
 signed main()
