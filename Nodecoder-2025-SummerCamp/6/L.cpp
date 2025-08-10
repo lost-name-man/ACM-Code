@@ -55,11 +55,14 @@ void solve()
         int ok = 0;
         for (int j = 0; j < crood[i].size(); j++)
         {
-            if (crood[i][j] > 0 && vis[crood[i][j]] == 0)
+            if (crood[i][j] > 0)
             {
-                ok = 1;
-                ans[i] = 1;
-                cntl++;
+                if (vis[crood[i][j]] == 0)
+                {
+                    ok = 1;
+                    ans[i] = 1;
+                    cntl++;
+                }
             }
             else
             {
