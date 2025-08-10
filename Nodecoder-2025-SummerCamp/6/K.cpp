@@ -23,15 +23,12 @@ using namespace std;
 #define int long long
 #define endl '\n'
 static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
-const int INF = 2e9 + 7;
+const int INF = 1e17 + 7;
 const int MOD = 1e17 + 7;
 
 int gcd(int a, int b)
 {
-    if (b > a)
-    {
-        swap(a, b);
-    }
+
     while (b != 0)
     {
         int tmp = a;
@@ -228,11 +225,11 @@ void solve()
             }
             else if (wanum == 2)
             {
-                int a, b;
-                a = brr[waid[0]] % pri;
-                b = brr[waid[1]] % pri;
+                // int a, b;
+                // a = brr[waid[0]] % pri;
+                // b = brr[waid[1]] % pri;
 
-                if (a == (pri - b))
+                if ((brr[waid[0]] + brr[waid[1]]) % pri == 0)
                 {
                     ans = max(ans, pri);
                 }
