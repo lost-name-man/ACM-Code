@@ -27,6 +27,39 @@ const int INF = 1e9;
 const int MOD = 11380;
 
 
+
+inline __int128 read() {
+    __int128 x = 0, f = 1;
+    char ch = getchar(); 
+
+
+    while (ch < '0' || ch > '9') {
+        if (ch == '-') f = -1;
+        ch = getchar();
+    }
+
+
+    while (ch >= '0' && ch <= '9') {
+        x = x * 10 + ch - '0';
+        ch = getchar();
+    }
+
+    return x * f;
+}
+
+
+inline void prints(__int128 x) {
+    if (x < 0) {
+        putchar('-');
+        x = -x;
+    }
+    if (x > 9) {
+        prints(x / 10); 
+    }
+    putchar(x % 10 + '0'); 
+}
+
+
 int ysf(int n, int w)
 {
     if(n==1)
@@ -46,12 +79,14 @@ int ysf(int n, int w)
 void solve()
 {
     int n, w;
-    cin>>n>>w;
-
+    // cin>>n>>w;
+    n=read();
+    w=read();
 
     if(w==1)
     {
-        cout<<(n*(n+1))/2<<endl;
+        prints((n*(n+1))/2);
+        cout<<endl;
         return;
     }
 
@@ -99,8 +134,8 @@ void solve()
     
 
 
-
-    cout<<ans<<endl;
+    prints(ans);
+    cout<<endl;
 
     // cout<<"!!!!!!!!"<<n<<" "<<w<<"!!!!!!!!!!!"<<endl;
     // for(auto iter=turn_num.begin(); iter!=turn_num.end(); iter++)
@@ -114,9 +149,10 @@ signed main()
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    int T = 1;
+    long long T = 1;
 
     cin >> T;
+    
 
     for (int i = 1; i <= T; i++)
     {
