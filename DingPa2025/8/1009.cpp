@@ -20,7 +20,7 @@
 #include <random>
 #include <chrono>
 using namespace std;
-#define int long long
+#define int  unsigned __int128
 #define endl '\n'
 static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
 const int INF = 1e9;
@@ -48,11 +48,18 @@ void solve()
     int n, w;
     cin>>n>>w;
 
+
+    if(w==1)
+    {
+        cout<<(n*(n+1))/2<<endl;
+        return;
+    }
+
     int copyn=n;
 
 
     int turn=0;
-    map<int, int>turn_num;
+    // map<int, int>turn_num;
     int ans=0;
 
     int l=1, r;
@@ -60,7 +67,7 @@ void solve()
     {
         turn++;
         int len=copyn/w;
-        turn_num[turn]=len;
+        // turn_num[turn]=len;
 
         r=l+len-1;
         
@@ -69,10 +76,10 @@ void solve()
         {
             break;
         }
-        cout<<"@"<<l<<" "<<r<<endl;
+        // cout<<"@"<<l<<" "<<r<<endl;
         ans+=turn*((r+l)*(len))/2;
         
-        cout<<"$"<<ans<<endl;
+        // cout<<"$"<<ans<<endl;
 
         copyn-=len;
         l+=len;
@@ -82,10 +89,11 @@ void solve()
     if(l<=n)
     {
         
-        int len=r-l+1;
+        
         r=n;
-        cout<<"#"<<turn<<endl;
-        cout<<"@"<<l<<" "<<r<<endl;
+        int len=r-l+1;
+        // cout<<"#"<<len<<endl;
+        // cout<<"@"<<l<<" "<<r<<endl;
         ans+=turn*((r+l)*(len))/2;
     }
     
