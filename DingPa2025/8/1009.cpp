@@ -94,7 +94,8 @@ void solve()
     int ans = 0;
 
     int l = 1, r;
-
+    long long lln = n;
+    int sqn = sqrt(lln);
     while (1)
     {
         if (copyn < w)
@@ -102,7 +103,7 @@ void solve()
             break;
         }
 
-        if (w * w >= copyn)
+        if (copyn <= sqn * w)
         {
             int unitlen = copyn / w;
             int len = copyn % w + 1;
