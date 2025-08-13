@@ -38,9 +38,13 @@ void solve(int T)
 
     int ans=0;
 
-    ans=max(ans, abs(sx1-tx1)+ abs(sy1-ty1))
+    ans=max(ans, abs(sx1-tx1)+ abs(sy1-ty1));
+    // ans=max(ans, abs(sx1-tx2)+ abs(sy1-ty2));
+    // ans=max(ans, abs(sx2-tx1)+ abs(sy2-ty1));
+    ans=max(ans, abs(sx2-tx2)+ abs(sy2-ty2));
 
 
+    cout<<ans<<endl;
 
 }
 
