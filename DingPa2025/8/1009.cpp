@@ -26,26 +26,7 @@ static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
 const int INF = 1e9;
 const int MOD = 11380;
 
-inline __int128 read()
-{
-    __int128 x = 0, f = 1;
-    char ch = getchar();
 
-    while (ch < '0' || ch > '9')
-    {
-        if (ch == '-')
-            f = -1;
-        ch = getchar();
-    }
-
-    while (ch >= '0' && ch <= '9')
-    {
-        x = x * 10 + ch - '0';
-        ch = getchar();
-    }
-
-    return x * f;
-}
 
 inline void prints(__int128 x)
 {
@@ -78,9 +59,13 @@ int query(int l, int r, int turn, int times)
 void solve()
 {
     int n, w;
-    // cin>>n>>w;
-    n = read();
-    w = read();
+    {
+        long long lln, llw;
+        cin>>lln>>llw;
+        n=lln;
+        w=llw;
+    }
+
 
     if (w == 1)
     {
@@ -94,8 +79,7 @@ void solve()
     int ans = 0;
 
     int l = 1, r;
-    long long lln = n;
-    int sqn = sqrt(lln);
+
     while (1)
     {
         if (copyn < w)
@@ -103,7 +87,7 @@ void solve()
             break;
         }
 
-        if (copyn <= sqn * w)
+        if (1)
         {
             int unitlen = copyn / w;
             int len = copyn % w + 1;

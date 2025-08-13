@@ -87,19 +87,19 @@ void solve()
     pre[0] = 1;
     for (int i = 1; i <= n; i++)
     {
-        pre[i] = pre[i - 1];
+        
         for (int j = 1; j <= n; j++)
         {
             if (id[j] > i || inver[j].second < i)
             {
                 continue;
             }
-            int nowl = inver[j].first;
-            int index = id[j];
-            f[i] += pre[index - 1] - pre[nowl - 1];
-            f[i] = getmod(pre[i]);
+            for(int k=1;k<=n;k++)
+            {
+                
+            }
         }
-        pre[i] += f[i];
+        pre[i] = pre[i-1] + f[i];
     }
     cout << f[n] << endl;
 }

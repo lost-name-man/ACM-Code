@@ -27,43 +27,21 @@ const int INF = 2e9 + 7;
 const int MOD = 1e17 + 7;
 
 
-int qmi(int a,int k, int p)
+void solve(int T)
 {
-    int res = 1;
-    while(k)
-    {
-        if(k & 1) res = res * a % p;
-        k >>= 1;
-        a = a * a % p;
-    }
-    return res;
-}
+    int sx1, sy1, sx2, sy2, tx1, ty1, tx2, ty2;
 
-int C(int a,int b,int p)
-{
-    if(a < b) return 0;
+    vector<pair<int, int>>xy(4);
 
-    int res = 1;
-    for(int i = 1, j = a; i <= b; i ++ , j -- )
-    {
-        res = res * j % p;
-        res = res * qmi(i, p - 2, p) % p;
-    }
-    return res;
-}
+    cin>>sx1>>sy1>>sx2>>sy2>>tx1>>ty1>>tx2>>ty2;
 
-int lucas(int a, int b, int p)
-{
-    if(a < p && b < p) return C(a, b, p);
-    return C(a % p, b % p, p) * lucas(a / p, b / p, p) % p;
-}
 
-void solve()
-{
-    for(int i=1; i<=10; i++)
-    {
-        
-    }
+    int ans=0;
+
+    ans=max(ans, abs(sx1-tx1)+ abs(sy1-ty1))
+
+
+
 }
 
 signed main()
@@ -73,10 +51,11 @@ signed main()
 
     int T = 1;
 
-    // cin >> T;
+    cin >> T;
+
 
     for (int i = 1; i <= T; i++)
     {
-        solve();
+        solve(i);
     }
 }

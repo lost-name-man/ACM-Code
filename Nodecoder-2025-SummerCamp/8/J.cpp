@@ -27,43 +27,12 @@ const int INF = 2e9 + 7;
 const int MOD = 1e17 + 7;
 
 
-int qmi(int a,int k, int p)
+void solve(int T)
 {
-    int res = 1;
-    while(k)
-    {
-        if(k & 1) res = res * a % p;
-        k >>= 1;
-        a = a * a % p;
-    }
-    return res;
-}
-
-int C(int a,int b,int p)
-{
-    if(a < b) return 0;
-
-    int res = 1;
-    for(int i = 1, j = a; i <= b; i ++ , j -- )
-    {
-        res = res * j % p;
-        res = res * qmi(i, p - 2, p) % p;
-    }
-    return res;
-}
-
-int lucas(int a, int b, int p)
-{
-    if(a < p && b < p) return C(a, b, p);
-    return C(a % p, b % p, p) * lucas(a / p, b / p, p) % p;
-}
-
-void solve()
-{
-    for(int i=1; i<=10; i++)
-    {
-        
-    }
+    string str;
+    getline(cin, str);
+    str=str+" nya";
+    cout<<str<<endl;
 }
 
 signed main()
@@ -73,10 +42,13 @@ signed main()
 
     int T = 1;
 
-    // cin >> T;
+    cin >> T;
+    string trash;
+    getline(cin, trash);
+    cout<<T<<" "<<"nya"<<endl;
 
     for (int i = 1; i <= T; i++)
     {
-        solve();
+        solve(i);
     }
 }
