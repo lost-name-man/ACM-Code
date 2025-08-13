@@ -51,17 +51,17 @@ void solve()
     {
         int tx = x3;
         int dx = min(abs(tx - x1), abs(tx - x2));
-        int dy = max(abs(y3 - y1), abs(y4 - y1));
+        int dy = min(abs(y3 - y1), abs(y4 - y1));
         ans = max(dy, dx);
-        cout << (ans - 1) * 2 + 1 << endl;
+        cout << ans * 2 + 1 << endl;
     }
     else
     {
         int tx = x1;
         int dx = min(abs(tx - x3), abs(tx - x4));
-        int dy = max(abs(y1 - y3), abs(y2 - y3));
+        int dy = min(abs(y1 - y3), abs(y2 - y3));
         ans = max(dy, dx);
-        cout << (ans - 1) * 2 + 1 << endl;
+        cout << ans * 2 + 1 << endl;
     }
 }
 
