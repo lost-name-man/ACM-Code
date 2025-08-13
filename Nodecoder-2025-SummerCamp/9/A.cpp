@@ -101,7 +101,6 @@ int dfs(int nownode)
         }
     }
 
-
     return 514;
 }
 
@@ -114,6 +113,10 @@ void solve()
 
     f = vector<vector<int>>(n + 5, vector<int>(29, INF));
 
+    for (int i = 0; i <= 26; i++)
+    {
+        f[0][i] = Gcup[i];
+    }
     for (int i = 1; i <= n; i++)
     {
         cin >> node[i].l >> node[i].r;
@@ -125,14 +128,13 @@ void solve()
 
     dfs(1);
 
-    int ans=INF;
-    for(int i=0; i<=26; i++)
+    int ans = INF;
+    for (int i = 0; i <= 26; i++)
     {
-        ans=min(ans, f[1][i]);
+        ans = min(ans, f[1][i]);
     }
 
-    cout<<ans<<endl;
-
+    cout << ans << endl;
 }
 
 signed main()
@@ -148,10 +150,6 @@ signed main()
     for (int i = 3; i <= 26; i++)
     {
         Gcup[i] = Gcup[i - 1] + Gcup[i - 2] + 1;
-    }
-    for (int i = 0; i <= 26; i++)
-    {
-        f[0][i] = Gcup[i];
     }
 
     cin >> T;
