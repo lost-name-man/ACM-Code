@@ -10,7 +10,7 @@ vector<int> fa, isleaf, vis, deep;
 void solve()
 {
     cin >> n;
-    fa = vis = deep = vector<int>(n + 5);
+    fa = vis = deep = vector<int>(n + 5, 0);
     isleaf = vector<int>(n + 5, 1);
     for (int i = 2; i <= n; i++)
     {
@@ -36,7 +36,7 @@ void solve()
             }
             for (int j = 0; j < node.size(); j++)
             {
-                deep[j] = nowdeep + deep[nownode] - (1 + j);
+                deep[node[j]] = nowdeep + deep[nownode] - (1 + j);
             }
             pq.push({deep[i], i});
         }
