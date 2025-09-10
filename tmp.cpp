@@ -3,47 +3,85 @@ using namespace std;
 #define int long long
 #define endl '\n'
 const int INF = 1e18;
-const int MOD = 1e16 + 61;
+const int MOD = 998244353;
 
-struct Cir
-{
-    double x;
-    double y;
-    double r;
-};
+int n;
+string s;
 
-double x[5], y[5];
-Cir c1, c2;
+map<char, int> mp;
 
-double euc(double x1, double y1, double x2, double y2)
-{
-    double x = abs(x1 - x2), y = abs(y1 - y2);
-    return sqrt(x * x + y * y);
-}
+int f[100005][64][8];
 
 void solve()
 {
-    vector<Cir> point;
-    cin >> x[1] >> y[1] >> x[2] >> y[2] >> x[3] >> y[3] >> x[4] >> y[4];
-    c1.x = (x[1] + x[2]) / 2;
-    c1.y = (y[1] + y[2]) / 2;
-    c2.x = (x[3] + x[4]) / 2;
-    c2.y = (y[3] + y[4]) / 2;
-    c1.r = (x[1], y[1], x[2], y[2]) / 2;
-    c2.r = (x[3], y[3], x[4], y[4]) / 2;
-
-    point.push_back({c2.x + sqrt(2) * c2.r / 2, c2.y + sqrt(2) * c2.r / 2, 0});
-    point.push_back({c2.x + sqrt(2) * c2.r / 2, c2.y - sqrt(2) * c2.r / 2, 0});
-    point.push_back({c2.x - sqrt(2) * c2.r / 2, c2.y + sqrt(2) * c2.r / 2, 0});
-    point.push_back({c2.x - sqrt(2) * c2.r / 2, c2.y - sqrt(2) * c2.r / 2, 0});
-
-    double ans = INF;
-    for (int i = 0; i < 4; i++)
+    cin >> n;
+    cin >> s;
+    s = '0' + s;
+    for (int i = 0; i < 9; i++)
     {
-        double dis = abs(point[i].x - c1.x) + abs(point[i].y - c1.y);
-        ans = min(ans, dis);
+        mp['0' + i] = i;
     }
-    cout << ans << endl;
+    for (int i = 0; i < 26; i++)
+    {
+        mp['a' + i] = i + 10;
+    }
+    for (int i = 0; i < 26; i++)
+    {
+        mp['A' + i] = i + 36;
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        int nowc = mp[s[i]];
+        if (s[i] >= 'A' && s[i] <= 'Z')
+        {
+            for (int st = 0; st < 8; st++)
+            {
+                int sum0 = 0, sum1 = 0;
+
+                if ((st & 1) == 0)
+                {
+                    continue;
+                }
+                for (int j = 0; j < 62; j++)
+                {
+                    if (nowc == j)
+                    {
+                        continue;
+                    }
+                    sum1 += f[i - 1][j][st];
+                    sum0 += f[i - 1][j][st ^ 1];
+                }
+                f[i][nowc][st] += sum0 + sum1;
+            }
+        }
+
+        if (s[i] >= '0' && s[i] <= '9')
+        {
+            for (int st = 0; st < 8; st++)
+            {
+                int sum0 = 0, sum1 = 0;
+                for (int j = 0; j < 62; j++)
+                {
+                    if (nowc == j)
+                    {
+                        continue;
+                    }
+                    sum0 += f[i - 1][j][st];
+                    sum1 += f[i - 1][j][st ^ 1];
+                }
+                if ((st & 1) == 0)
+                {
+                    continue;
+                }
+                else
+                {
+
+                    f[i][nowc][st] += sum0 + sum1;
+                }
+            }
+        }
+    }
 }
 
 signed main()
