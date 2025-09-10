@@ -63,6 +63,13 @@ void solve()
     }
     for (int i = 2; i <= n; i++)
     {
+        for (int j = 0; j < 62; j++)
+        {
+            for (int st = 0; st < 8; st++)
+            {
+                f[i & 1][j][st] = 0;
+            }
+        }
         int nowc = mp[s[i]];
         if (s[i] >= 'A' && s[i] <= 'Z')
         {
