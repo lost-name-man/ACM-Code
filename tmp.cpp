@@ -3,34 +3,45 @@ using namespace std;
 #define int long long
 #define endl '\n'
 const int INF = 1e18;
-const int MOD = 1e9 + 7;
+const int MOD = 1e16 + 61;
 
-int n;
-map<string, map<char, int>> mp;
-int prob[27];
+struct Cir
+{
+    double x;
+    double y;
+    double r;
+};
+
+double x[5], y[5];
+Cir c1, c2;
+
+double euc(double x1, double y1, double x2, double y2)
+{
+    double x = abs(x1 - x2), y = abs(y1 - y2);
+    return sqrt(x * x + y * y);
+}
+
 void solve()
 {
-    cin >> n;
-    for (int i = 1; i <= n; i++)
+    vector<Cir> point;
+    cin >> x[1] >> y[1] >> x[2] >> y[2] >> x[3] >> y[3] >> x[4] >> y[4];
+    c1.x = (x[1] + x[2]) / 2;
+    c1.y = (y[1] + y[2]) / 2;
+    c2.x = (x[3] + x[4]) / 2;
+    c2.y = (y[3] + y[4]) / 2;
+    c1.r = (x[1], y[1], x[2], y[2]) / 2;
+    c2.r = (x[3], y[3], x[4], y[4]) / 2;
+
+    point.push_back({c2.x + sqrt(2) * c2.r / 2, c2.y + sqrt(2) * c2.r / 2, 0});
+    point.push_back({c2.x + sqrt(2) * c2.r / 2, c2.y - sqrt(2) * c2.r / 2, 0});
+    point.push_back({c2.x - sqrt(2) * c2.r / 2, c2.y + sqrt(2) * c2.r / 2, 0});
+    point.push_back({c2.x - sqrt(2) * c2.r / 2, c2.y - sqrt(2) * c2.r / 2, 0});
+
+    double ans = INF;
+    for (int i = 0; i < 4; i++)
     {
-        string team, type;
-        char c;
-        cin >> team >> c >> type;
-        if (mp[team][c] == 0 && type[0] == 'a')
-        {
-            mp[team][c] = 1;
-            prob[c - 'A']++;
-        }
-    }
-    int maxn = 0;
-    char ans;
-    for (int i = 0; i < 26; i++)
-    {
-        if (prob[i] > maxn)
-        {
-            maxn = prob[i];
-            ans = i + 'A';
-        }
+        double dis = abs(point[i].x - c1.x) + abs(point[i].y - c1.y);
+        ans = min(ans, dis);
     }
     cout << ans << endl;
 }
