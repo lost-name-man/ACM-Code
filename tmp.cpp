@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-// #define int long long
+#define int long long
 #define endl '\n'
 const int INF = 1e18;
 const int MOD = 998244353;
@@ -85,7 +85,7 @@ void solve()
                     sum0 += f[(i - 1) & 1][j][st ^ 1];
                     sum0 %= MOD;
                 }
-                f[i & 1][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] = sum0 + sum1;
                 f[i & 1][nowc][st] %= MOD;
             }
         }
@@ -111,7 +111,7 @@ void solve()
                     sum1 %= MOD;
                     sum0 %= MOD;
                 }
-                f[i & 1][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] = sum0 + sum1;
                 f[i & 1][nowc][st] %= MOD;
             }
         }
@@ -138,7 +138,7 @@ void solve()
                     sum1 %= MOD;
                     sum0 %= MOD;
                 }
-                f[i & 1][tmpc][st] += sum0 + sum1;
+                f[i & 1][tmpc][st] = sum0 + sum1;
                 f[i & 1][tmpc][st] %= MOD;
             }
 
@@ -161,7 +161,7 @@ void solve()
                     sum1 %= MOD;
                     sum0 %= MOD;
                 }
-                f[i & 1][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] = sum0 + sum1;
                 f[i & 1][nowc][st] %= MOD;
             }
         }
