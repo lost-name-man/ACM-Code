@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define int long long
+// #define int long long
 #define endl '\n'
 const int INF = 1e18;
 const int MOD = 998244353;
@@ -10,7 +10,7 @@ string s;
 
 map<char, int> mp;
 
-int f[100005][64][8];
+int f[2][64][8];
 
 void solve()
 {
@@ -44,6 +44,22 @@ void solve()
     {
         int nowc = mp[s[1]];
         f[1][nowc][(1 << 1)] = 1;
+        f[1][nowc + 26][1] = 1;
+    }
+    if (s[1] == '?')
+    {
+        for (int i = 0; i <= 9; i++)
+        {
+            f[1][i][(1 << 2)] = 1;
+        }
+        for (int i = 10; i <= 35; i++)
+        {
+            f[1][i][(1 << 1)] = 1;
+        }
+        for (int i = 36; i <= 61; i++)
+        {
+            f[1][i][1] = 1;
+        }
     }
     for (int i = 2; i <= n; i++)
     {
@@ -64,10 +80,13 @@ void solve()
                     {
                         continue;
                     }
-                    sum1 += f[i - 1][j][st];
-                    sum0 += f[i - 1][j][st ^ 1];
+                    sum1 += f[(i - 1) & 1][j][st];
+                    sum1 %= MOD;
+                    sum0 += f[(i - 1) & 1][j][st ^ 1];
+                    sum0 %= MOD;
                 }
-                f[i][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] %= MOD;
             }
         }
 
@@ -87,10 +106,13 @@ void solve()
                     {
                         continue;
                     }
-                    sum1 += f[i - 1][j][st];
-                    sum0 += f[i - 1][j][st ^ (1 << 2)];
+                    sum1 += f[(i - 1) & 1][j][st];
+                    sum0 += f[(i - 1) & 1][j][st ^ (1 << 2)];
+                    sum1 %= MOD;
+                    sum0 %= MOD;
                 }
-                f[i][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] %= MOD;
             }
         }
 
@@ -111,10 +133,13 @@ void solve()
                     {
                         continue;
                     }
-                    sum1 += f[i - 1][j][st];
-                    sum0 += f[i - 1][j][st ^ 1];
+                    sum1 += f[(i - 1) & 1][j][st];
+                    sum0 += f[(i - 1) & 1][j][st ^ 1];
+                    sum1 %= MOD;
+                    sum0 %= MOD;
                 }
-                f[i][tmpc][st] += sum0 + sum1;
+                f[i & 1][tmpc][st] += sum0 + sum1;
+                f[i & 1][tmpc][st] %= MOD;
             }
 
             for (int st = 0; st < 8; st++)
@@ -131,10 +156,13 @@ void solve()
                     {
                         continue;
                     }
-                    sum1 += f[i - 1][j][st];
-                    sum0 += f[i - 1][j][st ^ (1 << 1)];
+                    sum1 += f[(i - 1) & 1][j][st];
+                    sum0 += f[(i - 1) & 1][j][st ^ (1 << 1)];
+                    sum1 %= MOD;
+                    sum0 %= MOD;
                 }
-                f[i][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] += sum0 + sum1;
+                f[i & 1][nowc][st] %= MOD;
             }
         }
 
@@ -150,12 +178,15 @@ void solve()
                 }
                 for (int j = 0; j < 62; j++)
                 {
-                    all1 += f[i - 1][j][st];
-                    all0 += f[i - 1][j][st ^ (1 << 2)];
+                    all1 += f[(i - 1) & 1][j][st];
+                    all0 += f[(i - 1) & 1][j][st ^ (1 << 2)];
+                    all1 %= MOD;
+                    all0 %= MOD;
                 }
                 for (int tmpc = 0; tmpc <= 9; tmpc++)
                 {
-                    f[i][tmpc][st] = all1 - f[i - 1][tmpc][st] + all0;
+                    f[i & 1][tmpc][st] = all1 - f[(i - 1) & 1][tmpc][st] + all0;
+                    f[i & 1][tmpc][st] = (f[i & 1][tmpc][st] % MOD + MOD) % MOD;
                 }
             }
             for (int st = 0; st < 8; st++) // xiao xie
@@ -169,12 +200,15 @@ void solve()
                 for (int j = 0; j < 62; j++)
                 {
 
-                    all1 += f[i - 1][j][st];
-                    all0 += f[i - 1][j][st ^ (1 << 1)];
+                    all1 += f[(i - 1) & 1][j][st];
+                    all0 += f[(i - 1) & 1][j][st ^ (1 << 1)];
+                    all1 %= MOD;
+                    all0 %= MOD;
                 }
                 for (int tmpc = 10; tmpc <= 35; tmpc++)
                 {
-                    f[i][tmpc][st] = all1 - f[i - 1][tmpc][st] + all0;
+                    f[i & 1][tmpc][st] = all1 - f[(i - 1) & 1][tmpc][st] + all0;
+                    f[i & 1][tmpc][st] = (f[i & 1][tmpc][st] % MOD + MOD) % MOD;
                 }
             }
 
@@ -189,12 +223,15 @@ void solve()
                 for (int j = 0; j < 62; j++)
                 {
 
-                    all1 += f[i - 1][j][st];
-                    all0 += f[i - 1][j][st ^ 1];
+                    all1 += f[(i - 1) & 1][j][st];
+                    all0 += f[(i - 1) & 1][j][st ^ 1];
+                    all1 %= MOD;
+                    all0 %= MOD;
                 }
                 for (int tmpc = 36; tmpc <= 61; tmpc++)
                 {
-                    f[i][tmpc][st] = all1 - f[i - 1][tmpc][st] + all0;
+                    f[i & 1][tmpc][st] = all1 - f[(i - 1) & 1][tmpc][st] + all0;
+                    f[i & 1][tmpc][st] = (f[i & 1][tmpc][st] % MOD + MOD) % MOD;
                 }
             }
         }
@@ -203,7 +240,8 @@ void solve()
     int ans = 0;
     for (int i = 0; i < 62; i++)
     {
-        ans += f[n][i][7];
+        ans += f[n & 1][i][7];
+        ans %= MOD;
     }
     cout << ans << endl;
 }
