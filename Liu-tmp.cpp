@@ -1,80 +1,154 @@
-#include <cstddef>
 #include <iostream>
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-#include <string>
-#include <cstdlib>
-#include <vector>
 #include <map>
-#include <list>
+#include <vector>
 #include <queue>
-#include <deque>
-#include <stack>
-#include <set>
-#include <functional>
-#include <unordered_set>
-#include <unordered_map>
-#include <numeric>
-#include <iomanip>
-#include <random>
-#include <chrono>
+#include <algorithm>
 using namespace std;
 #define int long long
 #define endl '\n'
-static mt19937_64 rnd(chrono::steady_clock::now().time_since_epoch().count());
-const int INF = 2e9 + 7;
-const int MOD = 1e17 + 7;
+const int INF = 1e18;
+const int MOD = 1e9 + 7;
 
-
-int qmi(int a,int k, int p)
+struct Edge
 {
-    int res = 1;
-    while(k)
-    {
-        if(k & 1) res = res * a % p;
-        k >>= 1;
-        a = a * a % p;
-    }
-    return res;
+    int id;
+    int w;
+    int from;
+    int to;
+    int next;
+};
+vector<Edge> edge;
+vector<int> head;
+int ctot;
+void addedge(int x, int y, int w)
+{
+    ctot++;
+    edge[ctot].from = x;
+    edge[ctot].to = y;
+    edge[ctot].w = w;
+    edge[ctot].next = head[x];
+    head[x] = ctot;
 }
 
-int C(int a,int b,int p)
-{
-    if(a < b) return 0;
+vector<int> fa;
 
-    int res = 1;
-    for(int i = 1, j = a; i <= b; i ++ , j -- )
+int findfa(int x)
+{
+    if (fa[x] == x)
     {
-        res = res * j % p;
-        res = res * qmi(i, p - 2, p) % p;
+        return x;
     }
-    return res;
+
+    int xfa = fa[x];
+    fa[x] = findfa(xfa);
+
+    return fa[x];
 }
 
-int lucas(int a, int b, int p)
+int addfa(int x, int y)
 {
-    if(a < p && b < p) return C(a, b, p);
-    return C(a % p, b % p, p) * lucas(a / p, b / p, p) % p;
+    int fafa = findfa(x);
+    int sonfa = findfa(y);
+    if (fafa > sonfa)
+    {
+        swap(fafa, sonfa);
+    }
+
+    fa[sonfa] = fafa;
+
+    return 1;
 }
 
 void solve()
 {
-    for(int i=1; i<=10; i++)
+
+    int n, m;
+    cin >> n >> m;
+    fa = vector<int>(n + 5, 0);
+    for (int i = 1; i <= n; i++)
     {
-        
+        fa[i] = i;
     }
+
+    vector<int> edg(m + 5, 0);
+    for (int i = 1; i <= m; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+        edg[i]=u;
+        addfa(u, v);
+    }
+
+    map<int, int> size_num;
+
+    vector<int> comp_edgenum(n+5, 0);
+    vector<int> fa_sonnum(n + 5, 0);
+    for (int i = 1; i <= n; i++)
+    {
+        int nowfa = findfa(i);
+        fa_sonnum[nowfa]++;      
+    }
+    for(int i=1; i<=m; i++)
+    {
+        int nowedg = edg[i];
+        int faedg=findfa(nowedg);
+        // cout<<"#"<<faedg<<endl; 
+        comp_edgenum[faedg]++;
+    }
+
+    // for(int i=1; i<=n; i++)
+    // {
+    //     cout<<fa[i]<<endl;
+    // }
+
+    int ans = INF;
+
+    for (int i = 1; i <= n; i++)
+    {
+        if (fa_sonnum[i] != 0)
+        {
+            size_num[fa_sonnum[i]]++;
+
+            int nodenum = fa_sonnum[i];
+            int edgenum = comp_edgenum[i];
+            int shouldedge = (nodenum * (nodenum - 1)) / 2;
+            int delta = shouldedge - edgenum;
+
+            // cout<<"@"<<nodenum<<" "<<edgenum<<endl;
+
+            if (delta > 0)
+            {
+
+                ans = min(ans, delta);
+            }
+        }
+    }
+
+    if (ans == INF)
+    {
+        // cout<<"!"<<endl;
+        vector<int> zwei_machten;
+        for (auto iter = size_num.begin(); iter != size_num.end(); iter++)
+        {
+            while (zwei_machten.size() < 2 && iter->second > 0)
+            {
+                zwei_machten.push_back(iter->first);
+                iter->second--;
+            }
+        }
+
+        ans = zwei_machten[0] * zwei_machten[1];
+    }
+
+    cout << ans << endl;
 }
 
 signed main()
 {
     ios::sync_with_stdio(0);
     cin.tie(0);
-
     int T = 1;
-
     // cin >> T;
-
     for (int i = 1; i <= T; i++)
     {
         solve();
