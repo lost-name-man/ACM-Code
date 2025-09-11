@@ -72,7 +72,7 @@ int inv(int x)
     return mypow(x, MOD - 2);
 }
 
-vector<vector<int>> lfa;
+vector<vector<signed>> lfa;
 vector<int> deep;
 void initlca()
 {
@@ -170,7 +170,7 @@ void solve()
     edge = vector<Edge>(n * 2 + 5);
     err = vector<Edge>(n + 5);
 
-    lfa = vector<vector<int>>(n + 5, vector<int>(24));
+    lfa = vector<vector<signed>>(n + 5, vector<signed>(24));
     tot = 1;
 
     for (int i = 1; i <= n; i++)
@@ -219,8 +219,13 @@ void solve()
             }
             if (findfa(lfa[tmpnode][0]) == fay)
             {
-                ans *= inv(nodenum[fax] * nodenum[fay]);
+                ans *= inv(nodenum[fax] * nodenum[fay] % MOD);
                 ans %= MOD;
+            }
+            else
+            {
+                ans = 0;
+                break;
             }
         }
         else
@@ -238,6 +243,11 @@ void solve()
             {
                 ans *= inv(nodenum[fax] * nodenum[fay] % MOD);
                 ans %= MOD;
+            }
+            else
+            {
+                ans = 0;
+                break;
             }
         }
 
