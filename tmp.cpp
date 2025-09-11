@@ -236,12 +236,13 @@ void solve()
             }
             if (findfa(lfa[tmpnode][0]) == fax)
             {
-                ans *= inv(nodenum[fax] * nodenum[fay]);
+                ans *= inv(nodenum[fax] * nodenum[fay] % MOD);
                 ans %= MOD;
             }
         }
 
         nodenum[fa[y]] += nodenum[fa[x]];
+        nodenum[fa[y]] %= MOD;
         connect(x, y);
     }
     cout << ans << endl;
