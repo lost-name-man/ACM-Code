@@ -40,13 +40,14 @@ vector<int> fax;
 vector<int> fay;
 void solve()
 {
+
     cin >> k >> x >> y;
 
     fax.clear();
     fay.clear();
     base.clear();
     int basenum = 1;
-    while (basenum * (k + 1) <= 1e18 && basenum * (k + 1) > 0)
+    while (basenum <= 1e18 && basenum > 0)
     {
         base.push_back(basenum);
         basenum *= (k + 1);
