@@ -1,23 +1,37 @@
-#include <bits/stdc++.h>
-#define int long long
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+#include <queue>
+
 using namespace std;
-
-const int INF = 1e18;
-
-int n;
-void solve()
+typedef long long ll;
+int main()
 {
-    cin >> n;
-    int x = ceil(n * 1.0 / 2 + 1);
-    cout <<
-}
-signed main()
-{
-    int T = 1;
-    cin >> T;
-    for (int i = 1; i <= T; i++)
+    int T;
+    scanf("%d", &T);
+    while (T--)
     {
-        solve();
+        ll a, b;
+        scanf("%lld%lld", &a, &b);
+        ll i = 0;
+        __int128 j = 1;
+        while (true)
+        {
+            ++i;
+            j *= 2;
+            if (b %j != 0)
+            {
+                printf("%lld %lld\n", i, 0LL);
+                break;
+            }
+            j *= 2;
+            if (a %j != 0)
+            {
+                printf("%lld %lld\n", i, 1LL);
+                break;
+            }
+        }
     }
     return 0;
 }

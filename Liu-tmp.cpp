@@ -18,6 +18,8 @@ void solve()
     int a, b;
     cin>>a>>b;
 
+    // cout<<"!"<<a<<" "<<b<<endl;
+
     if(a==1)
     {
         cout<<1<<" "<<1<<endl;
@@ -65,12 +67,16 @@ void solve()
                 zweipow++;
                 tmpb/=2;
             }
+
+
         }
 
         cout<<zweipow<<" "<<1<<endl;
     }
     
 }
+
+
 
 signed main()
 {
