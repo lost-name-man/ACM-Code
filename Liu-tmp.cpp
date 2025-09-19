@@ -52,7 +52,7 @@ void solve()
             }
         }
 
-        cout<<zweipow+1<<" "<<1<<endl;
+        cout<<zweipow+1<<" "<<0<<endl;
 
     }
     else
