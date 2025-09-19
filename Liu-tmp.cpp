@@ -10,189 +10,112 @@ using namespace std;
 const int INF = 1e18 + 3;
 const int MOD = 20220911;
 
-int l, r;
-vector<int> lbi, rbi;
-
-void tobi(int x, vector<int> &re)
+struct Sub
 {
-    for (int i = 60; i >= 0; i--)
-    {
-        re[i] = (x >> i) & 1;
-    }
-}
+    int id;
+    map<int, int>card_num;
+    
+    pair<int, int> declare_x_y;
+    map<int, int>lastdispose;
 
-int cmp(vector<int> &a, vector<int> &b)
-{
-    for (int i = 63; i >= 0; i--)
-    {
-        if (a[i] > b[i])
-        {
-            return 1;
-        }
-        else if (a[i] < b[i])
-        {
-            return -1;
-        }
-    }
-    return 0;
-}
+};
+vector<Sub>sub(4);
+map<int, int>ondesk_cards;
+int nowsub=0;
 void solve()
 {
-    cin >> l >> r;
-    lbi = rbi = vector<int>(64);
-    tobi(l, lbi);
-    tobi(r, rbi);
-
-    vector<int> tmplbi(64);
-    vector<int> ansbi(64);
-
-    if (2 >= l && 2 <= r)
+    for(int i=0; i<4; i++)
     {
-        cout << 2 << endl;
-        return;
+        for(int j=1; j<=13; j++)
+        {
+            int x;
+            cin>>x;
+            sub[i].card_num[x]++;
+        }
     }
-    int ok = 0;
-    for (int i = 2; i <= 32; i++)
+
+    int m;
+    cin>>m;
+
+    
+    for(int turn=1; turn<=m; turn++)
     {
-        ansbi = vector<int>(64);
-        tmplbi = vector<int>(64);
-        int onenum = i - 1;
-        int low = (1 << i);
-        int tmpl = l - low;
-        tobi(tmpl, tmplbi);
+        int lastsub=(nowsub-1+4)%4;
 
-        int all0 = 1;
-        for (int j = 0; j <= i; j++)
+        char op;
+        cin>>op;
+        if(op=='S')
         {
-            if (tmplbi[j] == 1)
-            {
-                all0 = 0;
-            }
-        }
-        for (int j = 60; j > i; j--)
-        {
-            if (tmplbi[j] == 1)
-            {
-                if (onenum > 0)
-                {
-                    ansbi[j] = 1;
-                }
-                onenum--;
-            }
-        }
-        if (onenum < 0)
-        {
-            int chal;
-            for (int j = 0; j <= 60; j++)
-            {
-                if (ansbi[j] == 1 && ansbi[j + 1] == 0) // 1 to rear
-                {
-                    swap(ansbi[j], ansbi[j + 1]);
-                    chal = j + 1;
-                    break;
-                }
-            }
-            int einnum = 0;
-            for (int j = i + 1; j <= chal - 1; j++)
-            {
-                if (ansbi[j] == 1)
-                {
-                    einnum++;
-                    ansbi[j] == 0;
-                }
-            }
+            cin>>sub[nowsub].declare_x_y.first>>sub[nowsub].declare_x_y.second;
+            sub[nowsub].lastdispose.clear();
 
-            for (int j = i + 1; j <= chal - 1; j++)
+            for(int i=1; i<=sub[nowsub].declare_x_y.second; i++)
             {
-                if (einnum == 0)
-                {
-                    break;
-                }
-                if (ansbi[j] == 0)
-                {
-                    ansbi[j] = 1;
-                    einnum--;
-                }
+                int x;
+                cin>>x;
+                sub[nowsub].lastdispose[x]++;
+                sub[nowsub].card_num[x]--;
+                ondesk_cards[x]++;
             }
         }
-        else if (onenum > 0)
+        else if(op=='!')
         {
-            for (int j = i + 1; j <= 63; j++)
+            
+            sub[nowsub].declare_x_y.first=sub[lastsub].declare_x_y.first;
+            cin>>sub[nowsub].declare_x_y.second;
+            sub[nowsub].lastdispose.clear();
+
+            for(int i=1; i<=sub[nowsub].declare_x_y.second; i++)
             {
-                if (ansbi[j] == 0)
-                {
-                    ansbi[j] = 1;
-                    onenum--;
-                }
-                if (onenum == 0)
-                {
-                    break;
-                }
+                int x;
+                cin>>x;
+                sub[nowsub].lastdispose[x]++;
+                sub[nowsub].card_num[x]--;
+                ondesk_cards[x]++;
             }
         }
         else
         {
-            if (all0 != 1)
+            if(sub[lastsub].lastdispose[sub[lastsub].declare_x_y.first]==sub[lastsub].declare_x_y.second)
             {
-
-                //
-                int chal;
-                for (int j = 0; j <= 60; j++)
+                for(auto iter=ondesk_cards.begin(); iter!=ondesk_cards.end(); iter++)
                 {
-                    if (ansbi[j] == 1 && ansbi[j + 1] == 0) // 1 to rear
-                    {
-                        swap(ansbi[j], ansbi[j + 1]);
-                        chal = j + 1;
-                        break;
-                    }
-                }
-                int einnum = 0;
-                for (int j = i + 1; j <= chal - 1; j++)
-                {
-                    if (ansbi[j] == 1)
-                    {
-                        einnum++;
-                        ansbi[j] == 0;
-                    }
+                    sub[nowsub].card_num[iter->first]+=iter->second;
                 }
 
-                for (int j = i + 1; j <= chal - 1; j++)
+                ondesk_cards.clear();
+                
+            }
+            else
+            {
+                for(auto iter=ondesk_cards.begin(); iter!=ondesk_cards.end(); iter++)
                 {
-                    if (einnum == 0)
-                    {
-                        break;
-                    }
-                    if (ansbi[j] == 0)
-                    {
-                        ansbi[j] = 1;
-                        einnum--;
-                    }
+                    sub[lastsub].card_num[iter->first]+=iter->second;
                 }
+
+                ondesk_cards.clear();
             }
         }
 
-        ansbi[i] = 1;
-        int check = cmp(ansbi, rbi);
-        if (check == 0 || check == -1)
+
+        //remedies
+        nowsub=(nowsub+1)%4;
+    }    
+
+    
+    for(int i=0; i<4; i++)
+    {
+        for(auto iter=sub[i].card_num.begin(); iter!=sub[i].card_num.end(); iter++)
         {
-            ok = 1;
-            break;
+            while(iter->second>0)
+            {
+                cout<<iter->first<<" ";
+                iter->second--;
+            }
         }
+        cout<<endl;
     }
 
-    if (ok == 0)
-    {
-        cout << -1 << endl;
-        return;
-    }
-
-    int ans = 0;
-    for (int i = 0; i <= 63; i++)
-    {
-        ans += ansbi[i] * (1 << i);
-    }
-
-    cout << ans << endl;
 }
 
 signed main()
@@ -200,7 +123,7 @@ signed main()
     ios::sync_with_stdio(0);
     cin.tie(0);
     int T = 1;
-    cin >> T;
+    // cin >> T;
     for (int i = 1; i <= T; i++)
     {
         solve();
