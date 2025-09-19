@@ -54,7 +54,8 @@ void solve()
             }
         }
 
-        cout<<zweipow+1<<" "<<0<<endl;
+        // cout<<"!"<<zweipow<<" "<<0<<endl;
+        cout<<(zweipow+3)/2<<" "<<0<<endl;
 
     }
     else
@@ -71,7 +72,7 @@ void solve()
 
         }
 
-        cout<<zweipow<<" "<<1<<endl;
+        cout<<(zweipow+2)/2<<" "<<1<<endl;
     }
     
 }
