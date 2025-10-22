@@ -21,7 +21,7 @@ void solve()
     s = '0' + s;
     t = '0' + t;
 
-    for (int i = 1; i <= lens; i++)
+    for (int i = 0; i <= lens; i++)
     {
         for (int j = 1; j <= lent + 1; j++)
         {
