@@ -20,27 +20,77 @@ using namespace std;
 #define int long long
 #define endl '\n'
 const int INF = 1e18 + 3;
-const int MOD = 20220911;
+const int MOD = 998244353;
 
+vector<int> fa;
+
+int findfa(int x)
+{
+    if (fa[x] == x)
+    {
+        return x;
+    }
+    return fa[x] = findfa(fa[x]);
+}
+
+void connect(int x, int y)
+{
+    int fax = findfa(x), fay = findfa(y);
+    if (fax != fay)
+    {
+        fa[fax] = fay;
+    }
+}
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<int> arr(n + 5);
-    int maxn = 0;
-    for (int i = 1; i <= n; i++)
+    fa = vector<int>(26);
+    for (int i = 0; i < 26; i++)
     {
-        cin >> arr[i];
-        maxn = max(maxn, arr[i]);
+        fa[i] = i;
     }
-    for (int i = 1; i <= n; i++)
+    string s1, s2, s3;
+    cin >> s1 >> s2 >> s3;
+    if (s1.size() != s2.size())
     {
-        if (arr[i] == maxn)
+        cout << "NO" << endl;
+        return;
+    }
+    else if (s1.size() != s3.size())
+    {
+        cout << "YES" << endl;
+        return;
+    }
+
+    for (int i = 0; i < s1.size(); i++)
+    {
+        if (s1[i] != s2[i])
         {
-            cout << i << ' ';
+            connect(s1[i] - 'a', s2[i] - 'a');
         }
     }
-    cout << endl;
+
+    int ok = 0;
+    for (int i = 0; i < s1.size(); i++)
+    {
+        if (s1[i] == s3[i])
+        {
+            continue;
+        }
+        if (findfa(s1[i] - 'a') != findfa(s3[i] - 'a'))
+        {
+            ok = 1;
+            break;
+        }
+    }
+
+    if (ok == 0)
+    {
+        cout << "NO" << endl;
+    }
+    else
+    {
+        cout << "YES" << endl;
+    }
 }
 
 signed main()
@@ -50,6 +100,7 @@ signed main()
     int T = 1;
     cin >> T;
 
+    // return 0;
     for (int i = 1; i <= T; i++)
     {
         solve();
