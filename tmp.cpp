@@ -22,75 +22,128 @@ using namespace std;
 const int INF = 1e18 + 3;
 const int MOD = 998244353;
 
-vector<int> fa;
-
-int findfa(int x)
+struct Node
 {
-    if (fa[x] == x)
+    int id;
+    int val;
+    int lnode = 0, rnode = 0;
+};
+
+int n, k;
+vector<int> arr;
+vector<Node> tree;
+
+int okdivi;
+int nowx;
+int root = 0;
+int dfs(int nownode)
+{
+    int nowgcd = arr[nownode] + nowx;
+    int lgcd = 0, rgcd = 0;
+    if (tree[nownode].lnode != 0)
     {
-        return x;
+        int lgcd = dfs(tree[nownode].lnode);
     }
-    return fa[x] = findfa(fa[x]);
+    if (tree[nownode].rnode != 0)
+    {
+        int rgcd = dfs(tree[nownode].rnode);
+    }
+
+    nowgcd = __gcd(__gcd(lgcd, rgcd), nowgcd);
+    if (nowgcd % (arr[nownode] + nowx) != 0)
+    {
+        okdivi = 0;
+    }
+    return nowgcd;
 }
-
-void connect(int x, int y)
+int checkans(int x)
 {
-    int fax = findfa(x), fay = findfa(y);
-    if (fax != fay)
-    {
-        fa[fax] = fay;
-    }
+    okdivi = 1;
+    nowx = x;
+    dfs(root);
+    return okdivi;
 }
 void solve()
 {
-    fa = vector<int>(26);
-    for (int i = 0; i < 26; i++)
+    cin >> n;
+    cin >> k;
+    arr = vector<int>(n + 5);
+    tree = vector<Node>(n + 5);
+    for (int i = 1; i <= n; i++)
     {
-        fa[i] = i;
+        cin >> arr[i];
     }
-    string s1, s2, s3;
-    cin >> s1 >> s2 >> s3;
-    if (s1.size() != s2.size())
+
+    if (n == 1)
     {
-        cout << "NO" << endl;
+        cout << k << ' ' << k * (k + 1) / 2 << endl;
         return;
     }
-    else if (s1.size() != s3.size())
+    stack<int> st;
+
+    for (int i = 1; i <= n; i++)
     {
-        cout << "YES" << endl;
-        return;
+        int lastp = 0;
+        while (!st.empty() && arr[st.top()] > arr[i])
+        {
+            lastp = st.top();
+            st.pop();
+        }
+
+        if (lastp)
+        {
+            tree[i].lnode = lastp;
+        }
+        if (!st.empty())
+        {
+            tree[st.top()].rnode = i;
+        }
+        else
+        {
+            root = i;
+        }
+        st.push(i);
     }
 
-    for (int i = 0; i < s1.size(); i++)
+    int maxans = arr[2] - arr[1];
+    for (int i = 1; i < n; i++)
     {
-        if (s1[i] != s2[i])
+        maxans = __gcd(maxans, abs(arr[i + 1] - arr[i]));
+    }
+    vector<int> posi_divi;
+    for (int i = 1; i * i <= maxans; i++)
+    {
+        if (maxans % i == 0)
         {
-            connect(s1[i] - 'a', s2[i] - 'a');
+            if (i - arr[root] >= 1 && i - arr[root] <= k)
+            {
+                posi_divi.push_back(i);
+            }
+            if (maxans / i != i)
+            {
+                if (maxans / i - arr[root] >= 1 && maxans / i - arr[root] <= k)
+                {
+                    posi_divi.push_back(maxans / i);
+                }
+            }
         }
     }
 
-    int ok = 0;
-    for (int i = 0; i < s1.size(); i++)
+    int ans = 0;
+    int num = 0;
+    for (int i = 0; i < posi_divi.size(); i++)
     {
-        if (s1[i] == s3[i])
-        {
-            continue;
-        }
-        if (findfa(s1[i] - 'a') != findfa(s3[i] - 'a'))
-        {
-            ok = 1;
-            break;
-        }
-    }
+        int nowdivi = posi_divi[i];
+        int nowx = nowdivi - arr[root];
+        int ok = checkans(nowx);
 
-    if (ok == 0)
-    {
-        cout << "NO" << endl;
+        if (ok == 1)
+        {
+            num++;
+            ans += nowx;
+        }
     }
-    else
-    {
-        cout << "YES" << endl;
-    }
+    cout << num << ' ' << ans << endl;
 }
 
 signed main()
