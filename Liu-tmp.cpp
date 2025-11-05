@@ -23,123 +23,109 @@ const int INF = 1e18 + 3;
 const int MOD = 998244353;
 
 
-struct Nex
+map<string, int>val_exist;
+
+int do3(int a, int b, map<int, int>&arr)
 {
-    int id;
-    int nexL=-1;
-    int nexR=-1;
-    int nexLR=-1;
-};
+    arr[a|b]=1;
+    arr[a&b]=1;
+    arr[a^b]=1;
+
+    return 0;
+}
+
+string do33(int a, int b)
+{
+
+    string einzwei;
+
+    string astr, bstr;
+
+
+    while(a)
+    {
+        int i=a%2;
+        astr+=(char)(i+'0');
+        a/=2;
+    }
+    while(astr.size()<32)
+    {
+        astr+='0';
+    }
+
+    while(b)
+    {
+        int i=b%2;
+        bstr+=(char)(i+'0');
+        b/=2;
+    }
+    while(bstr.size()<32)
+    {
+        bstr+='0';
+    }
+
+    // cout<<astr<<endl;
+
+
+    for(int i=0; i<32; i++)
+    {
+        if(astr[i]=='1' || bstr[i]=='1')
+        {
+            einzwei[i]='1';
+        }
+    }
+    
+    
+
+    return einzwei;
+
+}
 
 void solve()
 {
+    int n;
+    cin>>n;
 
-    string s;
-    cin>>s;
+    int ori=0;
 
-    s="@"+s + "@";
-
-
-    vector<Nex>nex(s.size()+5);
-
-
-
-    for(int i=s.size()-1; i>=0; i--)
+    vector<int>arr(n+5, 0);
+    for(int i=1; i<=n; i++)
     {
-        if(i!=0)
+        cin>>arr[i];
+
+        if(i>1)
         {
-            nex[i-1].nexL=nex[i].nexL;
-            nex[i-1].nexR=nex[i].nexR;
-            nex[i-1].nexLR=nex[i].nexLR;
+            val_exist[do33(arr[i-1], arr[i])]=1;
         }
         
-        if(s[i]=='L')
+    }
+
+    int ans=0;
+
+    int nullnum=0;
+    for(auto iter=val_exist.begin(); iter!=val_exist.end(); iter++)
+    {
+        int einnum=0;
+        for(int i=0; i<32; i++)
         {
-            nex[i-1].nexL=i;
-            if(s[i+1]=='R')
+            if(iter->first[i]=='1')
             {
-                nex[i-1].nexLR=i;
+                einnum++;
             }
         }
-        else if(s[i]=='R')
+        if(einnum!=0)
         {
-            nex[i-1].nexR=i;
+            ans+=pow(2, einnum);
+        }
+        else
+        {
+            nullnum=1;
         }
         
     }
 
 
-
-    int q;
-    cin>>q;
-    for(int Q=1; Q<=q; Q++)
-    {
-        string t;
-        cin>>t;
-
-        t=t+"@";
-
-        int si=0;
-        for(int ti=0; ti<t.size()-1; ti++)
-        {
-            char tch=t[ti];
-
-            if(tch=='L')
-            {
-                if(t[ti+1]=='R')
-                {
-                    int nexsi=nex[si].nexLR;
-                    if(nexsi==-1)
-                    {
-                        goto WAAA;
-                    }
-                    else
-                    {
-                        si=nexsi+1;
-                    }
-                }
-                else
-                {
-                    int nexsi=nex[si].nexL;
-                    if(nexsi==-1)
-                    {
-                        goto WAAA;
-                    }
-                    else
-                    {
-                        si=nexsi;
-                    }
-                }
-            }
-            else
-            {
-                int nexsi=nex[si].nexR;
-                if(nexsi==-1)
-                {
-                    goto WAAA;
-                }
-                else
-                {
-                    si=nexsi;
-                }
-            }
-
-        }
-
-
-        cout<<"YES"<<endl;
-
-
-        if(0)
-        {
-            WAAA:;
-
-            cout<<"NO"<<endl;
-
-        }
-    }
-
-
+    cout<<ans+nullnum<<endl;
 
 }
 
@@ -148,9 +134,7 @@ signed main()
     // ios::sync_with_stdio(0);
     // cin.tie(0);
     int T = 1;
-    cin >> T;
-
-
+    //  cin >> T;
 
     // return 0;
     for (int i = 1; i <= T; i++)
