@@ -22,91 +22,30 @@ using namespace std;
 const int INF = 1e18 + 3;
 const int MOD = 998244353;
 
-int n, k;
-
-vector<int> fa;
-vector<pair<int, int>> crood;
-
-struct Edge
-{
-    int x;
-    int y;
-    double dis;
-    bool operator<(const Edge &other) const
-    {
-        return this->dis > other.dis;
-    }
-};
-
-int findfa(int x)
-{
-    if (fa[x] == x)
-    {
-        return x;
-    }
-    return fa[x] = findfa(fa[x]);
-}
-
-void connnect(int x, int y)
-{
-    int fax = findfa(x), fay = findfa(y);
-    if (fax != fay)
-    {
-        fa[fax] = fay;
-    }
-}
+int n, m;
+int f[1003][1003];
 void solve()
 {
-    cin >> n >> k;
-    fa = vector<int>(n + 5);
-
+    string sa, sb;
+    cin >> n >> m;
+    cin >> sa >> sb;
+    sa = '@' + sa;
+    sb = '@' + sb;
     for (int i = 1; i <= n; i++)
     {
-        fa[i] = i;
-    }
-    crood = vector<pair<int, int>>(n + 5);
-    for (int i = 1; i <= n; i++)
-    {
-        int x, y;
-
-        cin >> x >> y;
-        crood[i] = {x, y};
-    }
-    priority_queue<Edge> pq;
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = i + 1; j <= n; j++)
+        for (int j = 1; j <= m; j++)
         {
-            double dis = sqrt((crood[i].first - crood[j].first) * (crood[i].first - crood[j].first) + (crood[i].second - crood[j].second) * (crood[i].second - crood[j].second));
-            pq.push({i, j, dis});
+            if (sa[i] == sb[j])
+            {
+                f[i][j] = max({f[i - 1][j - 1] + 1, f[i - 1][j], f[i][j - 1]});
+            }
+            else
+            {
+                f[i][j] = max({f[i - 1][j], f[i][j - 1]});
+            }
         }
     }
-
-    int num = n;
-    while (num > k)
-    {
-        Edge nowedge = pq.top();
-        pq.pop();
-        int fax = findfa(nowedge.x), fay = findfa(nowedge.y);
-        if (fax != fay)
-        {
-            connnect(fax, fay);
-            num--;
-        }
-    }
-    double ans;
-    while (!pq.empty())
-    {
-        Edge nowedge = pq.top();
-        pq.pop();
-        int fax = findfa(nowedge.x), fay = findfa(nowedge.y);
-        if (fax != fay)
-        {
-            ans = nowedge.dis;
-            break;
-        }
-    }
-    cout << setprecision(9) << fixed << ans << endl;
+    cout << f[n][m] << endl;
 }
 
 signed main()
