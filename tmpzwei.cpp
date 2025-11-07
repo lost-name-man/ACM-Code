@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
+#include <iterator>
 #include <string>
 #include <cstdlib>
 #include <vector>
@@ -39,14 +40,23 @@ int gcd(int a,int b)
         return gcd(b, a%b);
     }
 }
+
+int spx[2000005];
+void divierase(int num)
+{
+
+}
 int n,q;
 vector<int> arr;
+set<pair<int,int>> st;
+
+
 
 void solve()
 {
 
     cin>>n>>q;
-    set<pair<int,int>> st;
+    
 
     int lastindex=1;
     map<int,map<int,int>> divi;
@@ -91,17 +101,74 @@ void solve()
         auto it = st.lower_bound({p,0});
         if(v > arr[p])
         {
-            if(p!=n && arr[p]>arr[p+1])
+            if(p==it->first)
             {
-                if(p==it->first)
+                if(p!=1 && arr[p]>= arr[p-1])
                 {
-                    if(v >= arr[p-1] && p!=1)
+                    if(it->first == it->second)
                     {
-                        pair<int,int> tmpp=*it;
-                        tmpp.first++;
-                        it--;
-                        
+                        st.erase(it);
+
                     }
+                    else 
+                    {
+                        pair<int,int> tmp = *it;
+                        tmp.first++;
+                        st.erase(it);
+                        st.insert(tmp);
+                    }
+                    
+                    it--;
+                    pair<int,int> tmp = *it;
+                    tmp.second++;
+                    st.erase(it);
+                    st.insert(tmp);
+                }
+            }
+            else if(p!=it->second)
+            {
+                if(arr[p] > arr[p+1])
+                {
+                    pair<int,int> tmpl = {it->first ,p} , tmpr={p+1 , it->second};
+                    st.erase(it);
+                    st.insert(tmpl);
+                    st.insert(tmpr);
+                }
+            }
+        }
+        else if(v<arr[p])
+        {
+            if(p==it->second)
+            {
+                if(p!=n && arr[p] <= arr[p+1])
+                {
+                    if(it->first == it->second)
+                    {
+                        st.erase(it);
+                    }
+                    else 
+                    {
+                        pair<int,int> tmp = *it;
+                        tmp.second--;
+                        st.erase(it);
+                        st.insert(tmp);
+                    }
+                    
+                    it++;
+                    pair<int,int> tmp = *it;
+                    tmp.first--;
+                    st.erase(it);
+                    st.insert(tmp);
+                }
+            }
+            else if(p!=it->first) //长度至少为2
+            {
+                if(arr[p] < arr[p-1])
+                {
+                    pair<int,int> tmpl = {it->first ,p-1} , tmpr={p , it->second};
+                    st.erase(it);
+                    st.insert(tmpl);
+                    st.insert(tmpr);
                 }
             }
         }
