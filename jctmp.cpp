@@ -74,7 +74,7 @@ void update(int tot, int index, int x)
 
 int ask_divi_num(int num)
 {
-    if (num == 1)
+    if (num == 1 || num == 0)
     {
         return 1;
     }
@@ -91,6 +91,7 @@ int ask_divi_num(int num)
         }
         re *= cnt + 1;
     }
+    return re;
 }
 void solve()
 {
@@ -119,7 +120,8 @@ void solve()
     {
         int p, v;
         cin >> p >> v;
-        auto it = st.lower_bound({p, 0});
+        auto it = st.upper_bound({p, INF});
+        it--;
         if (v > arr[p])
         {
             if (p == it->first)
