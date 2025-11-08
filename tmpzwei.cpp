@@ -127,7 +127,7 @@ void solve()
     int quonum=prequo[n];
 
 
-    for(int j=1; j<=quonum; j++)
+    for(int j=0; j<=quonum; j++)
     {
         for(int k=0; k<=quonum; k++)
         {
