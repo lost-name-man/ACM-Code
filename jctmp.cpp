@@ -56,7 +56,7 @@ int query(int tot, int L, int R)
 void update(int tot, int index, int x)
 {
     int mid = (tree[tot].l + tree[tot].r) / 2;
-    if (tree[tot].l == index)
+    if (tree[tot].l == tree[tot].r && tree[tot].l == index)
     {
         tree[tot].val = x;
         return;
@@ -74,7 +74,11 @@ void update(int tot, int index, int x)
 
 int ask_divi_num(int num)
 {
-    if (num == 1 || num == 0)
+    if (num == 0)
+    {
+        return n;
+    }
+    if (num == 1)
     {
         return 1;
     }
@@ -170,6 +174,25 @@ void solve()
                     }
                     st.insert(tmp);
                 }
+                else if (p == 1 && it->first != it->second && v > arr[p + 1])
+                {
+                    pair<int, int> tmpl = {1, 1}, tmpr = {2, it->second};
+                    if (it->second != n)
+                    {
+                        update(1, it->first, 0);
+                    }
+                    if (tmpl.second != n)
+                    {
+                        update(1, tmpl.first, 1);
+                    }
+                    if (tmpr.second != n)
+                    {
+                        update(1, tmpr.first, tmpr.second - tmpr.first + 1);
+                    }
+                    st.erase(it);
+                    st.insert(tmpl);
+                    st.insert(tmpr);
+                }
             }
             else if (p != it->second)
             {
@@ -207,7 +230,8 @@ void solve()
                         {
                             update(1, it->first, 0);
                         }
-                        st.erase(it);
+                        it = st.erase(it);
+                        it--;
                     }
                     else
                     {
@@ -222,7 +246,8 @@ void solve()
                         {
                             update(1, tmp.first, tmp.second - tmp.first + 1);
                         }
-                        st.erase(it);
+                        it = st.erase(it);
+                        it--;
                         st.insert(tmp);
                     }
 
@@ -238,6 +263,26 @@ void solve()
                     }
                     st.erase(it);
                     st.insert(tmp);
+                }
+                else if (p == n && it->first != it->second && v < arr[p - 1])
+                {
+
+                    pair<int, int> tmpl = {it->first, n - 1}, tmpr = {n, n};
+                    if (it->second != n)
+                    {
+                        update(1, it->first, 0);
+                    }
+                    if (tmpl.second != n)
+                    {
+                        update(1, tmpl.first, tmpl.second - tmpl.first + 1);
+                    }
+                    if (tmpr.second != n)
+                    {
+                        update(1, tmpr.first, 1);
+                    }
+                    st.erase(it);
+                    st.insert(tmpl);
+                    st.insert(tmpr);
                 }
             }
             else if (p != it->first) // 长度至少为2
