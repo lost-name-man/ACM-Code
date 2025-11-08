@@ -72,7 +72,7 @@ void solve()
 
 
                 if(str[i]!='?')
-                {
+                { 
                     int nowch=str[i]-'a';
 
                     for(int rch=0; rch<=2; rch++)
@@ -127,30 +127,50 @@ void solve()
     int quonum=prequo[n];
 
 
-    // for(int j=0; j<=quonum; j++)
-    // {
-    //     for(int k=0; k<=quonum; k++)
-    //     {
-    //         for(int l=0; l<=quonum; l++)
-    //         {
-    //             cout<<"! "<<j<<" "<<k<<" "<<l<<" ==";
-    //             cout<<f[n][j][k][l]<<endl;
-    //         }
+    for(int j=1; j<=quonum; j++)
+    {
+        for(int k=0; k<=quonum; k++)
+        {
+            int l=quonum-j-k;
 
-    //     }
-    // }
+            for(int abc=0; abc<=2; abc++)
+            {
+                ans[j][k][l]+=f[n][j][k][abc];
+            }
+                
+            
+        }
+    }
+
+
+    for(int j=0; j<=quonum; j++)
+    {
+        for(int k=0; k<=quonum; k++)
+        {
+            for(int l=0; l<=quonum; l++)
+            {
+                cout<<"! "<<j<<" "<<k<<" "<<l<<" ==";
+                cout<<ans[j][k][l]<<endl;
+            }
+
+        }
+    }
 
 
 
 
-
+    // -----------------
     for(int j=1; j<=quonum; j++)
     {
         for(int k=0; k<=quonum; k++)
         {
             for(int l=0; l<=quonum; l++)
             {
-                ans[j][k][l]+=ans[j-1][k][l] + f[n][j][k][l];
+                for(int abc=0; abc<=2; abc++)
+                {
+                    ans[j][k][l]+=ans[j-1][k][l];
+                }
+                
             }
         }
     }
@@ -160,7 +180,11 @@ void solve()
         {
             for(int l=0; l<=quonum; l++)
             {
-                ans[j][k][l]+=ans[j][k-1][l] + f[n][j][k][l];
+                for(int abc=0; abc<=2; abc++)
+                {
+                    ans[j][k][l]+=ans[j][k-1][l];
+                }
+                
             }
         }
     }
@@ -170,10 +194,16 @@ void solve()
         {
             for(int l=1; l<=quonum; l++)
             {
-                ans[j][k][l]+=ans[j][k][l-1] + f[n][j][k][l];
+                for(int abc=0; abc<=2; abc++)
+                {
+                    ans[j][k][l]+=ans[j][k][l-1];
+                }
             }
         }
     }
+
+
+    
 
     for(int i=1; i<=q; i++)
     {
