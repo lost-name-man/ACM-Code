@@ -1,101 +1,75 @@
-#include <iostream>
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-#include <iterator>
-#include <string>
-#include <cstdlib>
-#include <vector>
-#include <map>
-#include <list>
-#include <queue>
-#include <deque>
-#include <stack>
-#include <set>
-#include <functional>
-#include <unordered_set>
-#include <unordered_map>
-#include <numeric>
-#include <iomanip>
+#include <bits/stdc++.h>
 using namespace std;
 #define int long long
 #define endl '\n'
 const int INF = 1e18 + 3;
 
-int gcd(int a, int b)
+struct Segtree
 {
+    int l;
+    int r;
+    int val;
+};
 
-    if (a < b)
-    {
-        swap(a, b);
-    }
-
-    if (b == 0)
-    {
-        return a;
-    }
-    else
-    {
-        return gcd(b, a % b);
-    }
-}
+vector<Segtree> tree;
 
 int n, q;
 vector<int> arr;
 set<pair<int, int>> st;
-map<int, map<int, int>> divi;
 
 int nowgcd;
 
 int spx[2000005];
-void divierase(int num)
+
+// Segtree
+void build(int tot, int L, int R)
 {
-    int nownum = num;
-    while (nownum != 1)
+    tree[tot].l = L, tree[tot].r = R;
+    if (L == R)
     {
-        int nowp = spx[nownum];
-        int cnt = 0;
-        while (nownum % nowp == 0)
-        {
-            cnt++;
-            nownum /= nowp;
-        }
-        divi[nowp][cnt]--;
-        if (divi[nowp][cnt] == 0)
-        {
-            divi[nowp].erase(cnt);
-            if (!divi[nowp].empty())
-            {
-                nowgcd = nowgcd / pow(nowp, cnt) * pow(nowp, divi[nowp].begin()->first);
-            }
-        }
+        tree[tot].val = 0;
+        return;
+    }
+    int mid = (L + R) / 2;
+    build(tot * 2, L, mid);
+    build(tot * 2 + 1, mid + 1, R);
+    tree[tot].val = 0;
+}
+
+int query(int tot, int L, int R)
+{
+    int mid = (L + R) / 2;
+    if (tree[tot].l >= L && tree[tot].r <= R)
+    {
+        return tree[tot].val;
+    }
+    else if (tree[tot].l > R || tree[tot].r < L)
+    {
+        return 0;
+    }
+    else
+    {
+        return __gcd(query(tot * 2, L, mid), query(tot * 2 + 1, mid + 1, R));
     }
 }
 
-void diviadd(int num)
+void update(int tot, int index, int x)
 {
-    if (num == 1)
+    int mid = (tree[tot].l + tree[tot].r) / 2;
+    if (tree[tot].l == index)
     {
-        nowgcd = 1;
+        tree[tot].val = x;
         return;
     }
-    int nownum = num;
-    while (nownum != 1)
+    if (index <= mid)
     {
-        int nowp = spx[nownum];
-        int cnt = 0;
-        while (nownum % nowp == 0)
-        {
-            cnt++;
-            nownum /= nowp;
-        }
-
-        if (cnt < divi[nowp].begin()->first)
-        {
-            nowgcd = nowgcd / pow(nowp, divi[nowp].begin()->first - cnt);
-        }
-        divi[nowp][cnt]++;
+        update(tot * 2, index, x);
     }
+    else
+    {
+        update(tot * 2 + 1, index, x);
+    }
+    tree[tot].val = __gcd(tree[tot * 2].val, tree[tot * 2 + 1].val);
 }
 
 int ask_divi_num(int num)
@@ -123,42 +97,24 @@ void solve()
 
     cin >> n >> q;
     vector<int> arr(n + 5);
+    tree = vector<Segtree>(4 * n + 5);
     st = set<pair<int, int>>();
-    divi = map<int, map<int, int>>();
-    int lastindex = 1;
 
+    int lastindex = 1;
+    build(1, 1, n);
     for (int i = 1; i <= n; i++)
     {
         cin >> arr[i];
         if (arr[i - 1] > arr[i])
         {
             st.insert({lastindex, i - 1});
+            update(1, lastindex, i - 1 - lastindex + 1);
             lastindex = i;
         }
     }
     st.insert({lastindex, n});
-    nowgcd = st.begin()->second - st.begin()->first + 1;
-    for (auto it = st.begin(); it->second != n; it++)
-    {
 
-        int len = it->second - it->first + 1;
-        nowgcd = gcd(nowgcd, it->second - it->first + 1);
-        int tmp = len;
-        while (tmp != 1)
-        {
-            int i = spx[tmp];
-            int divinum = 0;
-            while (tmp % i == 0)
-            {
-                divinum++;
-                tmp /= i;
-            }
-
-            divi[i][divinum]++;
-        }
-    }
-
-    cout << nowgcd << endl;
+    cout << ask_divi_num(tree[1].val) << endl;
     for (int i = 1; i <= q; i++)
     {
         int p, v;
@@ -176,25 +132,25 @@ void solve()
 
                         if (it->second != n)
                         {
-                            divierase(it->second - it->first + 1);
+                            update(1, it->first, 0);
                         }
                         it = st.erase(it);
                         it--;
                     }
                     else
                     {
-                        cotmp.second = cotmp.first;
+                        cotmp.second = cotmp.first; // yi ge
                         pair<int, int> tmp = *it;
                         tmp.first++;
                         if (it->second != n)
                         {
-                            divierase(it->second - it->first + 1);
+                            update(1, tmp.first, 0);
                         }
                         it = st.erase(it);
                         it--;
                         if (tmp.second != n)
                         {
-                            diviadd(tmp.second - tmp.first + 1);
+                            update(1, tmp.first, tmp.second - tmp.first + 1);
                         }
                         st.insert(tmp);
                     }
@@ -203,12 +159,12 @@ void solve()
                     tmp.second = cotmp.second;
                     if (it->second != n)
                     {
-                        divierase(it->second - it->first + 1);
+                        update(1, it->first, 0);
                     }
                     st.erase(it);
                     if (tmp.second != n)
                     {
-                        diviadd(tmp.second - tmp.first + 1);
+                        update(1, it->first, tmp.second - tmp.first + 1);
                     }
                     st.insert(tmp);
                 }
@@ -220,15 +176,15 @@ void solve()
                     pair<int, int> tmpl = {it->first, p}, tmpr = {p + 1, it->second};
                     if (it->second != n)
                     {
-                        divierase(it->second - it->first + 1);
+                        update(1, it->first, 0);
                     }
                     if (tmpl.second != n)
                     {
-                        diviadd(tmpl.second - tmpl.first + 1);
+                        update(1, tmpl.first, tmpl.second - tmpl.first + 1);
                     }
                     if (tmpr.second != n)
                     {
-                        divierase(tmpr.second - tmpr.first + 1);
+                        update(1, tmpr.first, tmpr.second - tmpr.first + 1);
                     }
                     st.erase(it);
                     st.insert(tmpl);
@@ -240,41 +196,43 @@ void solve()
         {
             if (p == it->second)
             {
+                pair<int, int> cotmp = *it;
                 if (p != n && v <= arr[p + 1])
                 {
-                    if (it->first == it->second)
+                    if (it->first == it->second || v >= arr[p - 1])
                     {
                         if (it->second != n)
                         {
-                            divierase(it->second - it->first + 1);
+                            update(1, it->first, 0);
                         }
                         st.erase(it);
                     }
                     else
                     {
+                        cotmp.first = cotmp.second;
                         pair<int, int> tmp = *it;
                         tmp.second--;
                         if (it->second != n)
                         {
-                            divierase(it->second - it->first + 1);
+                            update(1, it->first, 0);
                         }
                         if (tmp.second != n)
                         {
-                            diviadd(tmp.second - tmp.first + 1);
+                            update(1, tmp.first, tmp.second - tmp.first + 1);
                         }
                         st.erase(it);
                         st.insert(tmp);
                     }
 
                     pair<int, int> tmp = *it;
-                    tmp.first--;
+                    tmp.first = cotmp.first;
                     if (it->second != n)
                     {
-                        divierase(it->second - it->first + 1);
+                        update(1, it->first, 0);
                     }
                     if (tmp.second != n)
                     {
-                        diviadd(tmp.second - tmp.first + 1);
+                        update(1, tmp.first, tmp.second - tmp.first + 1);
                     }
                     st.erase(it);
                     st.insert(tmp);
@@ -287,15 +245,18 @@ void solve()
                     pair<int, int> tmpl = {it->first, p - 1}, tmpr = {p, it->second};
                     if (it->second != n)
                     {
-                        divierase(it->second - it->first + 1);
+                        update(1, it->first, 0);
+                        // divierase(it->second - it->first + 1);
                     }
                     if (tmpl.second != n)
                     {
-                        diviadd(tmpl.second - tmpl.first + 1);
+                        update(1, tmpl.first, tmpl.second - tmpl.first + 1);
+                        // diviadd(tmpl.second - tmpl.first + 1);
                     }
                     if (tmpr.second != n)
                     {
-                        diviadd(tmpr.second - tmpr.first + 1);
+                        update(1, tmpr.first, tmpr.second - tmpr.first + 1);
+                        // diviadd(tmpr.second - tmpr.first + 1);
                     }
                     st.erase(it);
                     st.insert(tmpl);
@@ -304,7 +265,7 @@ void solve()
             }
         }
         arr[p] = v;
-        cout << nowgcd << endl;
+        cout << ask_divi_num(tree[1].val) << endl;
     }
 }
 
@@ -329,7 +290,6 @@ signed main()
     cin >> T;
 
     init();
-    // return 0;
     for (int i = 1; i <= T; i++)
     {
         solve();
