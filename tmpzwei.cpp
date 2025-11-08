@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
-#include <iterator>
 #include <string>
 #include <cstdlib>
 #include <vector>
@@ -21,162 +20,178 @@ using namespace std;
 #define int long long
 #define endl '\n'
 const int INF = 1e18 + 3;
+const int MOD = 1e9+7;
 
 
-int gcd(int a,int b)
-{
 
-    if(a<b)
-    {
-        swap(a, b);
-    }
-
-    if(b==0)
-    {
-        return a;
-    }
-    else
-    {
-        return gcd(b, a%b);
-    }
-}
-
-int spx[2000005];
-void divierase(int num)
-{
-
-}
-int n,q;
-vector<int> arr;
-set<pair<int,int>> st;
-
-
+int f[305][305][305][3]={0};
+int ans[305][305][305]={0};
 
 void solve()
 {
-
+    int n, q;
     cin>>n>>q;
+    string str;
+    cin>>str;
+    str="@"+str;
     
 
-    int lastindex=1;
-    map<int,map<int,int>> divi;
+    vector<int>prequo(n+5, 0);
+
+    for(int i=1; i<=n; i++)
+    {
+        prequo[i]+=prequo[i-1];
+        if(str[i]=='?')
+        {
+            prequo[i]++;
+        }
+    }
+
+    //a==0 b==1 c==2
+
+    if(str[1]=='?')
+    {
+        
+        f[1][1][0][0]=1;
+        f[1][0][1][1]=1;
+        f[1][0][0][2]=1;
+    }
+    else
+    {
+        f[1][0][0][str[1]-'a']=1;
+    }
+
     
-    for(int i=1;i<=n;i++)
+    for(int i=2; i<=n; i++)
     {
-        cin>>arr[i];
-        if(arr[i-1]>arr[i])
+        for(int j=0; j<=prequo[i]; j++)
         {
-            st.insert({lastindex,i-1});
-            lastindex=i;
-        }
-    }
-    st.insert({lastindex,n});
-    int nowgcd=st.begin()->second - st.begin()->first + 1;
-    for(auto it = st.begin();it->second!=n;it++)
-    {
-
-        int len=it->second - it->first + 1;
-        int nowgcd=gcd(nowgcd , it->second - it->first + 1);
-        int tmp=len;
-        for(int i=2;i*i<=tmp;i++)
-        {
-            int divinum=0;
-            while(tmp%i==0)
+            for(int k=0; k<=prequo[i]-j; k++)
             {
-                divinum++;
-                tmp/=i;
-            }
-            if(divinum)
-            {
-                divi[i][divinum]++;
-            }
+                int l=prequo[i]-j-k;
 
-        } 
-    }
 
-    for(int i=1;i<=q;i++)
-    {
-        int p,v;
-        cin>>p>>v;
-        auto it = st.lower_bound({p,0});
-        if(v > arr[p])
-        {
-            if(p==it->first)
-            {
-                if(p!=1 && arr[p]>= arr[p-1])
+                if(str[i]!='?')
                 {
-                    if(it->first == it->second)
+                    int nowch=str[i]-'a';
+
+                    for(int rch=0; rch<=2; rch++)
                     {
-                        st.erase(it);
+                        if(rch==nowch)
+                        {
+                            continue;
+                        }
+                        f[i][j][k][nowch] += f[i-1][j][k][rch];
+                    }
+                }
+                else
+                {
+
+                    // ------------------------------------
+                    // A
+                    if(j)
+                    {
+                        f[i][j][k][0] += f[i-1][j-1][k][1];
+                        f[i][j][k][0] += f[i-1][j-1][k][2];
+                        f[i][j][k][0] %=MOD;
+                    }
+
+                    // B
+                    if(k)
+                    {
+                        f[i][j][k][1] += f[i-1][j][k-1][0];
+                        f[i][j][k][1] += f[i-1][j][k-1][2];
+                        f[i][j][k][1] %=MOD;
+                    }
+
+                    // C
+                    if(l)
+                    {
+                        f[i][j][k][2] += f[i-1][j][k][0];
+                        f[i][j][k][2] += f[i-1][j][k][1];
+                        f[i][j][k][2] %=MOD;
 
                     }
-                    else 
-                    {
-                        pair<int,int> tmp = *it;
-                        tmp.first++;
-                        st.erase(it);
-                        st.insert(tmp);
-                    }
-                    
-                    it--;
-                    pair<int,int> tmp = *it;
-                    tmp.second++;
-                    st.erase(it);
-                    st.insert(tmp);
+
+
+                    // ------------------------------------
                 }
-            }
-            else if(p!=it->second)
-            {
-                if(arr[p] > arr[p+1])
-                {
-                    pair<int,int> tmpl = {it->first ,p} , tmpr={p+1 , it->second};
-                    st.erase(it);
-                    st.insert(tmpl);
-                    st.insert(tmpr);
-                }
-            }
-        }
-        else if(v<arr[p])
-        {
-            if(p==it->second)
-            {
-                if(p!=n && arr[p] <= arr[p+1])
-                {
-                    if(it->first == it->second)
-                    {
-                        st.erase(it);
-                    }
-                    else 
-                    {
-                        pair<int,int> tmp = *it;
-                        tmp.second--;
-                        st.erase(it);
-                        st.insert(tmp);
-                    }
-                    
-                    it++;
-                    pair<int,int> tmp = *it;
-                    tmp.first--;
-                    st.erase(it);
-                    st.insert(tmp);
-                }
-            }
-            else if(p!=it->first) //长度至少为2
-            {
-                if(arr[p] < arr[p-1])
-                {
-                    pair<int,int> tmpl = {it->first ,p-1} , tmpr={p , it->second};
-                    st.erase(it);
-                    st.insert(tmpl);
-                    st.insert(tmpr);
-                }
+                
             }
         }
     }
 
 
+    
 
-   
+    int quonum=prequo[n];
+
+
+    // for(int j=0; j<=quonum; j++)
+    // {
+    //     for(int k=0; k<=quonum; k++)
+    //     {
+    //         for(int l=0; l<=quonum; l++)
+    //         {
+    //             cout<<"! "<<j<<" "<<k<<" "<<l<<" ==";
+    //             cout<<f[n][j][k][l]<<endl;
+    //         }
+
+    //     }
+    // }
+
+
+
+
+
+    for(int j=1; j<=quonum; j++)
+    {
+        for(int k=0; k<=quonum; k++)
+        {
+            for(int l=0; l<=quonum; l++)
+            {
+                ans[j][k][l]+=ans[j-1][k][l] + f[n][j][k][l];
+            }
+        }
+    }
+    for(int j=0; j<=quonum; j++)
+    {
+        for(int k=1; k<=quonum; k++)
+        {
+            for(int l=0; l<=quonum; l++)
+            {
+                ans[j][k][l]+=ans[j][k-1][l] + f[n][j][k][l];
+            }
+        }
+    }
+    for(int j=0; j<=quonum; j++)
+    {
+        for(int k=0; k<=quonum; k++)
+        {
+            for(int l=1; l<=quonum; l++)
+            {
+                ans[j][k][l]+=ans[j][k][l-1] + f[n][j][k][l];
+            }
+        }
+    }
+
+    for(int i=1; i<=q; i++)
+    {
+        int x, y, z;
+
+        cin>>x>>y>>z;
+        x=min(x, quonum);
+        y=min(y, quonum);
+        z=min(z, quonum);
+
+
+
+        cout<<ans[x][y][z]<<endl;
+
+    }
+
+
+
 
 }
 
@@ -185,9 +200,8 @@ signed main()
     // ios::sync_with_stdio(0);
     // cin.tie(0);
     int T = 1;
-    cin >> T;
+    //  cin >> T;
 
-    // return 0;
     for (int i = 1; i <= T; i++)
     {
         solve();
