@@ -170,7 +170,7 @@ void solve()
                     st.erase(it);
                     if (tmp.second != n)
                     {
-                        update(1, it->first, tmp.second - tmp.first + 1);
+                        update(1, tmp.first, tmp.second - tmp.first + 1);
                     }
                     st.insert(tmp);
                 }
@@ -231,7 +231,6 @@ void solve()
                             update(1, it->first, 0);
                         }
                         it = st.erase(it);
-                        it--;
                     }
                     else
                     {
@@ -247,7 +246,6 @@ void solve()
                             update(1, tmp.first, tmp.second - tmp.first + 1);
                         }
                         it = st.erase(it);
-                        it--;
                         st.insert(tmp);
                     }
 
