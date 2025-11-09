@@ -42,11 +42,11 @@ int dfs(int nownode)
     int lgcd = 0, rgcd = 0;
     if (tree[nownode].lnode != 0)
     {
-        int lgcd = dfs(tree[nownode].lnode);
+        lgcd = dfs(tree[nownode].lnode);
     }
     if (tree[nownode].rnode != 0)
     {
-        int rgcd = dfs(tree[nownode].rnode);
+        rgcd = dfs(tree[nownode].rnode);
     }
 
     nowgcd = __gcd(__gcd(lgcd, rgcd), nowgcd);
@@ -105,10 +105,16 @@ void solve()
         st.push(i);
     }
 
-    int maxans = arr[2] - arr[1];
+    int maxans = abs(arr[2] - arr[1]);
     for (int i = 1; i < n; i++)
     {
         maxans = __gcd(maxans, abs(arr[i + 1] - arr[i]));
+    }
+
+    if (maxans == 0)
+    {
+        cout << k << ' ' << k * (k + 1) / 2 << endl;
+        return;
     }
     vector<int> posi_divi;
     for (int i = 1; i * i <= maxans; i++)
