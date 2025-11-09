@@ -6,40 +6,66 @@ const int INF = 1e18 + 3;
 
 int a, b;
 int maxop;
+int ans;
 int checkans(int num, int a, int b)
 {
     int cnt = 0;
-    for (int i = 1; i <= maxop; i++)
+    for (int i = 1; i <= ans; i++)
     {
+        int nowgcd = __gcd(a, b);
+        a /= nowgcd;
+        b /= nowgcd;
+        if (a == 1 || b == 1)
+        {
+            cnt += 2;
+            break;
+        }
         if (num & 1)
         {
-            a -= __gcd(a, b);
+            a--;
         }
         else
         {
-            b -= __gcd(a, b);
+            b--;
         }
         num >>= 1;
         cnt++;
-        if (a == 0 || b == 0)
+        if (a == 1 || b == 1)
         {
-            cnt++;
+            cnt += 2;
             break;
         }
     }
     return cnt;
 }
 
-void dfs(int a, int b, int deep)
-{
-}
+// void dfs(int a, int b, int deep)
+// {
+//     if(deep >= ans)
+//     {
+//         return;
+//     }
+//     if(a==1 || b==1)
+//     {
+//         ans=min(ans,deep+2);
+//         return;
+//     }
+// }
 
 void solve()
 {
     cin >> a >> b;
-    int ans = 30;
 
-    maxop = log2(a) * 2 + 2;
+    int nowgcd = __gcd(a, b);
+    a /= nowgcd;
+    b /= nowgcd;
+    if (a == 1 || b == 1)
+    {
+        cout << 2 << endl;
+        return;
+    }
+    maxop = log2(a) * 2 + 1;
+    ans = maxop;
     for (int i = 0; i < (1ll << maxop); i++)
     {
         ans = min(ans, checkans(i, a, b));
