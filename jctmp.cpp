@@ -39,38 +39,49 @@ int checkans(int num, int a, int b)
     return cnt;
 }
 
-// void dfs(int a, int b, int deep)
-// {
-//     if(deep >= ans)
-//     {
-//         return;
-//     }
-//     if(a==1 || b==1)
-//     {
-//         ans=min(ans,deep+2);
-//         return;
-//     }
-// }
-
-void solve()
+void dfs(int a, int b, int deep)
 {
-    cin >> a >> b;
+    if (deep >= ans - 2)
+    {
+        return;
+    }
 
     int nowgcd = __gcd(a, b);
     a /= nowgcd;
     b /= nowgcd;
     if (a == 1 || b == 1)
     {
-        cout << 2 << endl;
+        ans = min(ans, deep + 2);
         return;
     }
-    maxop = log2(a) * 2 + 1;
+    dfs(a - 1, b, deep + 1);
+    dfs(a, b - 1, deep + 1);
+}
+
+void solve()
+{
+    cin >> a >> b;
+
+    maxop = log2(a) * 2 + 2;
     ans = maxop;
-    for (int i = 0; i < (1ll << maxop); i++)
-    {
-        ans = min(ans, checkans(i, a, b));
-    }
+    dfs(a, b, 0);
     cout << ans << endl;
+
+    // int nowgcd = __gcd(a, b);
+    // a /= nowgcd;
+    // b /= nowgcd;
+    // if (a == 1 || b == 1)
+    // {
+    //     cout << 2 << endl;
+    //     return;
+    // }
+    // maxop = log2(a) * 2 + 1;
+    // ans = maxop;
+    // for (int i = 0; i < (1ll << maxop); i++)
+    // {
+    //     ans = min(ans, checkans(i, a, b));
+    // }
+    // cout << ans << endl;
 }
 
 signed main()
