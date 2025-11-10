@@ -4,84 +4,73 @@ using namespace std;
 #define endl '\n'
 const int INF = 1e18 + 3;
 
-int a, b;
-int maxop;
-int ans;
-int checkans(int num, int a, int b)
+int n, k;
+int sumop;
+int work1(int cn)
 {
     int cnt = 0;
-    for (int i = 1; i <= ans; i++)
+
+    while (cn > 1)
     {
-        int nowgcd = __gcd(a, b);
-        a /= nowgcd;
-        b /= nowgcd;
-        if (a == 1 || b == 1)
-        {
-            cnt += 2;
-            break;
-        }
-        if (num & 1)
-        {
-            a--;
-        }
-        else
-        {
-            b--;
-        }
-        num >>= 1;
+        cn -= ceil(cn * 1.0 / k);
         cnt++;
-        if (a == 1 || b == 1)
-        {
-            cnt += 2;
-            break;
-        }
     }
-    return cnt;
-}
 
-void dfs(int a, int b, int deep)
+    int index = 1;
+    for (int i = 1; i <= cnt; i++)
+    {
+        index = index + ceil(index * 1.0 / (k - 1));
+    }
+    return index;
+}
+int work2(int cn)
 {
-    if (deep >= ans - 2)
+    int cnt = 0;
+    while (cn > 1)
     {
-        return;
+        int nowde = ceil(cn * 1.0 / k);
+
+        if (nowde == 1)
+        {
+            cnt += cn - 1;
+            cn = 1;
+            continue;
+        }
+        int be_next_num = cn - ((nowde - 1) * k + 1) + 1; // 成为下一个至少需要减多少
+        int to_next_turn = ceil(be_next_num * 1.0 / nowde);
+
+        cnt += to_next_turn;
+        cn -= to_next_turn * nowde;
     }
 
-    int nowgcd = __gcd(a, b);
-    a /= nowgcd;
-    b /= nowgcd;
-    if (a == 1 || b == 1)
+    int nowcnt = 0;
+    int index = 1;
+    while (nowcnt < cnt)
     {
-        ans = min(ans, deep + 2);
-        return;
+        int addnum = ceil(index * 1.0 / (k - 1));
+        int be_next_num = (addnum) * (k - 1) + 1; // 前面有addnum个-1与一个1
+        int to_next_turn = ceil((be_next_num - index) * 1.0 / addnum);
+
+        int turn = min(cnt - nowcnt, to_next_turn);
+        index = index + turn * addnum;
+        nowcnt += turn;
     }
-    dfs(a - 1, b, deep + 1);
-    dfs(a, b - 1, deep + 1);
+
+    return index;
 }
-
 void solve()
 {
-    cin >> a >> b;
-
-    maxop = log2(a) * 2 + 2;
-    ans = maxop;
-    dfs(a, b, 0);
+    cin >> n >> k;
+    int ans;
+    if (k < 1e9 && k * k <= n)
+    {
+        ans = work1(n);
+    }
+    else
+    {
+        ans = work2(n);
+    }
     cout << ans << endl;
-
-    // int nowgcd = __gcd(a, b);
-    // a /= nowgcd;
-    // b /= nowgcd;
-    // if (a == 1 || b == 1)
-    // {
-    //     cout << 2 << endl;
-    //     return;
-    // }
-    // maxop = log2(a) * 2 + 1;
-    // ans = maxop;
-    // for (int i = 0; i < (1ll << maxop); i++)
-    // {
-    //     ans = min(ans, checkans(i, a, b));
-    // }
-    // cout << ans << endl;
 }
 
 signed main()
