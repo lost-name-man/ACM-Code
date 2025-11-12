@@ -4,82 +4,85 @@ using namespace std;
 #define endl '\n'
 const int INF = 1e18 + 3;
 
-int tot = 1;
+int n;
+vector<int> arr, brr, crr;
 
-int n, m;
-vector<int> p;
-vector<map<int, int>> g;
-int pindex;
-
-vector<int> du, vis, visnum;
-vector<pair<int, int>> eans;
-int ans = 0;
-
-void dfs(int nownode, int fa)
+bool p(int num)
 {
-
-    vis[nownode] = 1;
-
-    for (auto it = g[nownode].begin(); it != g[nownode].end(); it++)
+    vector<int> pre(n + 5);
+    // int cnt = 0;
+    for (int i = 1; i <= n; i++)
     {
-        visnum[it->first]++;
-    }
-    while (visnum[nownode] < du[nownode] && pindex <= n)
-    {
-        int neednode = p[pindex];
-        if (g[nownode][neednode])
+        if (arr[i] == 0)
         {
-            pindex++;
-            dfs(neednode, nownode);
+            if (brr[i] >= num)
+            {
+                pre[1]++;
+                pre[n + 1]--;
+            }
+            continue;
+        }
+        double lx = (num - brr[i]) * 1.0 / arr[i];
+
+        if (arr[i] > 0)
+        {
+            int lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
+            pre[lindex]++;
+            pre[n + 1]--;
         }
         else
         {
-            du[nownode]++;
-            du[neednode]++;
-            visnum[neednode]++;
-            g[neednode][nownode] = 1;
-            g[nownode][neednode] = 1;
-
-            pindex++;
-            ans++;
-            eans.push_back({nownode, neednode});
-            dfs(neednode, nownode);
+            int rindex = upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin();
+            pre[1]++;
+            pre[rindex]--;
         }
     }
+    int stdnum = n / 2 + (n & 1);
+    int nownum = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        nownum += pre[i];
+        if (nownum >= stdnum)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
-
 void solve()
 {
-    ans = 0;
-    cin >> n >> m;
-    p = du = vis = visnum = vector<int>(n + 5);
-    g = vector<map<int, int>>(n + 5, map<int, int>());
-    pindex = 1;
-    for (int i = 1; i <= m; i++)
+    cin >> n;
+    arr = brr = crr = vector<int>(n + 5);
+    for (int i = 1; i <= n; i++)
     {
-        int x, y;
-        cin >> x >> y;
-        du[x]++;
-        du[y]++;
-        g[x][y] = 1;
-        g[y][x] = 1;
+        cin >> arr[i];
     }
     for (int i = 1; i <= n; i++)
     {
-        cin >> p[i];
+        cin >> brr[i];
     }
-
-    while (pindex <= n)
+    for (int i = 1; i <= n; i++)
     {
-        int neednode = p[pindex];
-        pindex++;
-        dfs(neednode, 0);
+        cin >> crr[i];
+    }
+    sort(crr.begin() + 1, crr.begin() + 1 + n);
+
+    int l = -2 * (1e18), r = 2 * 1e18;
+    int ans;
+    while (l <= r)
+    {
+        int mid = (l + r) / 2;
+        if (p(mid))
+        {
+            l = mid + 1;
+            ans = mid;
+        }
+        else
+        {
+            r = mid - 1;
+        }
     }
     cout << ans << endl;
-    for (int i = 0; i < eans.size(); i++)
-    {
-        cout << eans[i].first << ' ' << eans[i].second << endl;
-    }
 }
 
 signed main()
@@ -87,7 +90,7 @@ signed main()
     ios::sync_with_stdio(0);
     cin.tie(0);
     int T = 1;
-    // cin >> T;
+    cin >> T;
     for (int i = 1; i <= T; i++)
     {
         solve();
