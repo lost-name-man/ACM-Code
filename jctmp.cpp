@@ -11,7 +11,7 @@ vector<int> p;
 vector<map<int, int>> g;
 int pindex;
 
-vector<int> du, vis;
+vector<int> du, vis, visnum;
 vector<pair<int, int>> eans;
 int ans = 0;
 
@@ -19,19 +19,14 @@ void dfs(int nownode, int fa)
 {
 
     vis[nownode] = 1;
-    int visnum = 1;
-    if (fa == 0)
+
+    for (auto it = g[nownode].begin(); it != g[nownode].end(); it++)
     {
-        visnum = 0;
+        visnum[it->first]++;
     }
-    while (visnum < du[nownode] && pindex <= n)
+    while (visnum[nownode] < du[nownode] && pindex <= n)
     {
         int neednode = p[pindex];
-        if (vis[neednode] == 1)
-        {
-            visnum++;
-            continue;
-        }
         if (g[nownode][neednode])
         {
             pindex++;
@@ -41,14 +36,15 @@ void dfs(int nownode, int fa)
         {
             du[nownode]++;
             du[neednode]++;
-            g[neednode][nownode]++;
-            g[nownode][neednode]++;
+            visnum[neednode]++;
+            g[neednode][nownode] = 1;
+            g[nownode][neednode] = 1;
+
             pindex++;
             ans++;
             eans.push_back({nownode, neednode});
             dfs(neednode, nownode);
         }
-        visnum++;
     }
 }
 
@@ -56,7 +52,7 @@ void solve()
 {
     ans = 0;
     cin >> n >> m;
-    p = du = vis = vector<int>(n + 5);
+    p = du = vis = visnum = vector<int>(n + 5);
     g = vector<map<int, int>>(n + 5, map<int, int>());
     pindex = 1;
     for (int i = 1; i <= m; i++)
