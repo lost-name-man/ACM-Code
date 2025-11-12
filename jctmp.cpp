@@ -1,4 +1,21 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <vector>
+#include <map>
+#include <list>
+#include <queue>
+#include <deque>
+#include <stack>
+#include <set>
+#include <functional>
+#include <unordered_set>
+#include <unordered_map>
+#include <numeric>
+#include <iomanip>
 using namespace std;
 #define int long long
 #define endl '\n'
@@ -9,45 +26,116 @@ vector<int> arr, brr, crr;
 
 bool p(int num)
 {
-    vector<int> pre(n + 5);
-    // int cnt = 0;
+    // vector<int> pre(n + 5);
+    //  int cnt = 0;
+    vector<int> inv1, inv2;
     for (int i = 1; i <= n; i++)
     {
         if (arr[i] == 0)
         {
             if (brr[i] >= num)
             {
-                pre[1]++;
-                pre[n + 1]--;
+                inv1.push_back(1);
             }
             continue;
         }
-        double lx = (num - brr[i]) * 1.0 / arr[i];
+        int lx = (num - brr[i]) / arr[i];
+        int exp = (((num - brr[i]) % arr[i]) != 0);
 
-        if (arr[i] > 0)
+        int tmpa = (num - brr[i]), tmpb = arr[i];
+        if (tmpa > 0 && tmpb < 0 || tmpa > 0 && tmpb < 0)
         {
-            int lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-            pre[lindex]++;
-            pre[n + 1]--;
+            if (arr[i] > 0)
+            {
+                int lindex;
+                if (exp)
+                {
+                    lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
+                }
+                else
+                {
+                    lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
+                }
+
+                inv1.push_back(lindex);
+            }
+            else
+            {
+                int rindex;
+
+                if (exp)
+                {
+                    rindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
+                }
+                else
+                {
+                    rindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin() - 1);
+                }
+                inv2.push_back(rindex - 1);
+            }
         }
         else
         {
-            int rindex = upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin();
-            pre[1]++;
-            pre[rindex]--;
+
+            if (arr[i] > 0)
+            {
+                int lindex;
+                if (exp)
+                {
+                    lindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
+                }
+                else
+                {
+                    lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
+                }
+
+                inv1.push_back(lindex);
+            }
+            else
+            {
+                int rindex;
+
+                if (exp)
+                {
+                    rindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
+                }
+                else
+                {
+                    rindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
+                }
+                inv2.push_back(rindex - 1);
+            }
         }
     }
-    int stdnum = n / 2 + (n & 1);
+    sort(inv1.begin(), inv1.end(), greater<int>());
+    sort(inv2.begin(), inv2.end());
+
     int nownum = 0;
-    for (int i = 1; i <= n; i++)
+    int index1 = n, index2 = 1;
+    for (int i = 0; i < inv1.size(); i++)
     {
-        nownum += pre[i];
-        if (nownum >= stdnum)
+        if (index1 >= inv1[i] && index1 >= index2)
         {
-            return 1;
+            index1--;
+            nownum++;
         }
     }
-    return 0;
+    for (int i = 0; i < inv2.size(); i++)
+    {
+        if (index2 <= inv2[i] && index1 >= index2)
+        {
+            index2++;
+            nownum++;
+        }
+    }
+    if (nownum >= (n / 2 + n % 2))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 void solve()
 {
@@ -68,10 +156,12 @@ void solve()
     sort(crr.begin() + 1, crr.begin() + 1 + n);
 
     int l = -2 * (1e18), r = 2 * 1e18;
-    int ans;
+    int ans = 0;
     while (l <= r)
     {
         int mid = (l + r) / 2;
+
+        // int mid = (l + r) / 2;
         if (p(mid))
         {
             l = mid + 1;
