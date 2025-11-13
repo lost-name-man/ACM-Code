@@ -22,96 +22,78 @@ using namespace std;
 const int INF = 1e18;
 
 int n, m, k;
-vector<vector<int>> crood, anscrood;
+string s;
 
-pair<int, int> steps[4] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+vector<int> pre;
+int f[200005][6][2];
 
-int checkout(int x, int y)
+bool p(int x)
 {
-    if (x < 1 || x > n || y < 1 || y > m)
+    memset(f, 0x7f, sizeof(f));
+    for (int i = 0; i <= n; i++)
     {
-        return 0;
+        f[i][0][0] = 0;
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        int lastindex = i - x;
+        if (lastindex <= 0)
+        {
+            for (int j = 1; j <= k; j++)
+            {
+
+                f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
+            }
+            continue;
+        }
+        for (int j = 1; j <= k; j++)
+        {
+            f[i][j][1] = f[lastindex][j - 1][0] + (pre[i] - pre[lastindex]);
+            f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
+        }
+    }
+
+    if (f[n][k][0] <= m || f[n][k][1] <= m)
+    {
+        return 1;
     }
     else
     {
-        return 1;
+        return 0;
     }
 }
 void solve()
 {
     cin >> n >> m >> k;
-    crood = vector<vector<int>>(n + 5, vector<int>(m + 5));
-    anscrood = vector<vector<int>>(n + 5, vector<int>(m + 5, INF));
-
-    int headx, heady;
-    for (int i = 1; i <= k; i++)
-    {
-        int x, y;
-        cin >> x >> y;
-        if (i == 1)
-        {
-            headx = x, heady = y;
-        }
-        crood[x][y] = k - i + 1;
-    }
-    crood[headx][heady] = 0;
+    cin >> s;
+    s = '0' + s;
+    pre = vector<int>(n + 5);
     for (int i = 1; i <= n; i++)
     {
-        for (int j = 1; j <= m; j++)
+        pre[i] = pre[i - 1];
+        if (s[i] == '0')
         {
-            char tmp;
-            cin >> tmp;
-            if (tmp == '#')
-            {
-                crood[i][j] = INF;
-            }
+            pre[i]++;
         }
     }
 
-    // bfs
-    vector<vector<int>> vis(n + 5, vector<int>(m + 5));
-    queue<pair<int, int>> q;
+    int l = 1, r = n;
 
-    anscrood[headx][heady] = 0;
-    q.push({headx, heady});
-    while (!q.empty())
+    int ans = -1;
+    while (l <= r)
     {
-        int nowx = q.front().first, nowy = q.front().second;
-        q.pop();
-        vis[nowx][nowy] = 0;
-        for (int i = 0; i < 4; i++)
+        int mid = (l + r) / 2;
+        if (p(mid))
         {
-            int nextx = nowx + steps[i].first, nexty = nowy + steps[i].second;
-            if (checkout(nextx, nexty) == 1)
-            {
-                if (max(anscrood[nowx][nowy] + 1, crood[nextx][nexty]) < anscrood[nextx][nexty])
-                {
-                    anscrood[nextx][nexty] = max(anscrood[nowx][nowy] + 1, crood[nextx][nexty]);
-                    if (vis[nextx][nexty] == 0)
-                    {
-                        q.push({nextx, nexty});
-                        vis[nextx][nexty] = 1;
-                    }
-                }
-            }
+            l = mid + 1;
+            ans = mid;
+        }
+        else
+        {
+            r = mid - 1;
         }
     }
 
-    unsigned long long ans = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = 1; j <= m; j++)
-        {
-            if (anscrood[i][j] == INF)
-            {
-                continue;
-            }
-            else
-            {
-                ans += anscrood[i][j] * anscrood[i][j];
-            }
-        }
-    }
     cout << ans << endl;
 }
 
