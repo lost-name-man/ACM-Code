@@ -48,8 +48,8 @@ bool p(int x)
         }
         for (int j = 1; j <= k; j++)
         {
-            int L = lastindex + 1;
-            if (L == 1 || s[L - 1] == '0')
+
+            if (lastindex+1 == 1 || s[lastindex] == '0')
             {
                 f[i][j][1] = f[lastindex][j - 1][0] + (pre[i] - pre[lastindex]);
             }
