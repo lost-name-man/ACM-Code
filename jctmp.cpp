@@ -37,19 +37,24 @@ bool p(int x)
     for (int i = 1; i <= n; i++)
     {
         int lastindex = i - x;
-        if (lastindex <= 0)
-        {
-            for (int j = 1; j <= k; j++)
-            {
 
-                f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
-            }
+        for (int j = 1; j <= k; j++)
+        {
+            f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
+        }
+        if (lastindex < 0)
+        {
             continue;
         }
         for (int j = 1; j <= k; j++)
         {
             f[i][j][1] = f[lastindex][j - 1][0] + (pre[i] - pre[lastindex]);
             f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
+        }
+
+        if (pre[i] - pre[lastindex] == 0)
+        {
+            f[i][0][0] = INF;
         }
     }
 
