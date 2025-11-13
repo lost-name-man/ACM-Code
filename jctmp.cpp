@@ -19,157 +19,97 @@
 using namespace std;
 #define int long long
 #define endl '\n'
-const int INF = 1e18 + 3;
+const int INF = 1e18;
 
-int n;
-vector<int> arr, brr, crr;
+int n, m, k;
+vector<vector<int>> crood, anscrood;
 
-bool p(int num)
+pair<int, int> steps[4] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+int checkout(int x, int y)
 {
-    // vector<int> pre(n + 5);
-    //  int cnt = 0;
-    vector<int> inv1, inv2;
-    for (int i = 1; i <= n; i++)
+    if (x < 1 || x > n || y < 1 || y > m)
     {
-        if (arr[i] == 0)
-        {
-            if (brr[i] >= num)
-            {
-                inv1.push_back(1);
-            }
-            continue;
-        }
-        int lx = (num - brr[i]) / arr[i];
-        int exp = (((num - brr[i]) % arr[i]) != 0);
-
-        int tmpa = (num - brr[i]), tmpb = arr[i];
-        if (tmpa > 0 && tmpb < 0 || tmpa > 0 && tmpb < 0)
-        {
-            if (arr[i] > 0)
-            {
-                int lindex;
-                if (exp)
-                {
-                    lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                else
-                {
-                    lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-
-                inv1.push_back(lindex);
-            }
-            else
-            {
-                int rindex;
-
-                if (exp)
-                {
-                    rindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                else
-                {
-                    rindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin() - 1);
-                }
-                inv2.push_back(rindex - 1);
-            }
-        }
-        else
-        {
-
-            if (arr[i] > 0)
-            {
-                int lindex;
-                if (exp)
-                {
-                    lindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                else
-                {
-                    lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-
-                inv1.push_back(lindex);
-            }
-            else
-            {
-                int rindex;
-
-                if (exp)
-                {
-                    rindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                else
-                {
-                    rindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                inv2.push_back(rindex - 1);
-            }
-        }
-    }
-    sort(inv1.begin(), inv1.end(), greater<int>());
-    sort(inv2.begin(), inv2.end());
-
-    int nownum = 0;
-    int index1 = n, index2 = 1;
-    for (int i = 0; i < inv1.size(); i++)
-    {
-        if (index1 >= inv1[i] && index1 >= index2)
-        {
-            index1--;
-            nownum++;
-        }
-    }
-    for (int i = 0; i < inv2.size(); i++)
-    {
-        if (index2 <= inv2[i] && index1 >= index2)
-        {
-            index2++;
-            nownum++;
-        }
-    }
-    if (nownum >= (n / 2 + n % 2))
-    {
-        return 1;
+        return 0;
     }
     else
     {
-        return 0;
+        return 1;
     }
 }
 void solve()
 {
-    cin >> n;
-    arr = brr = crr = vector<int>(n + 5);
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> arr[i];
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> brr[i];
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> crr[i];
-    }
-    sort(crr.begin() + 1, crr.begin() + 1 + n);
+    cin >> n >> m >> k;
+    crood = vector<vector<int>>(n + 5, vector<int>(m + 5));
+    anscrood = vector<vector<int>>(n + 5, vector<int>(m + 5, INF));
 
-    int l = -2 * (1e18), r = 2 * 1e18;
-    int ans = 0;
-    while (l <= r)
+    int headx, heady;
+    for (int i = 1; i <= k; i++)
     {
-        int mid = (l + r) / 2;
-
-        // int mid = (l + r) / 2;
-        if (p(mid))
+        int x, y;
+        cin >> x >> y;
+        if (i == 1)
         {
-            l = mid + 1;
-            ans = mid;
+            headx = x, heady = y;
         }
-        else
+        crood[x][y] = k - i + 1;
+    }
+    crood[headx][heady] = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
         {
-            r = mid - 1;
+            char tmp;
+            cin >> tmp;
+            if (tmp == '#')
+            {
+                crood[i][j] = INF;
+            }
+        }
+    }
+
+    // bfs
+    vector<vector<int>> vis(n + 5, vector<int>(m + 5));
+    queue<pair<int, int>> q;
+
+    anscrood[headx][heady] = 0;
+    q.push({headx, heady});
+    while (!q.empty())
+    {
+        int nowx = q.front().first, nowy = q.front().second;
+        q.pop();
+        vis[nowx][nowy] = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            int nextx = nowx + steps[i].first, nexty = nowy + steps[i].second;
+            if (checkout(nextx, nexty) == 1)
+            {
+                if (max(anscrood[nowx][nowy] + 1, crood[nextx][nexty]) < anscrood[nextx][nexty])
+                {
+                    anscrood[nextx][nexty] = max(anscrood[nowx][nowy] + 1, crood[nextx][nexty]);
+                    if (vis[nextx][nexty] == 0)
+                    {
+                        q.push({nextx, nexty});
+                        vis[nextx][nexty] = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    unsigned long long ans = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            if (anscrood[i][j] == INF)
+            {
+                continue;
+            }
+            else
+            {
+                ans += anscrood[i][j] * anscrood[i][j];
+            }
         }
     }
     cout << ans << endl;
@@ -180,7 +120,7 @@ signed main()
     ios::sync_with_stdio(0);
     cin.tie(0);
     int T = 1;
-    cin >> T;
+    // cin >> T;
     for (int i = 1; i <= T; i++)
     {
         solve();
