@@ -19,89 +19,54 @@
 using namespace std;
 #define int long long
 #define endl '\n'
-const int INF = 1e18 + 3;
+const int INF = 1e18;
 
-int n;
-vector<int> arr, brr, crr;
+int n, m, k;
+string s;
 
-bool p(int num)
+vector<int> pre;
+int f[200005][6][2];
+
+bool p(int x)
 {
-    //vector<int> pre(n + 5);
-    // int cnt = 0;
-    vector<int> inv1, inv2;
+    memset(f, 0x7f, sizeof(f));
+    for (int i = 0; i <= n; i++)
+    {
+        f[i][0][0] = 0;
+    }
     for (int i = 1; i <= n; i++)
     {
-        if (arr[i] == 0)
+        int lastindex = i - x;
+
+        for (int j = 1; j <= k; j++)
         {
-            if (brr[i] >= num)
-            {
-                inv1.push_back(1);
-            }
+            f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
+        }
+        if (lastindex < 0)
+        {
             continue;
         }
-        int lx = (num - brr[i])/ arr[i];
-        int exp = (((num - brr[i]) % arr[i] ) != 0 );
-        
-        int tmpa = (num - brr[i]) , tmpb=arr[i];
-        if(tmpa>0 && tmpb<0 ||tmpa>0 && tmpb<0)
+        for (int j = 1; j <= k; j++)
         {
+            int L = lastindex + 1;
+            if (L == 1 || s[L - 1] == '0')
+            {
+                f[i][j][1] = f[lastindex][j - 1][0] + (pre[i] - pre[lastindex]);
+            }
 
+            f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
         }
-        else {
-        
-            if (arr[i] > 0)
+
+        if (pre[i] - pre[lastindex] == 0)
+        {
+            for (int j = 1; j <= k; j++)
             {
-                int lindex;
-                if(exp)
-                {
-                    lindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                else 
-                {
-                    lindex = (lower_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                
-                inv1.push_back(lindex);
-            
-            }
-            else
-            {
-                int rindex;
-                
-                if(exp)
-                {
-                    rindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                else 
-                {
-                    rindex = (upper_bound(crr.begin() + 1, crr.begin() + 1 + n, lx) - crr.begin());
-                }
-                inv2.push_back(rindex - 1);
+                // f[i][j][0]=INF;
             }
         }
     }
-    sort(inv1.begin(), inv1.end(),greater<int>());
-    sort(inv2.begin(), inv2.end());
-    
-    int nownum = 0;
-    int index1 = n, index2 = 1;
-    for (int i = 0; i < inv1.size(); i++)
-    {
-        if (index1 >= inv1[i] && index1>=index2)
-        {
-            index1--;
-            nownum++;
-        }
-    }
-    for (int i = 0; i < inv2.size(); i++)
-    {
-        if (index2 <= inv2[i] && index1 >= index2)
-        {
-            index2++;
-            nownum++;
-        }
-    }
-    if (nownum >= (n / 2 + n % 2))
+
+    if (f[n][k][0] <= m || f[n][k][1] <= m)
     {
         return 1;
     }
@@ -112,32 +77,25 @@ bool p(int num)
 }
 void solve()
 {
-    cin >> n;
-    arr = brr = crr = vector<int>(n + 5);
+    cin >> n >> m >> k;
+    cin >> s;
+    s = '0' + s;
+    pre = vector<int>(n + 5);
     for (int i = 1; i <= n; i++)
     {
-        cin >> arr[i];
+        pre[i] = pre[i - 1];
+        if (s[i] == '0')
+        {
+            pre[i]++;
+        }
     }
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> brr[i];
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> crr[i];
-    }
-    sort(crr.begin() + 1, crr.begin() + 1 + n);
 
-    int l = -2 * (1e18), r = 2 * 1e18;
-    int ans = 0;
+    int l = 1, r = n;
+
+    int ans = -1;
     while (l <= r)
     {
-        int mid=l/2+r/2;
-        if(l%2==1 && r%2==1)
-        {
-            mid++;
-        }
-        // int mid = (l + r) / 2;
+        int mid = (l + r) / 2;
         if (p(mid))
         {
             l = mid + 1;
@@ -148,6 +106,7 @@ void solve()
             r = mid - 1;
         }
     }
+
     cout << ans << endl;
 }
 
@@ -156,7 +115,7 @@ signed main()
     ios::sync_with_stdio(0);
     cin.tie(0);
     int T = 1;
-    cin >> T;
+    // cin >> T;
     for (int i = 1; i <= T; i++)
     {
         solve();
