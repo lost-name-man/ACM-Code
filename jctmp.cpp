@@ -50,7 +50,6 @@ void connect(int x, int y)
 
 int conver(int x)
 {
-
     return m - x + 1;
 }
 void solve()
@@ -61,6 +60,8 @@ void solve()
 
     havepair = map<int, int>();
     line_row = map<int, int>();
+
+    map<int, int> linenum;
     for (int i = 1; i <= 2 * n; i++)
     {
         fa[i] = i;
@@ -75,24 +76,25 @@ void solve()
         }
         for (int j = 1; j <= m; j++)
         {
-            if (crood[i][j] == 1 && crood[i][j] == crood[i][m - j + 1])
+            if (crood[i][j] == 1)
             {
-                havepair[j] = i;
+                linenum[j]++;
             }
         }
     }
 
     {
         int ok = 1;
-        for (int i = 1; i <= n; i++)
+        for (int i = 1; i <= m / 2; i++)
         {
-            for (int j = 1; j <= m; j++)
+            if (linenum[i] + linenum[conver(i)] > 2)
             {
-                if (crood[i][j] == 1 && havepair[j] != 0 && havepair[j] != i)
-                {
-                    ok = 0;
-                }
+                ok = 0;
             }
+        }
+        if (m % 2 == 1 && linenum[m / 2 + 1] > 1)
+        {
+            ok = 0;
         }
         if (ok == 0)
         {
@@ -117,7 +119,6 @@ void solve()
                 }
                 else
                 {
-
                     connect(i, line_row[j]);
                     connect(i + n, line_row[conver(j)]);
                 }
