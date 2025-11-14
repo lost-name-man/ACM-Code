@@ -21,85 +21,135 @@ using namespace std;
 #define endl '\n'
 const int INF = 1e18;
 
-int n, m, k;
-string s;
+int n, m;
+vector<vector<int>> crood;
+map<int, int> havepair;
+map<int, int> line_row;
+vector<int> fa;
 
-vector<int> pre;
-int f[200005][6][2];
-
-bool p(int x)
+int findfa(int x)
 {
-    memset(f, 0x7f, sizeof(f));
-    for (int i = 0; i <= n; i++)
+    if (fa[x] == x)
     {
-        f[i][0][0] = 0;
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        int lastindex = i - x;
-
-        for (int j = 1; j <= k; j++)
-        {
-            f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
-        }
-        if (lastindex < 0)
-        {
-            continue;
-        }
-        for (int j = 1; j <= k; j++)
-        {
-            f[i][j][1] = f[lastindex][j - 1][0] + (pre[i] - pre[lastindex]);
-            f[i][j][0] = min(f[i - 1][j][1], f[i - 1][j][0]);
-        }
-
-        if (pre[i] - pre[lastindex] == 0)
-        {
-            f[i][0][0] = INF;
-        }
-    }
-
-    if (f[n][k][0] <= m || f[n][k][1] <= m)
-    {
-        return 1;
+        return x;
     }
     else
     {
-        return 0;
+        return fa[x] = findfa(fa[x]);
     }
+}
+
+void connect(int x, int y)
+{
+    int fax = findfa(x), fay = findfa(y);
+    if (fax != fay)
+    {
+        fa[fax] = fay;
+    }
+}
+
+int conver(int x)
+{
+
+    return m - x + 1;
 }
 void solve()
 {
-    cin >> n >> m >> k;
-    cin >> s;
-    s = '0' + s;
-    pre = vector<int>(n + 5);
+    cin >> n >> m;
+    crood = vector<vector<int>>(n + 5, vector<int>(m + 5));
+    fa = vector<int>(2 * n + 5);
+
+    havepair = map<int, int>();
+    line_row = map<int, int>();
+    for (int i = 1; i <= 2 * n; i++)
+    {
+        fa[i] = i;
+    }
     for (int i = 1; i <= n; i++)
     {
-        pre[i] = pre[i - 1];
-        if (s[i] == '0')
+        for (int j = 1; j <= m; j++)
         {
-            pre[i]++;
+            char tmp;
+            cin >> tmp;
+            crood[i][j] = tmp - '0';
+        }
+        for (int j = 1; j <= m; j++)
+        {
+            if (crood[i][j] == 1 && crood[i][j] == crood[i][m - j + 1])
+            {
+                havepair[j] = i;
+            }
         }
     }
 
-    int l = 1, r = n;
-
-    int ans = -1;
-    while (l <= r)
     {
-        int mid = (l + r) / 2;
-        if (p(mid))
+        int ok = 1;
+        for (int i = 1; i <= n; i++)
         {
-            l = mid + 1;
-            ans = mid;
+            for (int j = 1; j <= m; j++)
+            {
+                if (crood[i][j] == 1 && havepair[j] != 0 && havepair[j] != i)
+                {
+                    ok = 0;
+                }
+            }
         }
-        else
+        if (ok == 0)
         {
-            r = mid - 1;
+            cout << 0 << endl;
+            return;
+        }
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            if (crood[i][j] == 1)
+            {
+                if (crood[i][conver(j)] == 1)
+                {
+                    continue;
+                }
+                if (line_row[j] == 0)
+                {
+                    line_row[j] = i;
+                    line_row[conver(j)] = i + n;
+                }
+                else
+                {
+
+                    connect(i, line_row[j]);
+                    connect(i + n, line_row[conver(j)]);
+                }
+            }
         }
     }
 
-    cout << ans << endl;
+    {
+        int ok = 1;
+        for (int i = 1; i <= n; i++)
+        {
+            if (findfa(i) == findfa(i + n))
+            {
+                ok = 0;
+                break;
+            }
+        }
+        if (ok == 0)
+        {
+            cout << 0 << endl;
+            return;
+        }
+    }
+
+    set<int> st;
+    for (int i = 1; i <= 2 * n; i++)
+    {
+        st.insert(findfa(i));
+    }
+
+    int p = st.size() / 2;
+    cout << pow(2, p) << endl;
 }
 
 signed main()
@@ -107,7 +157,7 @@ signed main()
     ios::sync_with_stdio(0);
     cin.tie(0);
     int T = 1;
-    // cin >> T;
+    cin >> T;
     for (int i = 1; i <= T; i++)
     {
         solve();
