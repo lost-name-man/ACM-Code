@@ -1,162 +1,42 @@
 #include <iostream>
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-#include <string>
-#include <cstdlib>
 #include <vector>
 #include <map>
-#include <list>
+#include <string>
+#include <algorithm>
 #include <queue>
-#include <deque>
-#include <stack>
-#include <set>
-#include <functional>
-#include <unordered_set>
-#include <unordered_map>
-#include <numeric>
-#include <iomanip>
+
 using namespace std;
 #define int long long
-#define endl '\n'
-const int INF = 1e18;
 
-int n, m;
-vector<vector<int>> crood;
-map<int, int> havepair;
-map<int, int> line_row;
-vector<int> fa;
+const int INF = 1e18 + 7;
+const int MOD = 0;
 
-int findfa(int x)
+struct Edge
 {
-    if (fa[x] == x)
-    {
-        return x;
-    }
-    else
-    {
-        return fa[x] = findfa(fa[x]);
-    }
+    int w;
+    int from;
+    int to;
+    int nex;
+};
+vector<Edge> edge;
+vector<int> head;
+int cfs;
+
+void addedge(int u, int v, int w)
+{
+    cfs++;
+    edge[cfs].from = u;
+    edge[cfs].to = v;
+    edge[cfs].w = w;
+    edge[cfs].nex = head[u];
+    head[u] = cfs;
 }
 
-void connect(int x, int y)
-{
-    int fax = findfa(x), fay = findfa(y);
-    if (fax != fay)
-    {
-        fa[fax] = fay;
-    }
-}
-
-int conver(int x)
-{
-    return m - x + 1;
-}
 void solve()
 {
-    cin >> n >> m;
-    crood = vector<vector<int>>(n + 5, vector<int>(m + 5));
-    fa = vector<int>(2 * n + 5);
-
-    havepair = map<int, int>();
-    line_row = map<int, int>();
-
-    map<int, int> linenum;
-    for (int i = 1; i <= 2 * n; i++)
-    {
-        fa[i] = i;
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = 1; j <= m; j++)
-        {
-            char tmp;
-            cin >> tmp;
-            crood[i][j] = tmp - '0';
-        }
-        for (int j = 1; j <= m; j++)
-        {
-            if (crood[i][j] == 1)
-            {
-                linenum[j]++;
-            }
-        }
-    }
-
-    {
-        int ok = 1;
-        for (int i = 1; i <= m / 2; i++)
-        {
-            if (linenum[i] + linenum[conver(i)] > 2)
-            {
-                ok = 0;
-            }
-        }
-        if (m % 2 == 1 && linenum[m / 2 + 1] > 1)
-        {
-            ok = 0;
-        }
-        if (ok == 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        for (int j = 1; j <= m; j++)
-        {
-            if (crood[i][j] == 1)
-            {
-                if (crood[i][conver(j)] == 1)
-                {
-                    continue;
-                }
-                if (line_row[j] == 0)
-                {
-                    line_row[j] = i;
-                    line_row[conver(j)] = i + n;
-                }
-                else
-                {
-                    connect(i, line_row[j]);
-                    connect(i + n, line_row[conver(j)]);
-                }
-            }
-        }
-    }
-
-    {
-        int ok = 1;
-        for (int i = 1; i <= n; i++)
-        {
-            if (findfa(i) == findfa(i + n))
-            {
-                ok = 0;
-                break;
-            }
-        }
-        if (ok == 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
-    }
-
-    set<int> st;
-    for (int i = 1; i <= 2 * n; i++)
-    {
-        st.insert(findfa(i));
-    }
-
-    int p = st.size() / 2;
-    cout << pow(2, p) << endl;
 }
-
 signed main()
 {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
     int T = 1;
     cin >> T;
     for (int i = 1; i <= T; i++)
