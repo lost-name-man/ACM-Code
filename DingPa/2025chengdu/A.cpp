@@ -12,7 +12,7 @@ const int INF = 1e18 + 7;
 const int MOD = 0;
 const double ESP = 1e-18;
 int n;
-vector<int> arr, brr, ans, num0;
+vector<int> arr, brr, ans, num0, sum;
 
 vector<map<int, int>> mp;
 vector<vector<int>> tree;
@@ -21,6 +21,7 @@ void dfs(int nownode, int fa)
 {
     num0[nownode] += (arr[nownode] == 0) + (brr[nownode] == 0);
 
+    int cnt = 0;
     if (arr[nownode] != 0)
     {
         mp[nownode][arr[nownode]]++;
@@ -30,7 +31,10 @@ void dfs(int nownode, int fa)
         mp[nownode][brr[nownode]]--;
     }
 
+    sum[nownode] += abs(mp[nownode][arr[nownode]]);
+    sum[nownode] += abs(mp[nownode][brr[nownode]]);
     int znum = 0;
+
     for (int i = 0; i < tree[nownode].size(); i++)
     {
         int nextnode = tree[nownode][i];
@@ -41,7 +45,7 @@ void dfs(int nownode, int fa)
         dfs(nextnode, nownode);
 
         num0[nownode] += num0[nextnode];
-
+        sum[nownode] += sum[nextnode];
         if (mp[nownode].size() <= mp[nextnode].size())
         {
             swap(mp[nownode], mp[nextnode]);
@@ -50,20 +54,13 @@ void dfs(int nownode, int fa)
         for (auto it = mp[nextnode].begin(); it != mp[nextnode].end(); it++)
         {
             int nownum = it->first;
+            int tmp = mp[nownode][nownum];
             mp[nownode][nownum] += it->second;
-            // if (mp[nownode][nownum] == 0)
-            // {
-            //     mp[nownode].erase(nownum);
-            // }
+            sum[nownode] -= abs(tmp) + abs(it->second) - abs(mp[nownode][nownum]);
         }
     }
 
-    int cnt = 0;
-    for (auto it = mp[nownode].begin(); it != mp[nownode].end(); it++)
-    {
-        cnt += abs(it->second);
-    }
-    if (num0[nownode] >= cnt)
+    if (num0[nownode] >= sum[nownode])
     {
         ans[nownode] = 1;
     }
@@ -75,7 +72,7 @@ void dfs(int nownode, int fa)
 void solve()
 {
     cin >> n;
-    arr = brr = ans = num0 = vector<int>(n + 5);
+    arr = brr = ans = num0 = sum = vector<int>(n + 5);
     mp = vector<map<int, int>>(n + 5);
     tree = vector<vector<int>>(n + 5);
     for (int i = 1; i <= n; i++)
